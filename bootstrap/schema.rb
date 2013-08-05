@@ -2,6 +2,8 @@
   'Node' => { 
     'id'   => '0x96ae9bbee664c195',
     'type' => 'struct',
+    'bytes' => 24,
+    'ptrs'  => 4,
     'members' => {
       'id' => { 
         'ordinal' => 0,
@@ -31,6 +33,8 @@
       'NestedNode' => { 
         'id'   => '0xadfe8e889429ee28',
         'type' => 'struct',
+        'bytes' => 8,
+        'ptrs'  => 1,
         'members' => {
           'name' => { 
             'ordinal' => 0,
@@ -53,7 +57,7 @@
         'id'   => '',
         'type' => 'union',
         'ordinal' => 5,
-        'bits'    => [0, 128],
+        'bits'    => [128, 144],
         'members' => {
           'fileNode' => { 
             'ordinal' => 6,
@@ -98,12 +102,14 @@
   'Type' => { 
     'id'   => '0xdddca9a9ee299e42',
     'type' => 'struct',
+    'bytes' => 16,
+    'ptrs'  => 1,
     'members' => {
       'body' => { 
         'id'   => '',
         'type' => 'union',
         'ordinal' => 0,
-        'bits'    => [0, 0],
+        'bits'    => [0, 16],
         'members' => {
           'voidType' => { 
             'ordinal' => 1,
@@ -211,12 +217,14 @@
   'Value' => { 
     'id'   => '0xc2c768aee22269ee',
     'type' => 'struct',
+    'bytes' => 16,
+    'ptrs'  => 1,
     'members' => {
       'body' => { 
         'id'   => '',
         'type' => 'union',
         'ordinal' => 0,
-        'bits'    => [0, 0],
+        'bits'    => [0, 16],
         'members' => {
           'voidValue' => { 
             'ordinal' => 10,
@@ -337,6 +345,8 @@
   'Annotation' => { 
     'id'   => '0xdb785131c0cfee73',
     'type' => 'struct',
+    'bytes' => 8,
+    'ptrs'  => 1,
     'members' => {
       'id' => { 
         'ordinal' => 0,
@@ -353,6 +363,8 @@
   'FileNode' => { 
     'id'   => '0xd59c380b31b76b1f',
     'type' => 'struct',
+    'bytes' => 0,
+    'ptrs'  => 1,
     'members' => {
       'imports' => { 
         'ordinal' => 0,
@@ -362,6 +374,8 @@
       'Import' => { 
         'id'   => '0xd5d6a9044d63c158',
         'type' => 'struct',
+        'bytes' => 8,
+        'ptrs'  => 1,
         'members' => {
           'id' => { 
             'ordinal' => 0,
@@ -418,6 +432,8 @@
   'StructNode' => { 
     'id'   => '0xbf81d92a0b7e0c1f',
     'type' => 'struct',
+    'bytes' => 8,
+    'ptrs'  => 1,
     'members' => {
       'dataSectionWordSize' => { 
         'ordinal' => 0,
@@ -442,6 +458,8 @@
       'Member' => { 
         'id'   => '0x9a2db4bd6b74f8c1',
         'type' => 'struct',
+        'bytes' => 8,
+        'ptrs'  => 3,
         'members' => {
           'name' => { 
             'ordinal' => 0,
@@ -467,7 +485,7 @@
             'id'   => '',
             'type' => 'union',
             'ordinal' => 4,
-            'bits'    => [0, 32],
+            'bits'    => [32, 48],
             'members' => {
               'fieldMember' => { 
                 'ordinal' => 5,
@@ -494,6 +512,8 @@
       'Field' => { 
         'id'   => '0xc75846e17057a41f',
         'type' => 'struct',
+        'bytes' => 4,
+        'ptrs'  => 2,
         'members' => {
           'offset' => { 
             'ordinal' => 0,
@@ -515,6 +535,8 @@
       'Union' => { 
         'id'   => '0xefff479ae161da06',
         'type' => 'struct',
+        'bytes' => 4,
+        'ptrs'  => 1,
         'members' => {
           'discriminantOffset' => { 
             'ordinal' => 0,
@@ -531,6 +553,8 @@
       'Group' => { 
         'id'   => '0xac91947f51b055ed',
         'type' => 'struct',
+        'bytes' => 0,
+        'ptrs'  => 1,
         'members' => {
           'members' => { 
             'ordinal' => 0,
@@ -544,6 +568,8 @@
   'EnumNode' => { 
     'id'   => '0xd612f44d78962abf',
     'type' => 'struct',
+    'bytes' => 0,
+    'ptrs'  => 1,
     'members' => {
       'enumerants' => { 
         'ordinal' => 0,
@@ -553,6 +579,8 @@
       'Enumerant' => { 
         'id'   => '0xc9ac441973b9f177',
         'type' => 'struct',
+        'bytes' => 2,
+        'ptrs'  => 2,
         'members' => {
           'name' => { 
             'ordinal' => 0,
@@ -576,6 +604,8 @@
   'InterfaceNode' => { 
     'id'   => '0xb8a6ecfa2d5121e6',
     'type' => 'struct',
+    'bytes' => 0,
+    'ptrs'  => 1,
     'members' => {
       'methods' => { 
         'ordinal' => 0,
@@ -585,6 +615,8 @@
       'Method' => { 
         'id'   => '0xbdd7f6f0832387ac',
         'type' => 'struct',
+        'bytes' => 4,
+        'ptrs'  => 4,
         'members' => {
           'name' => { 
             'ordinal' => 0,
@@ -604,6 +636,8 @@
           'Param' => { 
             'id'   => '0xd6d38cf4e366e91c',
             'type' => 'struct',
+            'bytes' => 0,
+            'ptrs'  => 4,
             'members' => {
               'name' => { 
                 'ordinal' => 0,
@@ -649,6 +683,8 @@
   'ConstNode' => { 
     'id'   => '0x8f0cf892b24a8062',
     'type' => 'struct',
+    'bytes' => 0,
+    'ptrs'  => 2,
     'members' => {
       'type' => { 
         'ordinal' => 0,
@@ -665,6 +701,8 @@
   'AnnotationNode' => { 
     'id'   => '0xf386f41ae9f5cbe5',
     'type' => 'struct',
+    'bytes' => 2,
+    'ptrs'  => 1,
     'members' => {
       'type' => { 
         'ordinal' => 0,
@@ -731,6 +769,8 @@
   'CodeGeneratorRequest' => { 
     'id'   => '0xd095654a26e15f1d',
     'type' => 'struct',
+    'bytes' => 0,
+    'ptrs'  => 2,
     'members' => {
       'nodes' => { 
         'ordinal' => 0,
