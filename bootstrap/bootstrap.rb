@@ -71,8 +71,8 @@ end
 
 def write_bool_member_getter(writer, member_name, member)
   bits = member['bits']
-  byte_offset = ((bits[1]+1)/8)
-  mask = (bits[1] % 7) + 1 # bits 1-8
+  byte_offset = ((bits[1])/8)
+  mask = 2 ** (bits[1] % 8) # bits 1-8
 
   writer.puts "def get_#{member_name.underscore}()"
   writer.puts "  @builder.get_uchar(#{byte_offset}) & #{mask} == #{mask}"
@@ -96,6 +96,8 @@ def write_member_getter(writer, member_name, member)
   if type == "Bool"
     write_bool_member_getter(writer, member_name, member)
     return
+  elsif type == "union"
+    writer.puts 
   else
     write_numeric_member_getter(writer, member_name, member)
   end
@@ -159,7 +161,7 @@ def main
     writer.puts "  end"
     writer.puts "end"
 
-    # puts writer.to_s
+    puts writer.to_s
 
     path = File.join(LIB_SCHEMA, "#{k.underscore}.rb")
     File.open(path, "w") do |f|

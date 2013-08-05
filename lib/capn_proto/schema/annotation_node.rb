@@ -24,35 +24,35 @@ module CapnProto
         end
 
         def get_targets_enum()
-          @builder.get_uchar(0) & 3 == 3
-        end
-
-        def get_targets_enumerant()
           @builder.get_uchar(0) & 4 == 4
         end
 
+        def get_targets_enumerant()
+          @builder.get_uchar(0) & 8 == 8
+        end
+
         def get_targets_struct()
-          @builder.get_uchar(0) & 5 == 5
+          @builder.get_uchar(0) & 16 == 16
         end
 
         def get_targets_field()
-          @builder.get_uchar(0) & 6 == 6
+          @builder.get_uchar(0) & 32 == 32
         end
 
         def get_targets_union()
-          @builder.get_uchar(0) & 7 == 7
+          @builder.get_uchar(0) & 64 == 64
         end
 
         def get_targets_interface()
-          @builder.get_uchar(1) & 1 == 1
+          @builder.get_uchar(0) & 128 == 128
         end
 
         def get_targets_method()
-          @builder.get_uchar(1) & 2 == 2
+          @builder.get_uchar(1) & 1 == 1
         end
 
         def get_targets_param()
-          @builder.get_uchar(1) & 3 == 3
+          @builder.get_uchar(1) & 2 == 2
         end
 
         def get_targets_annotation()
