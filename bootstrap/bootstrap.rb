@@ -116,6 +116,15 @@ def write_union_member_getter(writer, member_name, member)
   writer.puts "end"
 end
 
+def write_text_member_getter(writer, member_name, member)
+  bits = member['bits']
+  byte_offset = ((bits[0])/8)
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  get_text_field(#{byte_offset}, \"\")"
+  writer.puts "end"
+end
+
 def write_struct_member_getter(writer, member_name, member)
   type = member['type']
   bits = member['bits']
@@ -135,10 +144,14 @@ def write_member_getter(writer, member_name, member)
     write_bool_member_getter(writer, member_name, member)
   when "struct"
     write_struct_member_getter(writer, member_name, member)
+  when "Text"
+    write_text_member_getter(writer, member_name, member)
   when "union"
     write_union_member_getter(writer, member_name, member)
   else
-    write_numeric_member_getter(writer, member_name, member)
+    if PRIMITIVE_TYPES.include?(type)
+      write_numeric_member_getter(writer, member_name, member)
+    end
   end
 end
 

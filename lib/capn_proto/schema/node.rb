@@ -15,6 +15,9 @@ module CapnProto
           @reader.get_uint32(0)
         end
 
+        def get_scope_id()
+          @reader.get_uint64(0)
+        end
 
 
 

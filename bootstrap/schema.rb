@@ -22,7 +22,7 @@
       },
       'scopeId' => { 
         'ordinal' => 2,
-        'type'    => 'UInt6',
+        'type'    => 'UInt64',
         'bits'    => [0, 64],
       },
       'nestedNodes' => { 
