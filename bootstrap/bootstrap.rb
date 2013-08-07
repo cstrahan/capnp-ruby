@@ -112,7 +112,8 @@ def write_union_member_getter(writer, member_name, member)
   byte_offset = ((bits[0])/8)
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil)"
+  writer.puts "  tag = @reader.get_uint16(#{byte_offset})"
+  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil), tag)"
   writer.puts "end"
 end
 
@@ -120,7 +121,7 @@ def write_text_member_getter(writer, member_name, member)
   ptr = member['ptr']
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  get_text_field(#{ptr}, \"\")"
+  writer.puts "  @reader.get_text_field(#{ptr}, \"\")"
   writer.puts "end"
 end
 
