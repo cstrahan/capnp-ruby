@@ -15,11 +15,11 @@ module CapnProto
         end
 
         def get_display_name_prefix_length()
-          @reader.get_uint32(0)
+          @reader.get_uint32(20)
         end
 
         def get_scope_id()
-          @reader.get_uint64(0)
+          @reader.get_uint64(8)
         end
 
         def get_nested_nodes()
@@ -172,15 +172,15 @@ module CapnProto
           end
 
           def get_enum_type()
-            @reader.get_uint64(0)
+            @reader.get_uint64(8)
           end
 
           def get_struct_type()
-            @reader.get_uint64(0)
+            @reader.get_uint64(8)
           end
 
           def get_interface_type()
-            @reader.get_uint64(0)
+            @reader.get_uint64(8)
           end
 
         end
@@ -239,43 +239,43 @@ module CapnProto
           end
 
           def get_int8_value()
-            @reader.get_int8(0)
+            @reader.get_int8(8)
           end
 
           def get_int16_value()
-            @reader.get_int16(0)
+            @reader.get_int16(8)
           end
 
           def get_int32_value()
-            @reader.get_int32(0)
+            @reader.get_int32(8)
           end
 
           def get_int64_value()
-            @reader.get_int64(0)
+            @reader.get_int64(8)
           end
 
           def get_uint8_value()
-            @reader.get_uint8(0)
+            @reader.get_uint8(8)
           end
 
           def get_uint16_value()
-            @reader.get_uint16(0)
+            @reader.get_uint16(8)
           end
 
           def get_uint32_value()
-            @reader.get_uint32(0)
+            @reader.get_uint32(8)
           end
 
           def get_uint64_value()
-            @reader.get_uint64(0)
+            @reader.get_uint64(8)
           end
 
           def get_float32_value()
-            @reader.get_float32(0)
+            @reader.get_float32(8)
           end
 
           def get_float64_value()
-            @reader.get_float64(0)
+            @reader.get_float64(8)
           end
 
           def get_text_value()
@@ -285,7 +285,7 @@ module CapnProto
 
 
           def get_enum_value()
-            @reader.get_uint16(0)
+            @reader.get_uint16(8)
           end
 
 
@@ -374,11 +374,11 @@ module CapnProto
         end
 
         def get_pointer_section_size()
-          @reader.get_uint16(0)
+          @reader.get_uint16(2)
         end
 
         def get_preferred_list_encoding()
-          @reader.get_enum_field(0
+          @reader.get_enum_field(4
         end
 
         def get_members()
@@ -407,7 +407,7 @@ module CapnProto
           end
 
           def get_code_order()
-            @reader.get_uint16(0)
+            @reader.get_uint16(2)
           end
 
           def get_annotations()
@@ -599,7 +599,7 @@ module CapnProto
           end
 
           def get_required_param_count()
-            @reader.get_uint16(0)
+            @reader.get_uint16(2)
           end
 
           def get_return_type()

@@ -26,10 +26,12 @@ lines.each do |line|
       pointers = match[2].to_i
     end
 
-    if name.include?("@")
-      match     = /\[(\d+), (\d+)\)/.match(sline)
+    if match = /\[(\d+), (\d+)\)/.match(sline)
       bit_begin = match[1].to_i
       bit_len   = match[2].to_i
+    end
+
+    if name.include?("@")
       ordinal   = name.split("@")[1].to_i
       name      = name.split("@")[0]
     end
@@ -40,9 +42,12 @@ lines.each do |line|
     if bytes
       puts("  'bytes' => %i," % bytes)
       puts("  'ptrs'  => %i," % pointers)
-    elsif ordinal
-      puts("  'ordinal' => %i," % ordinal)
+    end
+    if bit_begin
       puts("  'bits'    => [%i, %i]," % [bit_begin, bit_len])
+    end
+    if ordinal
+      puts("  'ordinal' => %i," % ordinal)
     end
     puts("  'members' => {" % [name, type])
   elsif sline.start_with?('}')
@@ -57,8 +62,8 @@ lines.each do |line|
     puts("      'ordinal' => %i," % ordinal)
     puts("      'type'    => '%s'," % type)
     if match = /\[(\d+), (\d+)\)/.match(sline)
-      bit_begin = match[0].to_i
-      bit_len   = match[1].to_i
+      bit_begin = match[1].to_i
+      bit_len   = match[2].to_i
       puts("      'bits'    => [%i, %i]," % [bit_begin, bit_len])
     elsif match = /ptr\[(\d+)\]/.match(sline)
       ptr_no = match[1].to_i

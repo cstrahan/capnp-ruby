@@ -8,7 +8,7 @@
       'id' => { 
         'ordinal' => 0,
         'type'    => 'UInt64',
-        'bits'    => [0, 0],
+        'bits'    => [0, 64],
       },
       'displayName' => { 
         'ordinal' => 1,
@@ -18,12 +18,12 @@
       'displayNamePrefixLength' => { 
         'ordinal' => 12,
         'type'    => 'UInt32',
-        'bits'    => [0, 160],
+        'bits'    => [160, 192],
       },
       'scopeId' => { 
         'ordinal' => 2,
         'type'    => 'UInt64',
-        'bits'    => [0, 64],
+        'bits'    => [64, 128],
       },
       'nestedNodes' => { 
         'ordinal' => 3,
@@ -44,7 +44,7 @@
           'id' => { 
             'ordinal' => 1,
             'type'    => 'UInt64',
-            'bits'    => [0, 0],
+            'bits'    => [0, 64],
           },
         }
       },
@@ -56,8 +56,8 @@
       'body' => { 
         'id'   => '',
         'type' => 'union',
-        'ordinal' => 5,
         'bits'    => [128, 144],
+        'ordinal' => 5,
         'members' => {
           'fileNode' => { 
             'ordinal' => 6,
@@ -108,8 +108,8 @@
       'body' => { 
         'id'   => '',
         'type' => 'union',
-        'ordinal' => 0,
         'bits'    => [0, 16],
+        'ordinal' => 0,
         'members' => {
           'voidType' => { 
             'ordinal' => 1,
@@ -190,19 +190,19 @@
           'enumType' => { 
             'ordinal' => 16,
             'type'    => 'UInt64',
-            'bits'    => [0, 64],
+            'bits'    => [64, 128],
             'tag'     => 15,
           },
           'structType' => { 
             'ordinal' => 17,
             'type'    => 'UInt64',
-            'bits'    => [0, 64],
+            'bits'    => [64, 128],
             'tag'     => 16,
           },
           'interfaceType' => { 
             'ordinal' => 18,
             'type'    => 'UInt64',
-            'bits'    => [0, 64],
+            'bits'    => [64, 128],
             'tag'     => 17,
           },
           'objectType' => { 
@@ -223,8 +223,8 @@
       'body' => { 
         'id'   => '',
         'type' => 'union',
-        'ordinal' => 0,
         'bits'    => [0, 16],
+        'ordinal' => 0,
         'members' => {
           'voidValue' => { 
             'ordinal' => 10,
@@ -234,67 +234,67 @@
           'boolValue' => { 
             'ordinal' => 2,
             'type'    => 'Bool',
-            'bits'    => [0, 64],
+            'bits'    => [64, 65],
             'tag'     => 1,
           },
           'int8Value' => { 
             'ordinal' => 3,
             'type'    => 'Int8',
-            'bits'    => [0, 64],
+            'bits'    => [64, 72],
             'tag'     => 2,
           },
           'int16Value' => { 
             'ordinal' => 4,
             'type'    => 'Int16',
-            'bits'    => [0, 64],
+            'bits'    => [64, 80],
             'tag'     => 3,
           },
           'int32Value' => { 
             'ordinal' => 5,
             'type'    => 'Int32',
-            'bits'    => [0, 64],
+            'bits'    => [64, 96],
             'tag'     => 4,
           },
           'int64Value' => { 
             'ordinal' => 6,
             'type'    => 'Int64',
-            'bits'    => [0, 64],
+            'bits'    => [64, 128],
             'tag'     => 5,
           },
           'uint8Value' => { 
             'ordinal' => 7,
             'type'    => 'UInt8',
-            'bits'    => [0, 64],
+            'bits'    => [64, 72],
             'tag'     => 6,
           },
           'uint16Value' => { 
             'ordinal' => 8,
             'type'    => 'UInt16',
-            'bits'    => [0, 64],
+            'bits'    => [64, 80],
             'tag'     => 7,
           },
           'uint32Value' => { 
             'ordinal' => 9,
             'type'    => 'UInt32',
-            'bits'    => [0, 64],
+            'bits'    => [64, 96],
             'tag'     => 8,
           },
           'uint64Value' => { 
             'ordinal' => 1,
             'type'    => 'UInt64',
-            'bits'    => [0, 64],
+            'bits'    => [64, 128],
             'tag'     => 0,
           },
           'float32Value' => { 
             'ordinal' => 11,
             'type'    => 'Float32',
-            'bits'    => [0, 64],
+            'bits'    => [64, 96],
             'tag'     => 10,
           },
           'float64Value' => { 
             'ordinal' => 12,
             'type'    => 'Float64',
-            'bits'    => [0, 64],
+            'bits'    => [64, 128],
             'tag'     => 11,
           },
           'textValue' => { 
@@ -318,7 +318,7 @@
           'enumValue' => { 
             'ordinal' => 16,
             'type'    => 'UInt16',
-            'bits'    => [0, 64],
+            'bits'    => [64, 80],
             'tag'     => 15,
           },
           'structValue' => { 
@@ -351,7 +351,7 @@
       'id' => { 
         'ordinal' => 0,
         'type'    => 'UInt64',
-        'bits'    => [0, 0],
+        'bits'    => [0, 64],
       },
       'value' => { 
         'ordinal' => 1,
@@ -380,7 +380,7 @@
           'id' => { 
             'ordinal' => 0,
             'type'    => 'UInt64',
-            'bits'    => [0, 0],
+            'bits'    => [0, 64],
           },
           'name' => { 
             'ordinal' => 1,
@@ -438,17 +438,17 @@
       'dataSectionWordSize' => { 
         'ordinal' => 0,
         'type'    => 'UInt16',
-        'bits'    => [0, 0],
+        'bits'    => [0, 16],
       },
       'pointerSectionSize' => { 
         'ordinal' => 1,
         'type'    => 'UInt16',
-        'bits'    => [0, 16],
+        'bits'    => [16, 32],
       },
       'preferredListEncoding' => { 
         'ordinal' => 2,
         'type'    => '.ElementSize',
-        'bits'    => [0, 32],
+        'bits'    => [32, 48],
       },
       'members' => { 
         'ordinal' => 3,
@@ -469,12 +469,12 @@
           'ordinal' => { 
             'ordinal' => 1,
             'type'    => 'UInt16',
-            'bits'    => [0, 0],
+            'bits'    => [0, 16],
           },
           'codeOrder' => { 
             'ordinal' => 2,
             'type'    => 'UInt16',
-            'bits'    => [0, 16],
+            'bits'    => [16, 32],
           },
           'annotations' => { 
             'ordinal' => 3,
@@ -484,8 +484,8 @@
           'body' => { 
             'id'   => '',
             'type' => 'union',
-            'ordinal' => 4,
             'bits'    => [32, 48],
+            'ordinal' => 4,
             'members' => {
               'fieldMember' => { 
                 'ordinal' => 5,
@@ -518,7 +518,7 @@
           'offset' => { 
             'ordinal' => 0,
             'type'    => 'UInt32',
-            'bits'    => [0, 0],
+            'bits'    => [0, 32],
           },
           'type' => { 
             'ordinal' => 1,
@@ -541,7 +541,7 @@
           'discriminantOffset' => { 
             'ordinal' => 0,
             'type'    => 'UInt32',
-            'bits'    => [0, 0],
+            'bits'    => [0, 32],
           },
           'members' => { 
             'ordinal' => 1,
@@ -590,7 +590,7 @@
           'codeOrder' => { 
             'ordinal' => 1,
             'type'    => 'UInt16',
-            'bits'    => [0, 0],
+            'bits'    => [0, 16],
           },
           'annotations' => { 
             'ordinal' => 2,
@@ -626,7 +626,7 @@
           'codeOrder' => { 
             'ordinal' => 1,
             'type'    => 'UInt16',
-            'bits'    => [0, 0],
+            'bits'    => [0, 16],
           },
           'params' => { 
             'ordinal' => 2,
@@ -664,7 +664,7 @@
           'requiredParamCount' => { 
             'ordinal' => 3,
             'type'    => 'UInt16',
-            'bits'    => [0, 16],
+            'bits'    => [16, 32],
           },
           'returnType' => { 
             'ordinal' => 4,
@@ -712,57 +712,57 @@
       'targetsFile' => { 
         'ordinal' => 1,
         'type'    => 'Bool',
-        'bits'    => [0, 0],
+        'bits'    => [0, 1],
       },
       'targetsConst' => { 
         'ordinal' => 2,
         'type'    => 'Bool',
-        'bits'    => [0, 1],
+        'bits'    => [1, 2],
       },
       'targetsEnum' => { 
         'ordinal' => 3,
         'type'    => 'Bool',
-        'bits'    => [0, 2],
+        'bits'    => [2, 3],
       },
       'targetsEnumerant' => { 
         'ordinal' => 4,
         'type'    => 'Bool',
-        'bits'    => [0, 3],
+        'bits'    => [3, 4],
       },
       'targetsStruct' => { 
         'ordinal' => 5,
         'type'    => 'Bool',
-        'bits'    => [0, 4],
+        'bits'    => [4, 5],
       },
       'targetsField' => { 
         'ordinal' => 6,
         'type'    => 'Bool',
-        'bits'    => [0, 5],
+        'bits'    => [5, 6],
       },
       'targetsUnion' => { 
         'ordinal' => 7,
         'type'    => 'Bool',
-        'bits'    => [0, 6],
+        'bits'    => [6, 7],
       },
       'targetsInterface' => { 
         'ordinal' => 8,
         'type'    => 'Bool',
-        'bits'    => [0, 7],
+        'bits'    => [7, 8],
       },
       'targetsMethod' => { 
         'ordinal' => 9,
         'type'    => 'Bool',
-        'bits'    => [0, 8],
+        'bits'    => [8, 9],
       },
       'targetsParam' => { 
         'ordinal' => 10,
         'type'    => 'Bool',
-        'bits'    => [0, 9],
+        'bits'    => [9, 10],
       },
       'targetsAnnotation' => { 
         'ordinal' => 11,
         'type'    => 'Bool',
-        'bits'    => [0, 10],
+        'bits'    => [10, 11],
       },
     }
   },

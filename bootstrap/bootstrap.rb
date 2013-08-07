@@ -88,8 +88,8 @@ end
 
 def write_bool_member_getter(writer, member_name, member)
   bits = member['bits']
-  byte_offset = ((bits[1])/8)
-  mask = 2 ** (bits[1] % 8) # bits 1-8
+  byte_offset = ((bits[0])/8)
+  mask = 2 ** (bits[0] % 8) # bits 1-8
 
   writer.puts "def get_#{member_name.underscore}()"
   writer.puts "  @reader.get_uint8(#{byte_offset}) & #{mask} == #{mask}"
