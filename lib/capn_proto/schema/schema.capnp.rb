@@ -153,19 +153,61 @@ module CapnProto
           def which(struct_reader)
           end
 
+          def get_void_type()
+            nil
+          end
 
+          def get_bool_type()
+            nil
+          end
 
+          def get_int8_type()
+            nil
+          end
 
+          def get_int16_type()
+            nil
+          end
 
+          def get_int32_type()
+            nil
+          end
 
+          def get_int64_type()
+            nil
+          end
 
+          def get_uint8_type()
+            nil
+          end
 
+          def get_uint16_type()
+            nil
+          end
 
+          def get_uint32_type()
+            nil
+          end
 
+          def get_uint64_type()
+            nil
+          end
 
+          def get_float32_type()
+            nil
+          end
 
+          def get_float64_type()
+            nil
+          end
 
+          def get_text_type()
+            nil
+          end
 
+          def get_data_type()
+            nil
+          end
 
           def get_list_type()
             Type::Reader.new(@reader.get_struct_field(0, nil)
@@ -183,6 +225,9 @@ module CapnProto
             @reader.get_uint64(8)
           end
 
+          def get_object_type()
+            nil
+          end
         end
       end
     end
@@ -233,6 +278,9 @@ module CapnProto
           def which(struct_reader)
           end
 
+          def get_void_value()
+            nil
+          end
 
           def get_bool_value()
             @reader.get_uint8(8) & 1 == 1
@@ -289,6 +337,9 @@ module CapnProto
           end
 
 
+          def get_interface_value()
+            nil
+          end
 
         end
       end

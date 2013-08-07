@@ -141,7 +141,7 @@ def write_list_member_getter(writer, member_name, member)
   klass = klass_for(type)
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  #{klass}::List::Reader.new(@reader.get_list_field(#{ptr}, nil)"
+  writer.puts "  #{klass}::List::Reader.new(@reader.get_list_field(#{ptr}, nil))"
   writer.puts "end"
 end
 
@@ -176,6 +176,12 @@ def write_non_primitive_getter(writer, member_name, member)
   end
 end
 
+def write_void_member_getter(writer, member_name, member)
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  nil"
+  writer.puts "end"
+end
+
 def write_member_getter(writer, member_name, member)
   type = member['type']
 
@@ -188,6 +194,8 @@ def write_member_getter(writer, member_name, member)
     write_text_member_getter(writer, member_name, member)
   when "union"
     write_union_member_getter(writer, member_name, member)
+  when "Void"
+    write_void_member_getter(writer, member_name, member)
   else
     if PRIMITIVE_TYPES.include?(type)
       write_numeric_member_getter(writer, member_name, member)
