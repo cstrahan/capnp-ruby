@@ -6,6 +6,9 @@ module CapnProto
           @reader = struct_reader
         end
 
+        def get_type()
+          Type::Reader.new(@reader.get_struct_field(0, nil)
+        end
 
         def get_targets_file()
           @reader.get_uint8(0) & 1 == 1
@@ -51,6 +54,7 @@ module CapnProto
           @reader.get_uint8(1) & 4 == 4
         end
       end
+
       class Builder
         def initialize(struct_builder)
           @builder = struct_builder

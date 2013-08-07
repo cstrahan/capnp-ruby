@@ -107,7 +107,7 @@ def write_numeric_member_getter(writer, member_name, member)
 end
 
 def write_union_member_getter(writer, member_name, member)
-  type = member['type']
+  type = member_name.capitalize
   bits = member['bits']
   byte_offset = ((bits[0])/8)
 
@@ -117,11 +117,10 @@ def write_union_member_getter(writer, member_name, member)
 end
 
 def write_text_member_getter(writer, member_name, member)
-  bits = member['bits']
-  byte_offset = ((bits[0])/8)
+  ptr = member['ptr']
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  get_text_field(#{byte_offset}, \"\")"
+  writer.puts "  get_text_field(#{ptr}, \"\")"
   writer.puts "end"
 end
 
@@ -135,9 +134,49 @@ def write_struct_member_getter(writer, member_name, member)
   writer.puts "end"
 end
 
+def write_list_member_getter(writer, member_name, member)
+  ptr = member['ptr']
+  type = member['type'][5..-2]
+  klass = klass_for(type)
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  #{klass}::List::Reader.new(@reader.get_list_field(#{ptr}, nil)"
+  writer.puts "end"
+end
+
+def type_of(type)
+  if type.start_with?("List(")
+    "list"
+  else 
+    type = type[1..-1].split(".").inject({"members" => SCHEMA}) {|acc,n| acc["members"][n]}["type"]
+  end
+end
+
+def klass_for(type)
+  type[1..-1].split(".").join("::")
+end
+
+def write_non_primitive_getter(writer, member_name, member)
+  type = member['type']
+  type = type_of(type)
+  klass = klass_for(member['type'])
+
+  if member["ptr"]
+    ptr = member["ptr"]
+    writer.puts "def get_#{member_name.underscore}()"
+    writer.puts "  #{klass}::Reader.new(@reader.get_struct_field(#{ptr}, nil)"
+    writer.puts "end"
+  else
+    bits = member['bits']
+    byte_offset = ((bits[0])/8)
+    writer.puts "def get_#{member_name.underscore}()"
+    writer.puts "  @reader.get_#{type}_field(#{byte_offset}"
+    writer.puts "end"
+  end
+end
+
 def write_member_getter(writer, member_name, member)
   type = member['type']
-  return unless PRIMITIVE_TYPES.include?(type)
 
   case type
   when "Bool"
@@ -151,17 +190,42 @@ def write_member_getter(writer, member_name, member)
   else
     if PRIMITIVE_TYPES.include?(type)
       write_numeric_member_getter(writer, member_name, member)
+    elsif type.start_with?("List(")
+      write_list_member_getter(writer, member_name, member)
+    elsif type.start_with?(".")
+      write_non_primitive_getter(writer, member_name, member)
     end
   end
 end
 
 def write_union(writer, name, node)
-  writer.puts "module #{name.capitalize}"
-  writer.indent do
+  writer.puts <<-CODE
+module #{name.capitalize}
+  class Reader
+    def initialize(struct_reader)
+      @reader = struct_reader
+    end
+
+  CODE
+  writer.indent(writer.level + 4) do
     node['members'].each do |k, v|
+      writer.puts "#{k.underscore.upcase} = #{v['tag']}"
+    end
+  end
+
+  writer.puts <<-CODE
+
+    def which(struct_reader)
+    end
+  CODE
+
+  writer.indent(writer.level + 4) do
+    node['members'].each do |k, v|
+      writer.puts ""
       write_member_getter(writer, k, v)
     end
   end
+  writer.puts "  end"
   writer.puts "end"
 end
 
@@ -193,6 +257,7 @@ module #{name}
 
   writer.puts "  end" # END BUILDER
   writer.puts <<-CODE
+
   class Builder
     def initialize(struct_builder)
       @builder = struct_builder
@@ -245,22 +310,23 @@ def visit(writer, name, node)
 end
 
 def main
+  writer = IndentedWriter.new
+  writer.puts "module CapnProto"
+  writer.puts "  module Schema"
   SCHEMA.keys.each do |k|
-    writer = IndentedWriter.new
-    writer.puts "module CapnProto"
-    writer.puts "  module Schema"
     writer.indent(4) do
       visit(writer, k, SCHEMA[k])
     end
-    writer.puts "  end"
-    writer.puts "end"
+  end
+  writer.puts "  end"
+  writer.puts "end"
 
-    puts writer.to_s
+  puts writer.to_s
 
-    path = File.join(LIB_SCHEMA, "#{k.underscore}.rb")
-    File.open(path, "w") do |f|
-      f << writer.to_s
-    end
+  # path = File.join(LIB_SCHEMA, "#{k.underscore}.rb")
+  path = File.join(LIB_SCHEMA, "schema.capnp.rb")
+  File.open(path, "w") do |f|
+    f << writer.to_s
   end
 end
 
