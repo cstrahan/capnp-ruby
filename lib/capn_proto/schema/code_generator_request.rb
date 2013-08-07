@@ -1,24 +1,16 @@
 module CapnProto
   module Schema
     module CodeGeneratorRequest
-      def self.bytes
-        0
-      end
-
-      def self.pointers
-        2
-      end
-
       class Reader
-        def initialize(reader)
-          @reader = reader
+        def initialize(struct_reader)
+          @reader = struct_reader
         end
 
 
       end
       class Builder
-        def initialize(builder)
-          @builder = builder
+        def initialize(struct_builder)
+          @builder = struct_builder
         end
       end
     end

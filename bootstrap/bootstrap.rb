@@ -8,6 +8,23 @@ PRIMITIVE_TYPES = ['Bool','Int8','Int16','Int32','Int64','UInt8','UInt16',
 BUILT_IN_TYPES = ['Bool','Int8','Int16','Int32','Int64','UInt8','UInt16',
                   'UInt32','UInt64','Float32','Float64', 'Text', 'Data', 
                   'Void', 'Object']
+TYPE_TO_METHOD = {
+  'Bool'    => 'bool',
+  'Int8'    => 'int8',
+  'Int16'   => 'int16',
+  'Int32'   => 'int32',
+  'Int64'   => 'int64',
+  'UInt8'   => 'uint8',
+  'UInt16'  => 'uint16',
+  'UInt32'  => 'uint32',
+  'UInt64'  => 'uint64',
+  'Float32' => 'float32',
+  'Float64' => 'float64',
+  'Text'    => 'text',
+  'Data'    => 'data',
+  'Void'    => 'void',
+  'Object'  => 'object'
+}
 
 class String
   def undent
@@ -75,7 +92,7 @@ def write_bool_member_getter(writer, member_name, member)
   mask = 2 ** (bits[1] % 8) # bits 1-8
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  @builder.get_uchar(#{byte_offset}) & #{mask} == #{mask}"
+  writer.puts "  @reader.get_uint8(#{byte_offset}) & #{mask} == #{mask}"
   writer.puts "end"
 end
 
@@ -85,7 +102,27 @@ def write_numeric_member_getter(writer, member_name, member)
   byte_offset = ((bits[0]+1)/8)
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  @builder.get_#{type.underscore}(#{byte_offset})"
+  writer.puts "  @reader.get_#{TYPE_TO_METHOD[type]}(#{byte_offset})"
+  writer.puts "end"
+end
+
+def write_union_member_getter(writer, member_name, member)
+  type = member['type']
+  bits = member['bits']
+  byte_offset = ((bits[0])/8)
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil)"
+  writer.puts "end"
+end
+
+def write_struct_member_getter(writer, member_name, member)
+  type = member['type']
+  bits = member['bits']
+  byte_offset = ((bits[0])/8)
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil)"
   writer.puts "end"
 end
 
@@ -93,32 +130,45 @@ def write_member_getter(writer, member_name, member)
   type = member['type']
   return unless PRIMITIVE_TYPES.include?(type)
 
-  if type == "Bool"
+  case type
+  when "Bool"
     write_bool_member_getter(writer, member_name, member)
-    return
-  elsif type == "union"
-    writer.puts 
+  when "struct"
+    write_struct_member_getter(writer, member_name, member)
+  when "union"
+    write_union_member_getter(writer, member_name, member)
   else
     write_numeric_member_getter(writer, member_name, member)
   end
 end
 
+def write_union(writer, name, node)
+  writer.puts "module #{name.capitalize}"
+  writer.indent do
+    node['members'].each do |k, v|
+      write_member_getter(writer, k, v)
+    end
+  end
+  writer.puts "end"
+end
+
+def write_enum(writer, name, node)
+  writer.puts "module #{name}"
+  node['members'].each do |k, v|
+    writer.puts "  #{k.underscore.upcase} = #{v['ordinal']}"
+  end
+  writer.puts "end"
+end
+
 def write_struct(writer, name, node)
   writer.puts <<-CODE
 module #{name}
-  def self.bytes
-    #{node['bytes']}
-  end
-
-  def self.pointers
-    #{node['ptrs']}
-  end
-
   class Reader
-    def initialize(reader)
-      @reader = reader
+    def initialize(struct_reader)
+      @reader = struct_reader
     end
   CODE
+
   # members
   node['members'].each do |member, member_node|
     next if member_node['type'] == 'struct'
@@ -131,8 +181,8 @@ module #{name}
   writer.puts "  end" # END BUILDER
   writer.puts <<-CODE
   class Builder
-    def initialize(builder)
-      @builder = builder
+    def initialize(struct_builder)
+      @builder = struct_builder
     end
   end
   CODE
@@ -147,7 +197,38 @@ module #{name}
     end
   end
 
+  # enums
+  node['members'].each do |member, member_node|
+    if member_node['type'] == 'enum'
+      writer.puts ""
+      writer.indent do
+        write_enum(writer, member, member_node)
+      end
+    end
+  end
+
+  # unions
+  node['members'].each do |member, member_node|
+    if member_node['type'] == 'union'
+      writer.puts ""
+      writer.indent do
+        write_union(writer, member, member_node)
+      end
+    end
+  end
+
   writer.puts "end"
+end
+
+def visit(writer, name, node)
+  case node['type']
+  when 'struct'
+    write_struct(writer, name, node)
+  when 'union'
+    write_union(writer, name, node)
+  when 'enum'
+    write_enum(writer, name, node)
+  end
 end
 
 def main
@@ -156,7 +237,7 @@ def main
     writer.puts "module CapnProto"
     writer.puts "  module Schema"
     writer.indent(4) do
-      write_struct(writer, k, SCHEMA[k])
+      visit(writer, k, SCHEMA[k])
     end
     writer.puts "  end"
     writer.puts "end"

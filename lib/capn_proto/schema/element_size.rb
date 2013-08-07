@@ -1,32 +1,14 @@
 module CapnProto
   module Schema
     module ElementSize
-      def self.bytes
-
-      end
-
-      def self.pointers
-
-      end
-
-      class Reader
-        def initialize(reader)
-          @reader = reader
-        end
-
-
-
-
-
-
-
-
-      end
-      class Builder
-        def initialize(builder)
-          @builder = builder
-        end
-      end
+      EMPTY  = 0
+      BIT  = 1
+      BYTE  = 2
+      TWO_BYTES  = 3
+      FOUR_BYTES  = 4
+      EIGHT_BYTES  = 5
+      POINTER  = 6
+      INLINE_COMPOSITE  = 7
     end
   end
 end

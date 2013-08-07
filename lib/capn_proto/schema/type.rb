@@ -1,23 +1,27 @@
 module CapnProto
   module Schema
     module Type
-      def self.bytes
-        16
-      end
-
-      def self.pointers
-        1
-      end
-
       class Reader
-        def initialize(reader)
-          @reader = reader
+        def initialize(struct_reader)
+          @reader = struct_reader
         end
 
       end
       class Builder
-        def initialize(builder)
-          @builder = builder
+        def initialize(struct_builder)
+          @builder = struct_builder
+        end
+      end
+
+      module Body
+        def get_enum_type()
+          @reader.get_uint64(0)
+        end
+        def get_struct_type()
+          @reader.get_uint64(0)
+        end
+        def get_interface_type()
+          @reader.get_uint64(0)
         end
       end
     end
