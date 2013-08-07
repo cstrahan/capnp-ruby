@@ -131,7 +131,7 @@ def write_struct_member_getter(writer, member_name, member)
   byte_offset = ((bits[0])/8)
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil)"
+  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil))"
   writer.puts "end"
 end
 
@@ -165,13 +165,14 @@ def write_non_primitive_getter(writer, member_name, member)
   if member["ptr"]
     ptr = member["ptr"]
     writer.puts "def get_#{member_name.underscore}()"
-    writer.puts "  #{klass}::Reader.new(@reader.get_struct_field(#{ptr}, nil)"
+    writer.puts "  #{klass}::Reader.new(@reader.get_struct_field(#{ptr}, nil))"
     writer.puts "end"
   else
     bits = member['bits']
     byte_offset = ((bits[0])/8)
+    # must be enum, right?
     writer.puts "def get_#{member_name.underscore}()"
-    writer.puts "  @reader.get_#{type}_field(#{byte_offset}"
+    writer.puts "  @reader.get_uint16(#{byte_offset})"
     writer.puts "end"
   end
 end

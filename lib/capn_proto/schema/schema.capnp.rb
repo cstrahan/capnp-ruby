@@ -23,11 +23,11 @@ module CapnProto
         end
 
         def get_nested_nodes()
-          Node::NestedNode::List::Reader.new(@reader.get_list_field(1, nil)
+          Node::NestedNode::List::Reader.new(@reader.get_list_field(1, nil))
         end
 
         def get_annotations()
-          Annotation::List::Reader.new(@reader.get_list_field(2, nil)
+          Annotation::List::Reader.new(@reader.get_list_field(2, nil))
         end
 
         def get_body()
@@ -81,27 +81,27 @@ module CapnProto
           end
 
           def get_file_node()
-            FileNode::Reader.new(@reader.get_struct_field(3, nil)
+            FileNode::Reader.new(@reader.get_struct_field(3, nil))
           end
 
           def get_struct_node()
-            StructNode::Reader.new(@reader.get_struct_field(3, nil)
+            StructNode::Reader.new(@reader.get_struct_field(3, nil))
           end
 
           def get_enum_node()
-            EnumNode::Reader.new(@reader.get_struct_field(3, nil)
+            EnumNode::Reader.new(@reader.get_struct_field(3, nil))
           end
 
           def get_interface_node()
-            InterfaceNode::Reader.new(@reader.get_struct_field(3, nil)
+            InterfaceNode::Reader.new(@reader.get_struct_field(3, nil))
           end
 
           def get_const_node()
-            ConstNode::Reader.new(@reader.get_struct_field(3, nil)
+            ConstNode::Reader.new(@reader.get_struct_field(3, nil))
           end
 
           def get_annotation_node()
-            AnnotationNode::Reader.new(@reader.get_struct_field(3, nil)
+            AnnotationNode::Reader.new(@reader.get_struct_field(3, nil))
           end
         end
       end
@@ -210,7 +210,7 @@ module CapnProto
           end
 
           def get_list_type()
-            Type::Reader.new(@reader.get_struct_field(0, nil)
+            Type::Reader.new(@reader.get_struct_field(0, nil))
           end
 
           def get_enum_type()
@@ -355,7 +355,7 @@ module CapnProto
         end
 
         def get_value()
-          Value::Reader.new(@reader.get_struct_field(0, nil)
+          Value::Reader.new(@reader.get_struct_field(0, nil))
         end
       end
 
@@ -372,7 +372,7 @@ module CapnProto
         end
 
         def get_imports()
-          FileNode::Import::List::Reader.new(@reader.get_list_field(0, nil)
+          FileNode::Import::List::Reader.new(@reader.get_list_field(0, nil))
         end
       end
 
@@ -429,11 +429,11 @@ module CapnProto
         end
 
         def get_preferred_list_encoding()
-          @reader.get_enum_field(4
+          @reader.get_uint16(4)
         end
 
         def get_members()
-          StructNode::Member::List::Reader.new(@reader.get_list_field(0, nil)
+          StructNode::Member::List::Reader.new(@reader.get_list_field(0, nil))
         end
       end
 
@@ -462,7 +462,7 @@ module CapnProto
           end
 
           def get_annotations()
-            Annotation::List::Reader.new(@reader.get_list_field(1, nil)
+            Annotation::List::Reader.new(@reader.get_list_field(1, nil))
           end
 
           def get_body()
@@ -491,15 +491,15 @@ module CapnProto
             end
 
             def get_field_member()
-              StructNode::Field::Reader.new(@reader.get_struct_field(2, nil)
+              StructNode::Field::Reader.new(@reader.get_struct_field(2, nil))
             end
 
             def get_union_member()
-              StructNode::Union::Reader.new(@reader.get_struct_field(2, nil)
+              StructNode::Union::Reader.new(@reader.get_struct_field(2, nil))
             end
 
             def get_group_member()
-              StructNode::Group::Reader.new(@reader.get_struct_field(2, nil)
+              StructNode::Group::Reader.new(@reader.get_struct_field(2, nil))
             end
           end
         end
@@ -516,11 +516,11 @@ module CapnProto
           end
 
           def get_type()
-            Type::Reader.new(@reader.get_struct_field(0, nil)
+            Type::Reader.new(@reader.get_struct_field(0, nil))
           end
 
           def get_default_value()
-            Value::Reader.new(@reader.get_struct_field(1, nil)
+            Value::Reader.new(@reader.get_struct_field(1, nil))
           end
         end
 
@@ -542,7 +542,7 @@ module CapnProto
           end
 
           def get_members()
-            StructNode::Member::List::Reader.new(@reader.get_list_field(0, nil)
+            StructNode::Member::List::Reader.new(@reader.get_list_field(0, nil))
           end
         end
 
@@ -560,7 +560,7 @@ module CapnProto
           end
 
           def get_members()
-            StructNode::Member::List::Reader.new(@reader.get_list_field(0, nil)
+            StructNode::Member::List::Reader.new(@reader.get_list_field(0, nil))
           end
         end
 
@@ -578,7 +578,7 @@ module CapnProto
         end
 
         def get_enumerants()
-          EnumNode::Enumerant::List::Reader.new(@reader.get_list_field(0, nil)
+          EnumNode::Enumerant::List::Reader.new(@reader.get_list_field(0, nil))
         end
       end
 
@@ -603,7 +603,7 @@ module CapnProto
           end
 
           def get_annotations()
-            Annotation::List::Reader.new(@reader.get_list_field(1, nil)
+            Annotation::List::Reader.new(@reader.get_list_field(1, nil))
           end
         end
 
@@ -621,7 +621,7 @@ module CapnProto
         end
 
         def get_methods()
-          InterfaceNode::Method::List::Reader.new(@reader.get_list_field(0, nil)
+          InterfaceNode::Method::List::Reader.new(@reader.get_list_field(0, nil))
         end
       end
 
@@ -646,7 +646,7 @@ module CapnProto
           end
 
           def get_params()
-            InterfaceNode::Method::Param::List::Reader.new(@reader.get_list_field(1, nil)
+            InterfaceNode::Method::Param::List::Reader.new(@reader.get_list_field(1, nil))
           end
 
           def get_required_param_count()
@@ -654,11 +654,11 @@ module CapnProto
           end
 
           def get_return_type()
-            Type::Reader.new(@reader.get_struct_field(2, nil)
+            Type::Reader.new(@reader.get_struct_field(2, nil))
           end
 
           def get_annotations()
-            Annotation::List::Reader.new(@reader.get_list_field(3, nil)
+            Annotation::List::Reader.new(@reader.get_list_field(3, nil))
           end
         end
 
@@ -679,15 +679,15 @@ module CapnProto
             end
 
             def get_type()
-              Type::Reader.new(@reader.get_struct_field(1, nil)
+              Type::Reader.new(@reader.get_struct_field(1, nil))
             end
 
             def get_default_value()
-              Value::Reader.new(@reader.get_struct_field(2, nil)
+              Value::Reader.new(@reader.get_struct_field(2, nil))
             end
 
             def get_annotations()
-              Annotation::List::Reader.new(@reader.get_list_field(3, nil)
+              Annotation::List::Reader.new(@reader.get_list_field(3, nil))
             end
           end
 
@@ -706,11 +706,11 @@ module CapnProto
         end
 
         def get_type()
-          Type::Reader.new(@reader.get_struct_field(0, nil)
+          Type::Reader.new(@reader.get_struct_field(0, nil))
         end
 
         def get_value()
-          Value::Reader.new(@reader.get_struct_field(1, nil)
+          Value::Reader.new(@reader.get_struct_field(1, nil))
         end
       end
 
@@ -727,7 +727,7 @@ module CapnProto
         end
 
         def get_type()
-          Type::Reader.new(@reader.get_struct_field(0, nil)
+          Type::Reader.new(@reader.get_struct_field(0, nil))
         end
 
         def get_targets_file()
@@ -788,11 +788,11 @@ module CapnProto
         end
 
         def get_nodes()
-          Node::List::Reader.new(@reader.get_list_field(0, nil)
+          Node::List::Reader.new(@reader.get_list_field(0, nil))
         end
 
         def get_requested_files()
-          Int64::List::Reader.new(@reader.get_list_field(1, nil)
+          Int64::List::Reader.new(@reader.get_list_field(1, nil))
         end
       end
 
