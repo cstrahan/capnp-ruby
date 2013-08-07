@@ -31,8 +31,7 @@ module CapnProto
         end
 
         def get_body()
-          tag = @reader.get_uint16(16)
-          Body::Reader.new(@reader.get_struct_field(16, nil), tag)
+          Body::Reader.new(@reader)
         end
       end
 
@@ -78,6 +77,7 @@ module CapnProto
           ANNOTATION_NODE = 5
 
           def which(struct_reader)
+            @reader.get_uin16(16)
           end
 
           def get_file_node()
@@ -113,8 +113,7 @@ module CapnProto
         end
 
         def get_body()
-          tag = @reader.get_uint16(0)
-          Body::Reader.new(@reader.get_struct_field(0, nil), tag)
+          Body::Reader.new(@reader)
         end
       end
 
@@ -151,6 +150,7 @@ module CapnProto
           OBJECT_TYPE = 18
 
           def which(struct_reader)
+            @reader.get_uin16(0)
           end
 
           def get_void_type()
@@ -238,8 +238,7 @@ module CapnProto
         end
 
         def get_body()
-          tag = @reader.get_uint16(0)
-          Body::Reader.new(@reader.get_struct_field(0, nil), tag)
+          Body::Reader.new(@reader)
         end
       end
 
@@ -276,6 +275,7 @@ module CapnProto
           OBJECT_VALUE = 18
 
           def which(struct_reader)
+            @reader.get_uin16(0)
           end
 
           def get_void_value()
@@ -466,8 +466,7 @@ module CapnProto
           end
 
           def get_body()
-            tag = @reader.get_uint16(4)
-            Body::Reader.new(@reader.get_struct_field(4, nil), tag)
+            Body::Reader.new(@reader)
           end
         end
 
@@ -488,6 +487,7 @@ module CapnProto
             GROUP_MEMBER = 2
 
             def which(struct_reader)
+              @reader.get_uin16(4)
             end
 
             def get_field_member()

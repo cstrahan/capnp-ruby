@@ -108,12 +108,9 @@ end
 
 def write_union_member_getter(writer, member_name, member)
   type = member_name.capitalize
-  bits = member['bits']
-  byte_offset = ((bits[0])/8)
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  tag = @reader.get_uint16(#{byte_offset})"
-  writer.puts "  #{type}::Reader.new(@reader.get_struct_field(#{byte_offset}, nil), tag)"
+  writer.puts "  #{type}::Reader.new(@reader)"
   writer.puts "end"
 end
 
@@ -209,6 +206,10 @@ def write_member_getter(writer, member_name, member)
 end
 
 def write_union(writer, name, node)
+  # type = member_name.capitalize
+  bits = node['bits']
+  discriminant_offset = ((bits[0])/8)
+
   writer.puts <<-CODE
 module #{name.capitalize}
   class Reader
@@ -226,6 +227,7 @@ module #{name.capitalize}
   writer.puts <<-CODE
 
     def which(struct_reader)
+      @reader.get_uin16(#{discriminant_offset})
     end
   CODE
 
