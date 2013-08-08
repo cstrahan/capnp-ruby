@@ -2,7 +2,7 @@
 
 # Ruby Edition
 
-This is here is a [Ruby][ruby] compiler for the [Cap'n Proto]() data interchange format.
+This here is a [Ruby][ruby] compiler for the [Cap'n Proto]() data interchange format.
 
 # Status
 
