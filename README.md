@@ -1,4 +1,6 @@
-![alt text][logo]
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cstrahan/capnp-ruby/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
+![Cap'n Proto][logo]
 
 # Ruby Edition
 
