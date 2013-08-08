@@ -76,7 +76,7 @@ module CapnProto
           CONST_NODE = 4
           ANNOTATION_NODE = 5
 
-          def which(struct_reader)
+          def which
             @reader.get_uin16(16)
           end
 
@@ -149,7 +149,7 @@ module CapnProto
           INTERFACE_TYPE = 17
           OBJECT_TYPE = 18
 
-          def which(struct_reader)
+          def which
             @reader.get_uin16(0)
           end
 
@@ -274,7 +274,7 @@ module CapnProto
           INTERFACE_VALUE = 17
           OBJECT_VALUE = 18
 
-          def which(struct_reader)
+          def which
             @reader.get_uin16(0)
           end
 
@@ -486,7 +486,7 @@ module CapnProto
             UNION_MEMBER = 1
             GROUP_MEMBER = 2
 
-            def which(struct_reader)
+            def which
               @reader.get_uin16(4)
             end
 

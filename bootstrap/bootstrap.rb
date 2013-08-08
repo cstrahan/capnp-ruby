@@ -226,7 +226,7 @@ module #{name.capitalize}
 
   writer.puts <<-CODE
 
-    def which(struct_reader)
+    def which
       @reader.get_uin16(#{discriminant_offset})
     end
   CODE
