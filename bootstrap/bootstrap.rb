@@ -132,13 +132,46 @@ def write_struct_member_getter(writer, member_name, member)
   writer.puts "end"
 end
 
-def write_list_member_getter(writer, member_name, member)
+def write_text_member_getter(writer, member_name, member)
   ptr = member['ptr']
-  type = member['type'][5..-2]
-  klass = klass_for(type)
 
   writer.puts "def get_#{member_name.underscore}()"
-  writer.puts "  #{klass}::List::Reader.new(@reader.get_list_field(#{ptr}, nil))"
+  writer.puts "  ::CapnProto::Text::Reader.new(@reader.get_text_member(#{ptr}))"
+  writer.puts "end"
+end
+
+def write_object_member_getter(writer, member_name, member)
+  ptr = member['ptr']
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  ::CapnProto::DynamicObject.new(@reader.get_object_member(#{ptr}))"
+  writer.puts "end"
+end
+
+def write_data_member_getter(writer, member_name, member)
+  ptr = member['ptr']
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  ::CapnProto::Data::Reader.new(@reader.get_data_member(#{ptr}))"
+  writer.puts "end"
+end
+
+def write_list_member_getter(writer, member_name, member)
+  ptr = member['ptr']
+
+  is_primitive = member['type'][5] != "."
+  if is_primitive
+    type = member['type'][5..-2]
+    list_klass = "::CapnProto::#{type}List"
+    klass = klass_for(type)
+  else
+    type = member['type'][5..-2]
+    klass = klass_for(type)
+    list_klass = "#{klass}::List"
+  end
+
+  writer.puts "def get_#{member_name.underscore}()"
+  writer.puts "  #{list_klass}::Reader.new(@reader.get_list_field(#{ptr}, nil))"
   writer.puts "end"
 end
 
@@ -188,6 +221,10 @@ def write_member_getter(writer, member_name, member)
     write_bool_member_getter(writer, member_name, member)
   when "struct"
     write_struct_member_getter(writer, member_name, member)
+  when "Data"
+    write_data_member_getter(writer, member_name, member)
+  when "Object"
+    write_object_member_getter(writer, member_name, member)
   when "Text"
     write_text_member_getter(writer, member_name, member)
   when "union"

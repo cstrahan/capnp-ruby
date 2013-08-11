@@ -11,7 +11,7 @@ module CapnProto
         end
 
         def get_display_name()
-          @reader.get_text_field(0, "")
+          ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
         end
 
         def get_display_name_prefix_length()
@@ -48,7 +48,7 @@ module CapnProto
           end
 
           def get_name()
-            @reader.get_text_field(0, "")
+            ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
           end
 
           def get_id()
@@ -327,20 +327,32 @@ module CapnProto
           end
 
           def get_text_value()
-            @reader.get_text_field(0, "")
+            ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
           end
 
+          def get_data_value()
+            ::CapnProto::Data::Reader.new(@reader.get_data_member(0))
+          end
 
+          def get_list_value()
+            ::CapnProto::DynamicObject.new(@reader.get_object_member(0))
+          end
 
           def get_enum_value()
             @reader.get_uint16(8)
           end
 
+          def get_struct_value()
+            ::CapnProto::DynamicObject.new(@reader.get_object_member(0))
+          end
 
           def get_interface_value()
             nil
           end
 
+          def get_object_value()
+            ::CapnProto::DynamicObject.new(@reader.get_object_member(0))
+          end
         end
       end
     end
@@ -393,7 +405,7 @@ module CapnProto
           end
 
           def get_name()
-            @reader.get_text_field(0, "")
+            ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
           end
         end
 
@@ -450,7 +462,7 @@ module CapnProto
           end
 
           def get_name()
-            @reader.get_text_field(0, "")
+            ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
           end
 
           def get_ordinal()
@@ -595,7 +607,7 @@ module CapnProto
           end
 
           def get_name()
-            @reader.get_text_field(0, "")
+            ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
           end
 
           def get_code_order()
@@ -638,7 +650,7 @@ module CapnProto
           end
 
           def get_name()
-            @reader.get_text_field(0, "")
+            ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
           end
 
           def get_code_order()
@@ -675,7 +687,7 @@ module CapnProto
             end
 
             def get_name()
-              @reader.get_text_field(0, "")
+              ::CapnProto::Text::Reader.new(@reader.get_text_member(0))
             end
 
             def get_type()
@@ -792,7 +804,7 @@ module CapnProto
         end
 
         def get_requested_files()
-          Int64::List::Reader.new(@reader.get_list_field(1, nil))
+          ::CapnProto::UInt64List::Reader.new(@reader.get_list_field(1, nil))
         end
       end
 
