@@ -12,6 +12,9 @@ Gem::Specification.new do |s|
   s.email = ['charles.c.strahan@gmail.com']
 
   s.add_development_dependency 'rspec', '2.14.1'
+  s.add_development_dependency 'rake'
+  s.add_development_dependency 'awesome_print'
+  s.add_development_dependency 'interactive_editor'
 
   s.require_paths = ['lib']
 
