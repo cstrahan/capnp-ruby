@@ -4,16 +4,17 @@
 
 # Ruby Edition
 
-This here is a [Ruby][ruby] compiler for the [Cap'n Proto]() data interchange format.
+This here is a [Ruby][ruby] wrapper for the [Cap'n Proto]() data interchange format.
 
 # Status
 
-I'm currently bootstrapping this library with some really, really nasty
-throw away code in `bootstrap/`. Once the initial schema reader is
-ready, I'll chunk `bootstrap/` and write a proper compiler. My current
-goal is to have that done in the next week (8/18), at which point
-this project will be ready for contributions.
+This project started out as a pure Ruby re-implementation; however, in
+the interest of rolling out support for Cap'n Proto ASAP, I've switched
+gears: this is now a C extension.
+
+Support for [JRuby][jruby] will come after I implement support for Java.
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"
 [capnp]: http://kentonv.github.io/capnproto/ "Cap'n Proto"
+[jruby]: http://jruby.org/ "JRuby
