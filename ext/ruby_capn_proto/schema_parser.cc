@@ -6,7 +6,8 @@
 namespace ruby_capn_proto {
   VALUE SchemaParser::Class;
 
-  void SchemaParser::free(void* p) {
+  void SchemaParser::free(SchemaParser* p) {
+    p->~SchemaParser();
     ruby_xfree(p);
   }
 
