@@ -1,8 +1,7 @@
-require 'mkmf-rice'
-$CXX = "/Users/charlesstrahan/clang-3.2/bin/clang++"
+require 'mkmf'
 
-$CPPFLAGS += " -std=c++11"
-$CPPFLAGS += " -stdlib=libc++"
+CONFIG['CXX'] = "/Users/charlesstrahan/clang-3.2/bin/clang++"
+CONFIG['CXXFLAGS'] += " -std=c++11 -stdlib=libc++"
 
 if enable_config('debug')
   $CFLAGS += " -O0 -ggdb3"
@@ -15,8 +14,7 @@ $LDFLAGS += " -lkj"
 HEADER_DIRS = ["/usr/local/include"]
 LIB_DIRS    = ["/usr/local/lib"]
 
-create_makefile('capn_proto_ext')
-
+create_makefile('ruby_capn_proto/init')
 
 
 # HACK ATTACK

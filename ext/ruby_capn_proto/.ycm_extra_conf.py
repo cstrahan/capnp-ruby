@@ -11,24 +11,6 @@ def RubyInclude():
   rubyhdrdir = process.stdout.read()
   return rubyhdrdir
 
-def RiceInclude():
-  rice_path_helper = """
-  def locate_gem(name)
-    spec = Bundler.load.specs.find{|s| s.name == name }
-    raise GemNotFound, "Could not find gem '#{name}' in the current bundle." unless spec
-    if spec.name == 'bundler'
-      return File.expand_path('../../../', __FILE__)
-    end
-    spec.full_gem_path
-  end
-
-  print locate_gem("rice")
-  """
-  cmd = ["bundle", "exec", "ruby", "-e", rice_path_helper]
-  process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  ricehdrdir = os.path.join(process.stdout.read(), "ruby/lib/include/")
-  return ricehdrdir
-
 flags = [
 '-Wall',
 '-Wextra',
@@ -40,7 +22,6 @@ flags = [
 '-I', '.',
 '-I', '/usr/local/include',
 '-I', RubyInclude(),
-'-I', RiceInclude(),
 ]
 
 def DirectoryOfThisScript():

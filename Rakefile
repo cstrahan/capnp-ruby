@@ -5,8 +5,9 @@ Gem::PackageTask.new(GEMSPEC) do |pkg|
 end
 
 require 'rake/extensiontask'
-Rake::ExtensionTask.new('capn_proto_ext', GEMSPEC) do |ext|
-  ext.ext_dir = 'ext'
+Rake::ExtensionTask.new('init', GEMSPEC) do |ext|
+  ext.ext_dir = 'ext/ruby_capn_proto'
+  ext.lib_dir = 'lib/capn_proto'
   ext.source_pattern = "*.{cc,h}"
 end
 task :build => [:clean_build, :compile]
@@ -18,7 +19,7 @@ task :default => [:build, :spec]
 
 task :clean_build do
   rm_r "tmp" rescue nil
-  rm_r "lib/capn_proto_ext.bundle" rescue nil
+  # rm_r "lib/capn_proto_ext.bundle" rescue nil
 end
 
 task :console do

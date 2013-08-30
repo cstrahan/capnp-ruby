@@ -1,1 +1,1 @@
-require 'capn_proto_ext'
+require 'capn_proto/init'
