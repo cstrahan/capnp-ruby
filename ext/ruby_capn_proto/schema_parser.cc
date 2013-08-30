@@ -1,5 +1,6 @@
 #include "ruby_capn_proto.h"
 #include "schema_parser.h"
+#include "schema.h"
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
@@ -52,7 +53,6 @@ namespace ruby_capn_proto {
       auto schema = parser.parseDiskFile(StringValueCStr(rb_display_name),
                                          StringValueCStr(rb_disk_path),
                                          imports);
-      return Qnil;
+      return Schema::create(schema);
   }
-
 }
