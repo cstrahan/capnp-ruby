@@ -6,6 +6,13 @@
 namespace ruby_capn_proto {
   VALUE Schema::Class;
 
+  void Schema::Init() {
+    ClassBuilder("Schema", rb_cObject).
+      defineAlloc(&alloc).
+      defineMethod("get_proto", &get_proto).
+      store(&Class);
+  }
+
   void Schema::free(capnp::ParsedSchema* p) {
     p->~ParsedSchema();
     ruby_xfree(p);
@@ -30,12 +37,5 @@ namespace ruby_capn_proto {
 
   VALUE Schema::get_proto(VALUE self) {
     return SchemaNodeReader::create(Schema::unwrap(self)->getProto());
-  }
-
-  void Schema::Init() {
-    ClassBuilder("Schema", rb_cObject).
-      defineAlloc(&alloc).
-      defineMethod("get_proto", &get_proto).
-      store(&Class);
   }
 }

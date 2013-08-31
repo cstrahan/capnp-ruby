@@ -12,5 +12,7 @@ describe CapnProto do
       imports);
 
     node_reader = schema.get_proto
+    nodes = node_reader.nested_nodes
+    expect(nodes.size).to eq 2
   end
 end

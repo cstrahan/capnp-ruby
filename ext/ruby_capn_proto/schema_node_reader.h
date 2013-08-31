@@ -8,7 +8,7 @@ namespace ruby_capn_proto {
     static VALUE create(capnp::schema::Node::Reader reader);
     static void free(capnp::schema::Node::Reader* p);
     static capnp::schema::Node::Reader* unwrap(VALUE self);
-    static VALUE get_proto(VALUE self);
+    static VALUE get_nested_nodes(VALUE self);
     static VALUE is_struct(VALUE self);
     static VALUE is_enum(VALUE self);
 

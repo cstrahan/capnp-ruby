@@ -24,7 +24,7 @@ namespace ruby_capn_proto {
   VALUE SchemaParser::initialize(VALUE self) {
     capnp::SchemaParser* p = unwrap(self);
     new (p) capnp::SchemaParser();
-   
+
     return Qnil;
   }
 

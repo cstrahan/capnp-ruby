@@ -1,5 +1,6 @@
 #include "ruby_capn_proto.h"
 #include "schema_node_reader.h"
+#include "list_nested_node_reader.h"
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
@@ -8,6 +9,8 @@ namespace ruby_capn_proto {
   void SchemaNodeReader::Init() {
     ClassBuilder("SchemaNodeReader", rb_cObject).
       defineAlloc(&alloc).
+      defineMethod("nested_nodes", &get_nested_nodes).
+      defineMethod("struct?", &is_struct).
       store(&Class);
   }
 
@@ -33,11 +36,15 @@ namespace ruby_capn_proto {
     return p;
   }
 
+  VALUE SchemaNodeReader::get_nested_nodes(VALUE self) {
+    return ListNestedNodeReader::create(unwrap(self)->getNestedNodes());
+  }
+
   VALUE SchemaNodeReader::is_struct(VALUE self) {
-    unwrap(self)->isStruct() ? Qtrue : Qfalse;
+    return unwrap(self)->isStruct() ? Qtrue : Qfalse;
   }
 
   VALUE SchemaNodeReader::is_enum(VALUE self) {
-    unwrap(self)->isEnum() ? Qtrue : Qfalse;
+    return unwrap(self)->isEnum() ? Qtrue : Qfalse;
   }
 }
