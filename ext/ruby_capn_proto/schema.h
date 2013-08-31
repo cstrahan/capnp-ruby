@@ -8,6 +8,7 @@ namespace ruby_capn_proto {
     static VALUE create(capnp::ParsedSchema schema);
     static void free(capnp::ParsedSchema* p);
     static capnp::ParsedSchema* unwrap(VALUE self);
+    static VALUE get_proto(VALUE self);
 
     static VALUE Class;
   };

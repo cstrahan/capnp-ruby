@@ -10,6 +10,8 @@
 #include <capnp/serialize-packed.h>
 #include <capnp/message.h>
 #include <capnp/schema-parser.h>
+#include <capnp/schema.h>
+#include <capnp/message.h>
 
 #include <ruby.h>
 #ifdef __

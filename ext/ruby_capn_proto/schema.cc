@@ -1,5 +1,6 @@
 #include "ruby_capn_proto.h"
 #include "schema.h"
+#include "schema_node_reader.h"
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
@@ -27,9 +28,14 @@ namespace ruby_capn_proto {
     return rb_schema;
   }
 
+  VALUE Schema::get_proto(VALUE self) {
+    return SchemaNodeReader::create(Schema::unwrap(self)->getProto());
+  }
+
   void Schema::Init() {
     ClassBuilder("Schema", rb_cObject).
       defineAlloc(&alloc).
+      defineMethod("get_proto", &get_proto).
       store(&Class);
   }
 }
