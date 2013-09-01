@@ -32,10 +32,10 @@ namespace ruby_capn_proto {
   }
 
   VALUE ListNestedNodeReader::create(NodeList schema) {
-    VALUE rb_schema = alloc(Class);
-    NodeList* wrapped_schema = unwrap(rb_schema);
+    VALUE rb_obj = alloc(Class);
+    NodeList* wrapped_schema = unwrap(rb_obj);
     *wrapped_schema = kj::mv(schema);
-    return rb_schema;
+    return rb_obj;
   }
 
   VALUE ListNestedNodeReader::size(VALUE self) {
