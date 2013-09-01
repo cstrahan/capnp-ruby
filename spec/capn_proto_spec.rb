@@ -18,7 +18,6 @@ def walk_schema(schema, level)
       puts "#{padding}FIELD: " << field_name
     end
   end
-
 end
 
 describe CapnProto do

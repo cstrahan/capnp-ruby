@@ -6,6 +6,7 @@
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
 #include "field_list.h"
+#include "message_reader.h"
 
 extern "C" {
   void Init_init();
@@ -19,6 +20,7 @@ extern "C" {
     SchemaNodeReader::Init();
     ParsedSchema::Init();
     StructSchema::Init();
+    MessageReader::Init();
     ListNestedNodeReader::Init();
     NestedNodeReader::Init();
     FieldList::Init();
