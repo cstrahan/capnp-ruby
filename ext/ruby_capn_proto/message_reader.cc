@@ -22,6 +22,10 @@ namespace ruby_capn_proto {
   }
 
   VALUE MessageReader::get_root(VALUE self, VALUE rb_schema) {
+    if (rb_respond_to(rb_schema, rb_intern("schema"))) {
+      rb_schema = rb_funcall(rb_schema, rb_intern("schema"), 0);
+    }
+
     auto schema = *StructSchema::unwrap(rb_schema);
     auto reader = unwrap(self)->getRoot<capnp::DynamicStruct>(schema);
     return DynamicStructReader::create(reader);

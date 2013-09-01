@@ -5,8 +5,11 @@
 #include "struct_schema.h"
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
-#include "field_list.h"
+#include "dynamic_struct_reader.h"
+#include "dynamic_list_reader.h"
+#include "stream_fd_message_reader.h"
 #include "message_reader.h"
+#include "field_list.h"
 
 extern "C" {
   void Init_init();
@@ -23,6 +26,8 @@ extern "C" {
     MessageReader::Init();
     ListNestedNodeReader::Init();
     NestedNodeReader::Init();
+    DynamicStructReader::Init();
+    StreamFdMessageReader::Init();
     FieldList::Init();
   }
 }

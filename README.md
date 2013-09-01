@@ -4,15 +4,15 @@
 
 # Ruby Edition
 
-This here is a [Ruby][ruby] wrapper for the [Cap'n Proto][capnp] data interchange format.
+This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'n Proto][capnp].
 
 # Status
 
-This project started out as a pure Ruby re-implementation; however, in
-the interest of rolling out support for Cap'n Proto ASAP, I've switched
-gears: this is now a C extension.
+- [x] Schema parsing (and recursive Module definition)
+- [ ] Message reading (almost ready)
+- [ ] Message writing
 
-Support for [JRuby][jruby] will come after I implement support for Java.
+Proper support for [JRuby][jruby] will come after I implement support for Java.
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"
