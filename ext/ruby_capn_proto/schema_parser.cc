@@ -6,6 +6,7 @@
 
 namespace ruby_capn_proto {
   VALUE SchemaParser::Class;
+  using WrappedType = capnp::SchemaParser;
 
   void SchemaParser::Init() {
     ClassBuilder("SchemaParser", rb_cObject).
@@ -21,18 +22,18 @@ namespace ruby_capn_proto {
   }
 
   VALUE SchemaParser::alloc(VALUE klass) {
-    return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(capnp::SchemaParser)));
+    return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(WrappedType)));
   }
 
-  capnp::SchemaParser* SchemaParser::unwrap(VALUE self) {
-    capnp::SchemaParser* p;
-    Data_Get_Struct(self, capnp::SchemaParser, p);
+  WrappedType* SchemaParser::unwrap(VALUE self) {
+    WrappedType* p;
+    Data_Get_Struct(self, WrappedType, p);
     return p;
   }
 
   VALUE SchemaParser::initialize(VALUE self) {
-    capnp::SchemaParser* p = unwrap(self);
-    new (p) capnp::SchemaParser();
+    WrappedType* p = unwrap(self);
+    new (p) WrappedType();
 
     return Qnil;
   }

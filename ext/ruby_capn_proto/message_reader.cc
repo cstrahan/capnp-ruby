@@ -2,6 +2,7 @@
 #include "message_reader.h"
 #include "class_builder.h"
 #include "struct_schema.h"
+#include "dynamic_struct_reader.h"
 #include "util.h"
 
 namespace ruby_capn_proto {
@@ -16,14 +17,13 @@ namespace ruby_capn_proto {
 
   WrappedType* MessageReader::unwrap(VALUE self) {
     WrappedType* p;
-    Data_Get_Struct(self, capnp::MessageReader, p);
+    Data_Get_Struct(self, WrappedType, p);
     return p;
   }
 
   VALUE MessageReader::get_root(VALUE self, VALUE rb_schema) {
     auto schema = *StructSchema::unwrap(rb_schema);
     auto reader = unwrap(self)->getRoot<capnp::DynamicStruct>(schema);
-    // return DynamicStructReader::create(schema, reader);
-    return Qnil;
+    return DynamicStructReader::create(reader);
   }
 }

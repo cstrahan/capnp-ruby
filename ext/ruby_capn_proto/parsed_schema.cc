@@ -29,7 +29,7 @@ namespace ruby_capn_proto {
 
   WrappedType* ParsedSchema::unwrap(VALUE self) {
     WrappedType* p;
-    Data_Get_Struct(self, capnp::ParsedSchema, p);
+    Data_Get_Struct(self, WrappedType, p);
     return p;
   }
 

@@ -4,6 +4,7 @@
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
+  using WrappedType = capnp::schema::Node::Reader;
   VALUE SchemaNodeReader::Class;
 
   void SchemaNodeReader::Init() {
@@ -15,24 +16,24 @@ namespace ruby_capn_proto {
   }
 
   VALUE SchemaNodeReader::alloc(VALUE klass) {
-    return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(capnp::schema::Node::Reader)));
+    return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(WrappedType)));
   }
 
-  VALUE SchemaNodeReader::create(capnp::schema::Node::Reader reader) {
+  VALUE SchemaNodeReader::create(WrappedType reader) {
     VALUE rb_obj = alloc(Class);
-    capnp::schema::Node::Reader* wrapped = unwrap(rb_obj);
+    WrappedType* wrapped = unwrap(rb_obj);
     *wrapped = kj::mv(reader);
     return rb_obj;
   }
 
-  void SchemaNodeReader::free(capnp::schema::Node::Reader* p) {
+  void SchemaNodeReader::free(WrappedType* p) {
     p->~Reader();
     ruby_xfree(p);
   }
 
-  capnp::schema::Node::Reader* SchemaNodeReader::unwrap(VALUE self) {
-    capnp::schema::Node::Reader* p;
-    Data_Get_Struct(self, capnp::schema::Node::Reader, p);
+  WrappedType* SchemaNodeReader::unwrap(VALUE self) {
+    WrappedType* p;
+    Data_Get_Struct(self, WrappedType, p);
     return p;
   }
 
