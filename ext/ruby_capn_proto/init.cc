@@ -2,6 +2,7 @@
 #include "schema.h"
 #include "schema_parser.h"
 #include "schema_node_reader.h"
+#include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
 
 extern "C" {
@@ -16,5 +17,6 @@ extern "C" {
     Schema::Init();
     SchemaNodeReader::Init();
     ListNestedNodeReader::Init();
+    NestedNodeReader::Init();
   }
 }

@@ -10,6 +10,8 @@ namespace ruby_capn_proto {
     ClassBuilder("Schema", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("get_proto", &get_proto).
+      defineMethod("get_nested", &get_nested).
+      // defineMethod("as_struct", &as_struct).
       store(&Class);
   }
 
@@ -28,14 +30,29 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE Schema::create(capnp::ParsedSchema schema) {
+  VALUE Schema::create(VALUE parent, capnp::ParsedSchema schema) {
     VALUE rb_schema = alloc(Class);
     capnp::ParsedSchema* wrapped_schema = unwrap(rb_schema);
     *wrapped_schema = kj::mv(schema);
+
+    rb_iv_set(rb_schema, "parent", parent);
+
     return rb_schema;
   }
 
   VALUE Schema::get_proto(VALUE self) {
-    return SchemaNodeReader::create(Schema::unwrap(self)->getProto());
+    return SchemaNodeReader::create(unwrap(self)->getProto());
+  }
+
+  kj::String heapString(VALUE rb_string) {
+    auto rb_val = StringValue(rb_string);
+    auto str = RSTRING_PTR(rb_val);
+    auto len = RSTRING_LEN(rb_val);
+    return kj::heapString(str, len);
+  }
+
+  VALUE Schema::get_nested(VALUE self, VALUE rb_name) {
+    auto name = heapString(rb_name);
+    return create(self, unwrap(self)->getNested(name));
   }
 }

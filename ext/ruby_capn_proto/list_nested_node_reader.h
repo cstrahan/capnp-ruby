@@ -12,6 +12,7 @@ namespace ruby_capn_proto {
     static NodeList* unwrap(VALUE self);
     static VALUE create(NodeList reader);
     static VALUE size(VALUE self);
+    static VALUE get(VALUE self, VALUE index);
 
     static VALUE Class;
   };

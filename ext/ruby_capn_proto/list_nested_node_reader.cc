@@ -1,5 +1,6 @@
 #include "ruby_capn_proto.h"
 #include "list_nested_node_reader.h"
+#include "nested_node_reader.h"
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
@@ -11,6 +12,7 @@ namespace ruby_capn_proto {
     ClassBuilder("ListNestedNodeReader", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("size", &size).
+      defineMethod("[]", &get).
       store(&Class);
   }
 
@@ -38,5 +40,11 @@ namespace ruby_capn_proto {
 
   VALUE ListNestedNodeReader::size(VALUE self) {
     return INT2FIX(unwrap(self)->size());
+  }
+
+  VALUE ListNestedNodeReader::get(VALUE self, VALUE index) {
+    auto idx = FIX2INT(index);
+    auto list = *unwrap(self);
+    return NestedNodeReader::create(list[idx]);
   }
 }

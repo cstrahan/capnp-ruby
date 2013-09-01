@@ -6,6 +6,14 @@
 namespace ruby_capn_proto {
   VALUE SchemaParser::Class;
 
+  void SchemaParser::Init() {
+    ClassBuilder("SchemaParser", rb_cObject).
+      defineAlloc(&alloc).
+      defineMethod("initialize", &initialize).
+      defineMethod("parse_disk_file", &parse_disk_file).
+      store(&Class);
+  }
+
   void SchemaParser::free(SchemaParser* p) {
     p->~SchemaParser();
     ruby_xfree(p);
@@ -28,14 +36,6 @@ namespace ruby_capn_proto {
     return Qnil;
   }
 
-  void SchemaParser::Init() {
-    ClassBuilder("SchemaParser", rb_cObject).
-      defineAlloc(&alloc).
-      defineMethod("initialize", &initialize).
-      defineMethod("parse_disk_file", &parse_disk_file).
-      store(&Class);
-  }
-
   static kj::Array<kj::StringPtr> toStringArray(VALUE rb_array) {
     auto len = RARRAY_LEN(rb_array);
     auto array = kj::heapArray<kj::StringPtr>(len);
@@ -49,11 +49,10 @@ namespace ruby_capn_proto {
   }
 
   VALUE SchemaParser::parse_disk_file(VALUE self, VALUE rb_display_name, VALUE rb_disk_path, VALUE rb_import_path) {
-      ::capnp::SchemaParser parser;
       auto imports = toStringArray(rb_import_path);
-      auto schema = parser.parseDiskFile(StringValueCStr(rb_display_name),
-                                         StringValueCStr(rb_disk_path),
-                                         imports);
-      return Schema::create(schema);
+      auto schema = unwrap(self)->parseDiskFile(StringValueCStr(rb_display_name),
+                                                StringValueCStr(rb_disk_path),
+                                                imports);
+      return Schema::create(self, schema);
   }
 }
