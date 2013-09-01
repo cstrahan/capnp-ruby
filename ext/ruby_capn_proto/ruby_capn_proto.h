@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 
+#include <kj/common.h>
 #include <kj/array.h>
 
 #include <capnp/serialize.h>

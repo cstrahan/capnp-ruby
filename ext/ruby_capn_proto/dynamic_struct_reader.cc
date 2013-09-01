@@ -37,6 +37,45 @@ namespace ruby_capn_proto {
     return rb_obj;
   }
 
+  VALUE toRuby(capnp::DynamicValue::Reader value, VALUE parent) {
+    switch (value.getType())
+    {
+      case capnp::DynamicValue::BOOL:
+        return value.as<bool>() ? Qtrue : Qfalse;
+      case capnp::DynamicValue::INT:
+        return INT2FIX(value.as<int64_t>());
+      case capnp::DynamicValue::UINT:
+        return INT2FIX(value.as<uint64_t>());
+      case capnp::DynamicValue::FLOAT:
+        return rb_float_new(value.as<double>());
+      case capnp::DynamicValue::TEXT:
+        auto text = value.as<capnp::Text>();
+        return rb_str_new(text.begin(), text.size());
+      case capnp::DynamicValue::DATA:
+        auto data = value.as<capnp::Data>();
+        return rb_str_new(data.begin(), data.size());
+      case capnp::DynamicValue::LIST:
+        // return DynamicListReader::create(value.as<capnp::List>(), parent);
+        return Qnil;
+      case capnp::DynamicValue::STRUCT:
+        auto x = kj::Maybe<bool>
+          return DynamicStructReader::create(value.as<capnp::DynamicStruct>);
+      case capnp::DynamicValue::ENUM:
+        auto enumerant_maybe = fixMaybe(value.as<capnp::DynamicEnum>().getEnumerant());
+        KJ_IF_MAYBE(enumerant, enumerant_maybe) {
+          auto name = enumerant->getProto().getName();
+          return rb_str_new(name.begin(), name.size());
+        } else {
+          return Qnil;
+        }
+      case capnp::DynamicValue::VOID:
+        return Qnil;
+      case capnp::DynamicValue::UNKNOWN:
+      default:
+        return Qnil;
+    }
+  }
+
   VALUE DynamicStructReader::which(VALUE self) {
     auto schema_maybe = unwrap(self)->which();
     KJ_IF_MAYBE(schema, schema_maybe) {
