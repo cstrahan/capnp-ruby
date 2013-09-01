@@ -1,6 +1,7 @@
 #include "ruby_capn_proto.h"
 #include "nested_node_reader.h"
 #include "class_builder.h"
+#include "util.h"
 
 namespace ruby_capn_proto {
   using WrappedType = capnp::schema::Node::NestedNode::Reader;
@@ -36,8 +37,6 @@ namespace ruby_capn_proto {
   }
 
   VALUE NestedNodeReader::name(VALUE self) {
-    auto begin = unwrap(self)->getName().begin();
-    auto size = unwrap(self)->getName().size();
-    return rb_str_new(begin, size);
+    return Util::toRubyString(unwrap(self)->getName());
   }
 }

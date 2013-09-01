@@ -2,6 +2,7 @@
 #include "schema.h"
 #include "schema_node_reader.h"
 #include "class_builder.h"
+#include "util.h"
 
 namespace ruby_capn_proto {
   VALUE Schema::Class;
@@ -44,15 +45,8 @@ namespace ruby_capn_proto {
     return SchemaNodeReader::create(unwrap(self)->getProto());
   }
 
-  kj::String heapString(VALUE rb_string) {
-    auto rb_val = StringValue(rb_string);
-    auto str = RSTRING_PTR(rb_val);
-    auto len = RSTRING_LEN(rb_val);
-    return kj::heapString(str, len);
-  }
-
   VALUE Schema::get_nested(VALUE self, VALUE rb_name) {
-    auto name = heapString(rb_name);
+    auto name = Util::toString(rb_name);
     return create(self, unwrap(self)->getNested(name));
   }
 }

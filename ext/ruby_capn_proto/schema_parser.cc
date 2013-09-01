@@ -2,6 +2,7 @@
 #include "schema_parser.h"
 #include "schema.h"
 #include "class_builder.h"
+#include "util.h"
 
 namespace ruby_capn_proto {
   VALUE SchemaParser::Class;
@@ -36,23 +37,17 @@ namespace ruby_capn_proto {
     return Qnil;
   }
 
-  static kj::Array<kj::StringPtr> toStringArray(VALUE rb_array) {
-    auto len = RARRAY_LEN(rb_array);
-    auto array = kj::heapArray<kj::StringPtr>(len);
-    for (int i=0; i < len; i++) {
-      auto rb_str = rb_ary_entry(rb_array, i);
-      auto str = StringValueCStr(rb_str);
-      array[i] = str;
-    }
-
-    return array;
-  }
-
   VALUE SchemaParser::parse_disk_file(VALUE self, VALUE rb_display_name, VALUE rb_disk_path, VALUE rb_import_path) {
-      auto imports = toStringArray(rb_import_path);
-      auto schema = unwrap(self)->parseDiskFile(StringValueCStr(rb_display_name),
-                                                StringValueCStr(rb_disk_path),
-                                                imports);
-      return Schema::create(self, schema);
+    // auto imports = kj::Array<kj::StringPtr>(0);
+    auto imports = Util::toStringArray(rb_import_path);
+    auto importsPtrs = KJ_MAP(s, imports) -> kj::StringPtr { return s; };
+
+    auto display_name = StringValueCStr(rb_display_name);
+    auto schema = unwrap(self)->parseDiskFile(
+        display_name,
+        StringValueCStr(rb_disk_path),
+        importsPtrs
+        );
+    return Schema::create(self, schema);
   }
 }

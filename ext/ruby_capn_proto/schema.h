@@ -10,6 +10,7 @@ namespace ruby_capn_proto {
     static capnp::ParsedSchema* unwrap(VALUE self);
     static VALUE get_proto(VALUE self);
     static VALUE get_nested(VALUE self, VALUE name);
+    static VALUE as_struct(VALUE self, VALUE name);
 
     static VALUE Class;
   };
