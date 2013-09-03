@@ -66,8 +66,6 @@ What's implemented:
 What's to come:
 - Message writing
 
-- [x] Schema parsing (and recursive Module definition)
-
 Proper support for [JRuby][jruby] will come after I implement support for Java.
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
