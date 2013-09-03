@@ -1,11 +1,13 @@
 require 'mkmf'
 
-CONFIG['CXX'] = ENV['CXX'] if ENV['CXX']
-CONFIG['CXXFLAGS'] += " -std=c++11 -stdlib=libc++"
-
 if enable_config('debug')
-  $CFLAGS += " -O0 -ggdb3"
+  CONFIG['CFLAGS'] += " -O0 -ggdb3"
+else
+  $CPPFLAGS += " -DNDEBUG"
 end
+
+CONFIG['CXX'] = ENV['CXX'] if ENV['CXX']
+CONFIG['CXXFLAGS'] += " #{ENV['CXXFLAGS']}" if ENV['CXXFLAGS']
 
 $LDFLAGS += " -lcapnpc"
 $LDFLAGS += " -lcapnp"
