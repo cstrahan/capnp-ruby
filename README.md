@@ -14,7 +14,7 @@ First [install libcapnp][libcapnpinstall], then install the gem:
 gem install capn_proto
 ```
 
-Remember to set the CXX and CXXFLAGS environment variables as necessary. As an OSX user, having followed the [instructions for installing libcapnp on OSX][libcapnp-install], the correct incantation is as follows:
+Remember to set the `CXX` and `CXXFLAGS` environment variables as necessary. As an OSX user, having followed the [instructions for installing libcapnp on OSX][libcapnpinstall], the correct incantation is as follows:
 
 ```bash
 export CXX=$HOME/clang-3.2/bin/clang++
