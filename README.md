@@ -25,6 +25,8 @@ gem install capn_proto --pre
 # Example
 
 ```ruby
+require 'capn_proto'
+
 module AddressBook extend CapnProto::SchemaLoader
   load_schema("addressbook.capnp")
 end
