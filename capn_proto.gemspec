@@ -4,9 +4,17 @@ Gem::Specification.new do |s|
   s.name = 'capn_proto'
   s.version = CapnProto::VERSION
 
-  s.description = s.summary = "Cap'n Proto for ruby"
+  s.summary = "Cap'n Proto (libcapnp) bindings for Ruby."
 
-  s.homepage = 'http://github.com/cstrahan/ruby-capn_proto'
+  s.description =
+    "This gem wraps the official C++ implementation of Cap'n Proto " \
+    "(libcapnp). " \
+    "From the Cap'n Proto documentation: " \
+    "\"Cap'n Proto is an insanely fast data interchange format and " \
+    "capability-based RPC system. Think JSON, except binary. " \
+    "Or think Protocol Buffers, except faster.\""
+
+  s.homepage = 'https://github.com/cstrahan/capnp-ruby'
 
   s.authors = ['Charles Strahan']
   s.email = ['charles.c.strahan@gmail.com']
@@ -18,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'awesome_print'
   s.add_development_dependency 'interactive_editor'
 
-  s.extensions = ['ext/extconf.rb']
+  s.extensions = ['ext/capn_proto/extconf.rb']
   s.require_paths = ['lib']
 
   s.files = `git ls-files`.split("\n")

@@ -18,7 +18,7 @@ extern "C" {
 using namespace ruby_capn_proto;
 
 extern "C" {
-  void Init_init() {
+  void Init_capn_proto() {
     SchemaParser::Init();
     SchemaNodeReader::Init();
     ParsedSchema::Init();

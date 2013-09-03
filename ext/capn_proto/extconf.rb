@@ -13,7 +13,7 @@ $LDFLAGS += " -lcapnpc"
 $LDFLAGS += " -lcapnp"
 $LDFLAGS += " -lkj"
 
-create_makefile('ruby_capn_proto/init')
+create_makefile('capn_proto/capn_proto')
 
 # HACK ATTACK
 # def inreplace(path, search, replace)

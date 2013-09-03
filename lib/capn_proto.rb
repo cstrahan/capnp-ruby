@@ -1,4 +1,4 @@
-require 'capn_proto/init'
+require 'capn_proto/capn_proto'
 
 module CapnProto
   ListNestedNodeReader.class_eval do
