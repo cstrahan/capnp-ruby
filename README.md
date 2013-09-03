@@ -34,4 +34,4 @@ Proper support for [JRuby][jruby] will come after I implement support for Java.
 [ruby]: http://www.ruby-lang.org/ "Ruby"
 [capnp]: http://kentonv.github.io/capnproto/ "Cap'n Proto"
 [jruby]: http://jruby.org/ "JRuby"
-[libcapnpinstall]: [http://kentonv.github.io/capnproto/install.html]
+[libcapnpinstall]: http://kentonv.github.io/capnproto/install.html
