@@ -11,7 +11,7 @@ This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'
 First [install libcapnp][libcapnp-install], then install the gem:
 
 ```bash
-gem install capn_proto
+gem install capn_proto --pre
 ```
 
 Remember to set the `CXX` and `CXXFLAGS` environment variables as necessary. As an OSX user, having followed the [instructions for installing libcapnp on OSX][libcapnp-install], the correct incantation is as follows:
@@ -19,7 +19,7 @@ Remember to set the `CXX` and `CXXFLAGS` environment variables as necessary. As 
 ```bash
 export CXX=$HOME/clang-3.2/bin/clang++
 export CXXFLAGS="-std=c++11 -stdlib=libc++"
-gem install capn_proto
+gem install capn_proto --pre
 ```
 
 # Example
