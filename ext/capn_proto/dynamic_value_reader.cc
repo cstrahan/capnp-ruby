@@ -27,7 +27,6 @@ namespace ruby_capn_proto {
         }
       case capnp::DynamicValue::LIST:
         return DynamicListReader::create(value.as<capnp::DynamicList>(), parent);
-        // return Qnil;
       case capnp::DynamicValue::STRUCT:
         return DynamicStructReader::create(value.as<capnp::DynamicStruct>());
       case capnp::DynamicValue::ENUM:
