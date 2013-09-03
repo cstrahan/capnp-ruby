@@ -8,7 +8,7 @@ This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'
 
 # Installing
 
-First [install libcapnp][libcapnp-install], then install the gem:
+First [install libcapnp][libcapnpinstall], then install the gem:
 
 ```bash
 gem install capn_proto
@@ -34,4 +34,4 @@ Proper support for [JRuby][jruby] will come after I implement support for Java.
 [ruby]: http://www.ruby-lang.org/ "Ruby"
 [capnp]: http://kentonv.github.io/capnproto/ "Cap'n Proto"
 [jruby]: http://jruby.org/ "JRuby"
-[libcapnp-install]: [http://kentonv.github.io/capnproto/install.html]
+[libcapnpinstall]: [http://kentonv.github.io/capnproto/install.html]
