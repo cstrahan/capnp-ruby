@@ -13,8 +13,7 @@ end
 def print_address_book(file)
   addresses = AddressBook::AddressBook.read_from(file)
 
-  addresses['people'].each do |person|
-  # addresses.people.each do |person|
+  addresses.people.each do |person|
     puts "#{person.name} : #{person.email}"
     person.phones.each do |phone|
       puts "#{phone.type} : #{phone.number}"
