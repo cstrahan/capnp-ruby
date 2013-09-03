@@ -22,10 +22,6 @@ export CXXFLAGS="-std=c++11 -stdlib=libc++"
 gem install capn_proto
 ```
 
-# License
-
-The MIT License
-
 # Status
 
 - [x] Schema parsing (and recursive Module definition)
