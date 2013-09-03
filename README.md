@@ -22,11 +22,51 @@ export CXXFLAGS="-std=c++11 -stdlib=libc++"
 gem install capn_proto
 ```
 
+# Example
+
+```ruby
+module AddressBook extend CapnProto::SchemaLoader
+  load_schema("addressbook.capnp")
+end
+
+def print_address_book(file)
+  addresses = AddressBook::AddressBook.read_from(file)
+
+  addresses.people.each do |person|
+    puts "#{person.name} : #{person.email}"
+
+    person.phones.each do |phone|
+      puts "#{phone.type} : #{phone.number}"
+    end
+
+    which = person.employment.which
+
+    if which == "unemployed"
+      puts "unemployed"
+    elsif which == 'employer'
+      puts "employer: #{person.employment.employer}"
+    elsif which == "school"
+      puts "student at: #{person.employment.school}"
+    elsif which == "selfEmployed"
+      puts "self employed"
+    end
+  end
+end
+
+file = File.open("addressbook.bin", "rb")
+print_address_book(file)
+```
+
 # Status
 
+What's implemented:
+- Schema parsing/loading
+- Message reading
+
+What's to come:
+- Message writing
+
 - [x] Schema parsing (and recursive Module definition)
-- [x] Message reading
-- [ ] Message writing
 
 Proper support for [JRuby][jruby] will come after I implement support for Java.
 
