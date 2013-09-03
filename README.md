@@ -6,7 +6,7 @@
 
 This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'n Proto][capnp].
 
-[![Build Status](https://api.travis-ci.org/cstrahan/capnp-ruby.png)](https://travis-ci.org/cstrahan/capnp-ruby)
+[![Build Status](https://travis-ci.org/cstrahan/capnp-ruby.png?branch=master)](https://travis-ci.org/cstrahan/capnp-ruby)
 
 # Installing
 
