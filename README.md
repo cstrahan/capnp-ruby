@@ -9,7 +9,7 @@ This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'
 # Status
 
 - [x] Schema parsing (and recursive Module definition)
-- [ ] Message reading (almost ready)
+- [x] Message reading
 - [ ] Message writing
 
 Proper support for [JRuby][jruby] will come after I implement support for Java.
