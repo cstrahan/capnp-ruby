@@ -1,3 +1,6 @@
+#ifndef PARSED_SCHEMA_H
+#define PARSED_SCHEMA_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -16,3 +19,5 @@ namespace ruby_capn_proto {
     static VALUE Class;
   };
 }
+
+#endif /* PARSED_SCHEMA_H */

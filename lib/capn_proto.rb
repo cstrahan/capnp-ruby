@@ -10,6 +10,27 @@ module CapnProto
     end
   end
 
+  DynamicListReader.class_eval do
+    include Enumerable
+    def each
+      (0...size).each do |n|
+        yield self[n]
+      end
+    end
+  end
+
+  DynamicStructReader.class_eval do
+    def method_missing(name, *args, &block)
+      self[name.to_s, *args, &block]
+    end
+
+    def each
+      (0...size).each do |n|
+        yield self[n]
+      end
+    end
+  end
+
   module SchemaLoader
     def schema_parser
       @schema_parser
@@ -25,7 +46,7 @@ module CapnProto
         file_name,
         imports);
 
-        _load_schema_rec(schema, self)
+      _load_schema_rec(schema, self)
     end
 
     def _load_schema_rec(schema, mod)
@@ -56,11 +77,11 @@ module CapnProto
       end
 
       def read_packed_from(io)
-        raise 'non implemented'
+        raise 'not implemented'
       end
 
       def new_message(file)
-        raise 'non implemented'
+        raise 'not implemented'
       end
     end
   end

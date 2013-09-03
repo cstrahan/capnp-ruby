@@ -1,3 +1,6 @@
+#ifndef FIELD_LIST_H
+#define FIELD_LIST_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -16,3 +19,5 @@ namespace ruby_capn_proto {
   };
 }
 
+
+#endif /* FIELD_LIST_H */

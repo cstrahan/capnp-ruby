@@ -1,3 +1,6 @@
+#ifndef STRUCT_SCHEMA_H
+#define STRUCT_SCHEMA_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -16,3 +19,5 @@ namespace ruby_capn_proto {
   };
 }
 
+
+#endif /* STRUCT_SCHEMA_H */

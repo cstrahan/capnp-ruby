@@ -1,6 +1,8 @@
 #include "ruby_capn_proto.h"
 #include "message_reader.h"
 #include "stream_fd_message_reader.h"
+#include "struct_schema.h"
+#include "dynamic_struct_reader.h"
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
@@ -11,6 +13,7 @@ namespace ruby_capn_proto {
     ClassBuilder("StreamFdMessageReader", MessageReader::Class).
       defineAlloc(&alloc).
       defineMethod("initialize", &initialize).
+      defineMethod("get_root", &get_root).
       store(&Class);
   }
 
@@ -36,5 +39,15 @@ namespace ruby_capn_proto {
     WrappedType* p;
     Data_Get_Struct(self, WrappedType, p);
     return p;
+  }
+
+  VALUE StreamFdMessageReader::get_root(VALUE self, VALUE rb_schema) {
+    if (rb_respond_to(rb_schema, rb_intern("schema"))) {
+      rb_schema = rb_funcall(rb_schema, rb_intern("schema"), 0);
+    }
+
+    auto schema = *StructSchema::unwrap(rb_schema);
+    auto reader = unwrap(self)->getRoot<capnp::DynamicStruct>(schema);
+    return DynamicStructReader::create(reader);
   }
 }

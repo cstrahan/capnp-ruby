@@ -1,3 +1,6 @@
+#ifndef UTIL_H
+#define UTIL_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -9,3 +12,5 @@ namespace ruby_capn_proto {
     static VALUE toRubyString(kj::StringPtr string);
   };
 }
+
+#endif /* UTIL_H */

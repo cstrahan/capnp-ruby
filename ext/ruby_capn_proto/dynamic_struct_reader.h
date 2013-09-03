@@ -1,3 +1,6 @@
+#ifndef DYNAMIC_STRUCT_READER_H
+#define DYNAMIC_STRUCT_READER_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -10,8 +13,11 @@ namespace ruby_capn_proto {
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE which(VALUE self);
+    static VALUE get(VALUE self, VALUE name);
 
     static VALUE Class;
   };
 }
 
+
+#endif /* DYNAMIC_STRUCT_READER_H */

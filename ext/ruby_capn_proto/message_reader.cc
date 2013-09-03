@@ -11,23 +11,20 @@ namespace ruby_capn_proto {
 
   void MessageReader::Init() {
     ClassBuilder("MessageReader", rb_cObject).
-      defineMethod("get_root", &get_root).
       store(&Class);
   }
+
+  // XXX
+  // I wanted to use inheritance here for #get_root,
+  // but this segfaults unless I reinterpret_cast to the right
+  // subclass of capnp::MessageReader. Whish I know more about
+  // the C++ object model :(...
+  // Worst case scenario, I could probably use tempalates...
+  // If only I had experience with them.
 
   WrappedType* MessageReader::unwrap(VALUE self) {
     WrappedType* p;
     Data_Get_Struct(self, WrappedType, p);
     return p;
-  }
-
-  VALUE MessageReader::get_root(VALUE self, VALUE rb_schema) {
-    if (rb_respond_to(rb_schema, rb_intern("schema"))) {
-      rb_schema = rb_funcall(rb_schema, rb_intern("schema"), 0);
-    }
-
-    auto schema = *StructSchema::unwrap(rb_schema);
-    auto reader = unwrap(self)->getRoot<capnp::DynamicStruct>(schema);
-    return DynamicStructReader::create(reader);
   }
 }

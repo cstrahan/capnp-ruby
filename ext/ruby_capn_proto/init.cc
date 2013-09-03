@@ -27,6 +27,7 @@ extern "C" {
     ListNestedNodeReader::Init();
     NestedNodeReader::Init();
     DynamicStructReader::Init();
+    DynamicListReader::Init();
     StreamFdMessageReader::Init();
     FieldList::Init();
   }

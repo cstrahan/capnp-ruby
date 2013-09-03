@@ -1,3 +1,6 @@
+#ifndef STREAM_FD_MESSAGE_READER_H
+#define STREAM_FD_MESSAGE_READER_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -9,10 +12,10 @@ namespace ruby_capn_proto {
     static VALUE initialize(VALUE klass, VALUE io);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
-    static VALUE get_nested_nodes(VALUE self);
-    static VALUE is_struct(VALUE self);
-    static VALUE is_enum(VALUE self);
+    static VALUE get_root(VALUE name, VALUE schema);
 
     static VALUE Class;
   };
 }
+
+#endif /* STREAM_FD_MESSAGE_READER_H */

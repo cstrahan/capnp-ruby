@@ -1,3 +1,6 @@
+#ifndef NESTED_NODE_READER_H
+#define NESTED_NODE_READER_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -14,3 +17,5 @@ namespace ruby_capn_proto {
     static VALUE Class;
   };
 }
+
+#endif /* NESTED_NODE_READER_H */

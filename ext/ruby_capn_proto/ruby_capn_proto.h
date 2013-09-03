@@ -1,5 +1,5 @@
-#ifndef RUBY_CAPN_PROTO
-#define RUBY_CAPN_PROTO
+#ifndef RUBY_CAPN_PROTO_H
+#define RUBY_CAPN_PROTO_H
 
 #include <iostream>
 #include <vector>
@@ -35,4 +35,4 @@
 namespace ruby_capn_proto {
 }
 
-#endif
+#endif /* RUBY_CAPN_PROTO_H */

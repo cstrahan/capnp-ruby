@@ -1,3 +1,6 @@
+#ifndef CLASS_BUILDER_H
+#define CLASS_BUILDER_H
+
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
@@ -65,3 +68,5 @@ namespace ruby_capn_proto {
     return f(self, arg1, arg2, arg3, arg4);
   }
 }
+
+#endif /* CLASS_BUILDER_H */
