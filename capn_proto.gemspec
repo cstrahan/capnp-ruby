@@ -2,6 +2,8 @@ require File.expand_path('../lib/capn_proto/version', __FILE__)
 
 Gem::Specification.new do |s|
   s.name = 'capn_proto'
+  s.license = 'MIT'
+
   s.version = CapnProto::VERSION
 
   s.summary = "Cap'n Proto (libcapnp) bindings for Ruby."
