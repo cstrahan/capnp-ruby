@@ -8,7 +8,7 @@ namespace ruby_capn_proto {
   public:
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(capnp::schema::Node::Reader reader);
+    static VALUE create(capnp::schema::Node::Reader reader, VALUE parent);
     static void free(capnp::schema::Node::Reader* p);
     static capnp::schema::Node::Reader* unwrap(VALUE self);
     static VALUE get_nested_nodes(VALUE self);

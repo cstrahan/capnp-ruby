@@ -31,10 +31,12 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE DynamicStructReader::create(WrappedType reader) {
+  VALUE DynamicStructReader::create(WrappedType reader, VALUE parent) {
     VALUE rb_obj = alloc(Class);
     WrappedType* wrapped = unwrap(rb_obj);
     *wrapped = kj::mv(reader);
+
+    rb_iv_set(rb_obj, "parent", parent);
 
     return rb_obj;
   }

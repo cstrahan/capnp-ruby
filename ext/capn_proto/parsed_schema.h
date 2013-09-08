@@ -9,7 +9,7 @@ namespace ruby_capn_proto {
     using WrappedType = capnp::ParsedSchema;
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(VALUE parent, WrappedType schema);
+    static VALUE create(WrappedType schema, VALUE parent);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE get_proto(VALUE self);

@@ -31,10 +31,12 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE StructSchema::create(WrappedType schema) {
+  VALUE StructSchema::create(WrappedType schema, VALUE parent) {
     VALUE rb_obj = alloc(Class);
     WrappedType* wrapped_schema = unwrap(rb_obj);
     *wrapped_schema = kj::mv(schema);
+
+    rb_iv_set(rb_obj, "parent", parent);
 
     return rb_obj;
   }

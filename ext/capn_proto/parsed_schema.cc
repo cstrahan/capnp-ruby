@@ -33,7 +33,7 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE ParsedSchema::create(VALUE parent, WrappedType schema) {
+  VALUE ParsedSchema::create(WrappedType schema, VALUE parent) {
     VALUE rb_obj = alloc(Class);
     WrappedType* wrapped_schema = unwrap(rb_obj);
     *wrapped_schema = kj::mv(schema);
@@ -44,15 +44,15 @@ namespace ruby_capn_proto {
   }
 
   VALUE ParsedSchema::get_proto(VALUE self) {
-    return SchemaNodeReader::create(unwrap(self)->getProto());
+    return SchemaNodeReader::create(unwrap(self)->getProto(), self);
   }
 
   VALUE ParsedSchema::get_nested(VALUE self, VALUE rb_name) {
     auto name = Util::toString(rb_name);
-    return create(self, unwrap(self)->getNested(name));
+    return create(unwrap(self)->getNested(name), self);
   }
 
   VALUE ParsedSchema::as_struct(VALUE self) {
-    return StructSchema::create(unwrap(self)->asStruct());
+    return StructSchema::create(unwrap(self)->asStruct(), self);
   }
 }

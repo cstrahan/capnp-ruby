@@ -48,6 +48,6 @@ namespace ruby_capn_proto {
 
     auto schema = *StructSchema::unwrap(rb_schema);
     auto reader = unwrap(self)->getRoot<capnp::DynamicStruct>(schema);
-    return DynamicStructReader::create(reader);
+    return DynamicStructReader::create(reader, self);
   }
 }

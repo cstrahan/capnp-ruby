@@ -13,7 +13,7 @@ namespace ruby_capn_proto {
     static VALUE alloc(VALUE klass);
     static void free(NodeList* p);
     static NodeList* unwrap(VALUE self);
-    static VALUE create(NodeList reader);
+    static VALUE create(NodeList reader, VALUE parent);
     static VALUE size(VALUE self);
     static VALUE get(VALUE self, VALUE index);
 

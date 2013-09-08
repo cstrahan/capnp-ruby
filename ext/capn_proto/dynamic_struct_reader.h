@@ -9,7 +9,7 @@ namespace ruby_capn_proto {
     using WrappedType = capnp::DynamicStruct::Reader;
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(WrappedType reader);
+    static VALUE create(WrappedType reader, VALUE parent);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE which(VALUE self);

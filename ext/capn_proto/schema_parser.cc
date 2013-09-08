@@ -48,6 +48,6 @@ namespace ruby_capn_proto {
         StringValueCStr(rb_disk_path),
         importsPtrs
         );
-    return ParsedSchema::create(self, schema);
+    return ParsedSchema::create(schema, self);
   }
 }

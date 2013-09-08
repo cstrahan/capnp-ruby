@@ -19,10 +19,13 @@ namespace ruby_capn_proto {
     return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(WrappedType)));
   }
 
-  VALUE SchemaNodeReader::create(WrappedType reader) {
+  VALUE SchemaNodeReader::create(WrappedType reader, VALUE parent) {
     VALUE rb_obj = alloc(Class);
     WrappedType* wrapped = unwrap(rb_obj);
     *wrapped = kj::mv(reader);
+
+    rb_iv_set(rb_obj, "parent", parent);
+
     return rb_obj;
   }
 
@@ -38,7 +41,7 @@ namespace ruby_capn_proto {
   }
 
   VALUE SchemaNodeReader::get_nested_nodes(VALUE self) {
-    return ListNestedNodeReader::create(unwrap(self)->getNestedNodes());
+    return ListNestedNodeReader::create(unwrap(self)->getNestedNodes(), self);
   }
 
   VALUE SchemaNodeReader::is_struct(VALUE self) {

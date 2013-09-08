@@ -35,6 +35,8 @@ namespace ruby_capn_proto {
     WrappedType* wrapped = unwrap(rb_obj);
     *wrapped = kj::mv(reader);
 
+    rb_iv_set(rb_obj, "parent", parent);
+
     return rb_obj;
   }
 
