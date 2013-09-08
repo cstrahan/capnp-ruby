@@ -12,7 +12,7 @@ namespace ruby_capn_proto {
       case capnp::DynamicValue::INT:
         return INT2FIX(value.as<int64_t>());
       case capnp::DynamicValue::UINT:
-        return INT2FIX(value.as<uint64_t>());
+        return UINT2NUM(value.as<uint64_t>());
       case capnp::DynamicValue::FLOAT:
         return rb_float_new(value.as<double>());
       case capnp::DynamicValue::TEXT:
