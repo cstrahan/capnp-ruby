@@ -20,6 +20,7 @@ task :default => [:compile, :spec]
 task :console do
   $: << File.expand_path("../lib", __FILE__)
   require 'irb'
+  require 'capn_proto'
   ARGV.clear
   IRB.start
 end
