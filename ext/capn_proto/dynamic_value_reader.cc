@@ -10,7 +10,7 @@ namespace ruby_capn_proto {
       case capnp::DynamicValue::BOOL:
         return value.as<bool>() ? Qtrue : Qfalse;
       case capnp::DynamicValue::INT:
-        return INT2FIX(value.as<int64_t>());
+        return INT2NUM(value.as<int64_t>());
       case capnp::DynamicValue::UINT:
         return UINT2NUM(value.as<uint64_t>());
       case capnp::DynamicValue::FLOAT:
