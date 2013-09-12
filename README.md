@@ -16,12 +16,14 @@ First [install libcapnp][libcapnp-install], then install the gem:
 gem install capn_proto --pre
 ```
 
-Remember to set the `CXX` and `CXXFLAGS` environment variables as necessary. As an OSX user, having followed the [instructions for installing libcapnp on OSX][libcapnp-install], the correct incantation is as follows:
+The native extension for this gem requires a C++ compiler with C++11 features, so use the same C++ compiler and flags that you used to compile libcapnp (e.g. `CXX` and `CXXFLAGS`).
+
+Note: this gem will attempt to automatically discover any necessary compiler flags for C++11 features (e.g. -std=c++11 -stdlib=libc++), so setting `CXXFLAGS` isn't strictly necessary.
+
+As an OSX user, having followed the [instructions for installing libcapnp on OSX][libcapnp-install], the correct incantation is as follows:
 
 ```bash
-export CXX=$HOME/clang-3.2/bin/clang++
-export CXXFLAGS="-std=c++11 -stdlib=libc++"
-gem install capn_proto --pre
+CXX=$HOME/clang-3.2/bin/clang++ gem install capn_proto --pre
 ```
 
 # Example
