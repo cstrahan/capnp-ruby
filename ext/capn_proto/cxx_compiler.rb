@@ -34,9 +34,15 @@ class CXXCompiler
     #include <thread>
   CODE
 
-  # The environment variables (e.g. CXX, CXXFLAGS).
+  # env: The environment variables (e.g. CXX, CXXFLAGS).
   def initialize(env)
     @env = env.dup
+    @exist = system("command -v #{@env['CXX'].shellescape} >/dev/null 2>&1")
+  end
+
+  # True if the compiler is accessible on the $PATH.
+  def exist?
+    @exist
   end
 
   # True if support for C++11 was detected, false otherwise.
@@ -69,7 +75,7 @@ class CXXCompiler
 
   # Detect any required flags.
   def test_compiler_flags(env)
-    return if @tested
+    return if @tested || !exist?
     @tested = true
 
     cxxflags = (env['CXXFLAGS'] || '')
