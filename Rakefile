@@ -1,3 +1,4 @@
+require 'capn_proto/version'
 GEMSPEC = eval(File.read('capn_proto.gemspec'))
 
 require 'rubygems/package_task'
@@ -16,6 +17,19 @@ RSpec::Core::RakeTask.new(:spec) do |config|
 end
 
 task :default => [:compile, :spec]
+
+Rake::Task["clean"].clear
+task :clean do
+  rm_r "tmp" rescue nil
+  rm "lib/capn_proto/capn_proto.bundle" rescue nil
+end
+
+task :release => [:clean, :compile, :spec, :gem]  do
+  tag = "v#{CapnProto::VERSION}"
+  sh "git tag #{tag}"
+  sh "git push origin #{tag}"
+  sh "gem push pkg/capn_proto-#{CapnProto::VERSION}.gem"
+end
 
 task :console do
   $: << File.expand_path("../lib", __FILE__)

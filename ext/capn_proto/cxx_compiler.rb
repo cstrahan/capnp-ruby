@@ -110,14 +110,17 @@ class CXXCompiler
 end
 
 if $0 == __FILE__
-  compiler = CXXCompiler.new(ENV.to_hash)
+  compiler         = CXXCompiler.new(ENV.to_hash)
+  cxx              = ENV['CXX']
+  cxxflags         = ENV['CXXFLAGS']
+  extra_cxxflags   = [compiler.std_flag, compiler.stdlib_flag].join(' ')
+  compiler_support = compiler.has_cxx11_compiler_support? ? 'YES' : 'NO'
+  lib_support      = compiler.has_cxx11_library_support? ? 'YES' : 'NO'
 
-  puts "CXX      = #{ENV['CXX']}"
-  puts "CXXFLAGS = #{[ENV['CXXFLAGS'], compiler.std_flag, compiler.stdlib_flag].join(' ')}"
+  puts "     given CXX      = #{cxx}"
+  puts "     given CXXFLAGS = #{cxxflags}"
+  puts "additional CXXFLAGS = #{extra_cxxflags}"
   puts ""
-  puts "Has C++11 compiler support?"
-  puts "  #{compiler.has_cxx11_compiler_support? ? 'YES' : 'NO'}"
-  puts ""
-  puts "Has C++11 library support?"
-  puts "  #{compiler.has_cxx11_library_support? ? 'YES' : 'NO'}"
+  puts "Has C++11 compiler support?  #{compiler_support}"
+  puts "Has C++11 library support?   #{lib_support}"
 end

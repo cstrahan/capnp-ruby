@@ -14,6 +14,7 @@
 #include <capnp/schema.h>
 #include <capnp/message.h>
 #include <capnp/dynamic.h>
+#include <capnp/object.h>
 
 #include <ruby.h>
 #ifdef __

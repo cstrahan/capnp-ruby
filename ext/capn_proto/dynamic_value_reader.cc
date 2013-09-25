@@ -2,6 +2,7 @@
 #include "dynamic_value_reader.h"
 #include "dynamic_list_reader.h"
 #include "dynamic_struct_reader.h"
+#include "dynamic_object_reader.h"
 
 namespace ruby_capn_proto {
   VALUE DynamicValueReader::to_ruby(capnp::DynamicValue::Reader value, VALUE parent) {
@@ -39,6 +40,8 @@ namespace ruby_capn_proto {
             return Qnil;
           }
         }
+      case capnp::DynamicValue::OBJECT:
+        return DynamicObjectReader::create(value.as<capnp::ObjectPointer>(), parent);
       case capnp::DynamicValue::VOID:
         return Qnil;
       case capnp::DynamicValue::UNKNOWN:

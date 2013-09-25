@@ -8,6 +8,7 @@
 #include "dynamic_struct_reader.h"
 #include "dynamic_list_reader.h"
 #include "stream_fd_message_reader.h"
+#include "dynamic_object_reader.h"
 #include "message_reader.h"
 #include "field_list.h"
 
@@ -30,5 +31,6 @@ extern "C" {
     DynamicListReader::Init();
     StreamFdMessageReader::Init();
     FieldList::Init();
+    DynamicObjectReader::Init();
   }
 }
