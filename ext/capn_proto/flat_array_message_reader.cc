@@ -1,34 +1,36 @@
 #include "ruby_capn_proto.h"
 #include "message_reader.h"
-#include "stream_fd_message_reader.h"
+#include "flat_array_message_reader.h"
 #include "struct_schema.h"
 #include "dynamic_struct_reader.h"
 #include "class_builder.h"
 #include "exception.h"
 
 namespace ruby_capn_proto {
-  using WrappedType = capnp::StreamFdMessageReader;
-  VALUE StreamFdMessageReader::Class;
+  using WrappedType = capnp::FlatArrayMessageReader;
+  VALUE FlatArrayMessageReader::Class;
 
-  void StreamFdMessageReader::Init() {
-    ClassBuilder("StreamFdMessageReader", MessageReader::Class).
+  void FlatArrayMessageReader::Init() {
+    ClassBuilder("FlatArrayMessageReader", MessageReader::Class).
       defineAlloc(&alloc).
       defineMethod("initialize", &initialize).
       defineMethod("get_root", &get_root).
       store(&Class);
   }
 
-  VALUE StreamFdMessageReader::alloc(VALUE klass) {
+  VALUE FlatArrayMessageReader::alloc(VALUE klass) {
     return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(WrappedType)));
   }
 
-  VALUE StreamFdMessageReader::initialize(VALUE self, VALUE rb_io) {
-    VALUE rb_fileno = rb_funcall(rb_io, rb_intern("fileno"), 0);
-    auto fileno = FIX2INT(rb_fileno);
-    WrappedType* p = unwrap(self);
+  VALUE FlatArrayMessageReader::initialize(VALUE self, VALUE rb_buff) {
+    rb_iv_set(self, "buff", rb_buff);
+    auto str = RSTRING_PTR(rb_buff);
+    auto len = RSTRING_LEN(rb_buff);
+    kj::ArrayPtr<const capnp::word> buff((const capnp::word*)str, len/sizeof(capnp::word));
 
     try {
-      new (p) WrappedType(fileno);
+      WrappedType* p = unwrap(self);
+      new (p) WrappedType(buff);
     } catch (kj::Exception ex) {
       return Exception::raise(ex);
     }
@@ -36,18 +38,18 @@ namespace ruby_capn_proto {
     return Qnil;
   }
 
-  void StreamFdMessageReader::free(WrappedType* p) {
-    p->~StreamFdMessageReader();
+  void FlatArrayMessageReader::free(WrappedType* p) {
+    p->~FlatArrayMessageReader();
     ruby_xfree(p);
   }
 
-  WrappedType* StreamFdMessageReader::unwrap(VALUE self) {
+  WrappedType* FlatArrayMessageReader::unwrap(VALUE self) {
     WrappedType* p;
     Data_Get_Struct(self, WrappedType, p);
     return p;
   }
 
-  VALUE StreamFdMessageReader::get_root(VALUE self, VALUE rb_schema) {
+  VALUE FlatArrayMessageReader::get_root(VALUE self, VALUE rb_schema) {
     if (rb_respond_to(rb_schema, rb_intern("schema"))) {
       rb_schema = rb_funcall(rb_schema, rb_intern("schema"), 0);
     }

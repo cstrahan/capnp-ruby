@@ -1,3 +1,4 @@
+require 'tempfile'
 require 'spec_helper'
 require 'capn_proto'
 
@@ -29,6 +30,40 @@ describe "reading" do
 end
 
 describe "writing" do
+  describe "#write" do
+    it "full circle" do
+      tmp = Tempfile.new('test.bin')
+      addresses = AddressBook::AddressBook.new_message
+      people = addresses.initPeople(1)
+      bob = people[0]
+      bob.name = "Bob"
+      bob.id = 123
+      addresses.write(tmp)
+
+      tmp.rewind
+      addresses = AddressBook::AddressBook.read_from(tmp)
+      expect(addresses.people.size).to eq 1
+      expect(addresses.people.first.name).to eq "Bob"
+      expect(addresses.people.first.id).to eq 123
+    end
+  end
+
+  describe "#to_bytes" do
+    it "full circle" do
+      addresses = AddressBook::AddressBook.new_message
+      people = addresses.initPeople(1)
+      bob = people[0]
+      bob.name = "Bob"
+      bob.id = 123
+      bytes = addresses.to_bytes
+
+      addresses = AddressBook::AddressBook.make_from_bytes(bytes)
+      expect(addresses.people.size).to eq 1
+      expect(addresses.people.first.name).to eq "Bob"
+      expect(addresses.people.first.id).to eq 123
+    end
+  end
+
   describe "Dynamic Structs" do
     let(:addresses) { AddressBook::AddressBook.new_message }
 
@@ -40,8 +75,6 @@ describe "writing" do
 
       people[1] = bob
       x = people[1]
-      puts x.name
-      puts x.id
     end
   end
 end

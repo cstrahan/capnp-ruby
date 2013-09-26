@@ -31,6 +31,33 @@ module AddressBook extend CapnProto::SchemaLoader
   load_schema("addressbook.capnp")
 end
 
+def write_address_book(file)
+  addresses = AddressBook::AddressBook.new_message
+  people = addresses.initPeople(2)
+
+  alice = people[0]
+  alice.id = 123
+  alice.name = 'Alice'
+  alice.email = 'alice@example.com'
+  alice_phones = alice.initPhones(1)
+  alice_phones[0].number = "555-1212"
+  alice_phones[0].type = 'mobile'
+  alice.employment.school = "MIT"
+
+  bob = people[1]
+  bob.id = 456
+  bob.name = 'Bob'
+  bob.email = 'bob@example.com'
+  bob_phones = bob.initPhones(2)
+  bob_phones[0].number = "555-4567"
+  bob_phones[0].type = 'home'
+  bob_phones[1].number = "555-7654"
+  bob_phones[1].type = 'work'
+  bob.employment.unemployed = nil
+
+  addresses.write(file)
+end
+
 def print_address_book(file)
   addresses = AddressBook::AddressBook.read_from(file)
 
@@ -41,22 +68,25 @@ def print_address_book(file)
       puts "#{phone.type} : #{phone.number}"
     end
 
-    which = person.employment.which
-
-    if which == "unemployed"
+    if person.employment.unemployed?
       puts "unemployed"
-    elsif which == 'employer'
+    if person.employment.employer?
       puts "employer: #{person.employment.employer}"
-    elsif which == "school"
+    if person.employment.school?
       puts "student at: #{person.employment.school}"
-    elsif which == "selfEmployed"
+    if person.employment.selfEmployed?
       puts "self employed"
     end
   end
 end
 
-file = File.open("addressbook.bin", "rb")
-print_address_book(file)
+if __FILE__ == $0
+  file = File.open("addressbook.bin", "wb")
+  write_address_book(file)
+
+  file = File.open("addressbook.bin", "rb")
+  print_address_book(file)
+end
 ```
 
 # Status
@@ -64,11 +94,18 @@ print_address_book(file)
 What's implemented:
 - Schema parsing/loading
 - Message reading
+  - From byte string
+  - From file descriptor
+- Message writing (to file descriptor)
+  - To byte string
+  - To file descriptor
 
 What's to come:
-- Message writing
-
-Proper support for [JRuby][jruby] will come after I implement support for Java.
+- More reading/writing mechanisms:
+  - Packing/unpacking
+- Extensive test coverage
+- Proper support for [JRuby][jruby]
+- Support for RPC
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"

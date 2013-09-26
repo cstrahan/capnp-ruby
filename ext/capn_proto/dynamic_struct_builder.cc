@@ -3,6 +3,8 @@
 #include "dynamic_struct_reader.h"
 #include "dynamic_value_reader.h"
 #include "dynamic_value_builder.h"
+#include "message_builder.h"
+#include "malloc_message_builder.h"
 #include "class_builder.h"
 #include "exception.h"
 #include "util.h"
@@ -15,6 +17,8 @@ namespace ruby_capn_proto {
     ClassBuilder("DynamicStructBuilder", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("which", &which).
+      defineMethod("write", &write).
+      defineMethod("to_bytes", &to_bytes).
       defineMethod("[]", &get).
       defineMethod("[]=", &set).
       defineMethod("init", (VALUE (*)(int, VALUE*, VALUE))&init).
@@ -126,6 +130,32 @@ namespace ruby_capn_proto {
     }
 
     return rb_obj;
+  }
+
+  VALUE DynamicStructBuilder::write(VALUE self, VALUE file) {
+    VALUE rb_fileno = rb_funcall(file, rb_intern("fileno"), 0);
+    int fileno = FIX2INT(rb_fileno);
+    if (!RTEST(rb_iv_get(self, "is_root"))) {
+      rb_raise(Exception::Class, "You can only call write() on the message's root struct.");
+    }
+
+    capnp::MessageBuilder* message_builder = MallocMessageBuilder::unwrap(rb_iv_get(self, "parent"));
+    try {
+      capnp::writeMessageToFd(fileno, message_builder->getSegmentsForOutput());
+      return Qnil;
+    } catch (kj::Exception ex) {
+      return Exception::raise(ex);
+    }
+  }
+
+  VALUE DynamicStructBuilder::to_bytes(VALUE self) {
+    if (!RTEST(rb_iv_get(self, "is_root"))) {
+      rb_raise(Exception::Class, "You can only call to_bytes() on the message's root struct.");
+    }
+
+    capnp::MessageBuilder* message_builder = MallocMessageBuilder::unwrap(rb_iv_get(self, "parent"));
+    auto array = capnp::messageToFlatArray(*message_builder);
+    return rb_str_new((char*)array.begin(), sizeof(capnp::word) * array.size());
   }
 
   VALUE DynamicStructBuilder::which(VALUE self) {

@@ -33,12 +33,29 @@ module CapnProto
   end
 
   DynamicStructReader.class_eval do
+    # examples:
+    #
+    #    x.employed?(10)
+    #    x.age
     def method_missing(name, *args, &block)
-      self[name.to_s]
+      name = name.to_s
+
+      if name.end_with?("?")
+        which == name[0..-2]
+      else
+        self[name]
+      end
     end
   end
 
   DynamicStructBuilder.class_eval do
+    # examples:
+    #
+    #    x.initSandwich
+    #    x.initPeople(10)
+    #    x.employed?(10)
+    #    x.age = 10
+    #    x.age
     def method_missing(name, *args, &block)
       name = name.to_s
 
@@ -48,9 +65,11 @@ module CapnProto
         init(name, *args)
       elsif name.end_with?("=")
         name = name[0..-2]
-        self[name.to_s] = args[0]
+        self[name] = args[0]
+      elsif name.end_with?("?")
+        which == name[0..-2]
       else
-        self[name.to_s]
+        self[name]
       end
     end
   end
@@ -97,6 +116,12 @@ module CapnProto
 
       def read_from(io)
         reader = StreamFdMessageReader.new(io)
+        reader.get_root(self)
+      end
+
+      def make_from_bytes(bytes)
+        # TODO: support FFI pointers
+        reader = FlatArrayMessageReader.new(bytes)
         reader.get_root(self)
       end
 

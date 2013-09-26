@@ -14,6 +14,7 @@
 #include "message_builder.h"
 #include "stream_fd_message_reader.h"
 #include "malloc_message_builder.h"
+#include "flat_array_message_reader.h"
 
 #include "dynamic_struct_reader.h"
 #include "dynamic_struct_builder.h"
@@ -40,6 +41,7 @@ extern "C" {
     MessageBuilder::Init();
     StreamFdMessageReader::Init();
     MallocMessageBuilder::Init();
+    FlatArrayMessageReader::Init();
 
     DynamicStructReader::Init();
     DynamicStructBuilder::Init();

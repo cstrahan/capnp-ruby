@@ -19,6 +19,9 @@ namespace ruby_capn_proto {
     static VALUE init(VALUE self, VALUE rb_name, VALUE rb_obj);
     static VALUE init(int argc, VALUE* argv, VALUE self);
 
+    static VALUE write(VALUE self, VALUE file);
+    static VALUE to_bytes(VALUE self);
+
     static VALUE Class;
   private:
     static VALUE _get(VALUE self, VALUE name);
