@@ -15,3 +15,13 @@ describe "Dynamic Structs" do
     expect { addresses.foo }.to raise_error(CapnProto::Exception)
   end
 end
+
+describe "Dynamic Lists" do
+  let(:file) { open_file("addressbook.bin") }
+  let(:addresses) { AddressBook::AddressBook.read_from(file) }
+  let(:people) { addresses.people }
+
+  it "#[] given out-of-bounds index raises" do
+    expect { addresses.people[999999] }.to raise_error(CapnProto::Exception)
+  end
+end

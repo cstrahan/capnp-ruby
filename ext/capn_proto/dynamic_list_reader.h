@@ -17,6 +17,8 @@ namespace ruby_capn_proto {
     static VALUE size(VALUE self);
 
     static VALUE Class;
+  private:
+    static VALUE _get(VALUE self, VALUE index);
   };
 }
 

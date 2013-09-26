@@ -1,6 +1,7 @@
 #include "ruby_capn_proto.h"
 #include "dynamic_list_reader.h"
 #include "dynamic_value_reader.h"
+#include "exception.h"
 #include "class_builder.h"
 
 namespace ruby_capn_proto {
@@ -45,6 +46,14 @@ namespace ruby_capn_proto {
   }
 
   VALUE DynamicListReader::get(VALUE self, VALUE rb_index) {
+    try {
+      return _get(self, rb_index);
+    } catch (kj::Exception ex) {
+      return Exception::raise(ex);
+    }
+  }
+
+  VALUE DynamicListReader::_get(VALUE self, VALUE rb_index) {
     auto reader = *unwrap(self);
     auto index = FIX2INT(rb_index);
     auto size = reader.size();
