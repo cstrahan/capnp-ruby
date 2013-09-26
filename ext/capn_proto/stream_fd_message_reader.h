@@ -12,7 +12,7 @@ namespace ruby_capn_proto {
     static VALUE initialize(VALUE klass, VALUE io);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
-    static VALUE get_root(VALUE name, VALUE schema);
+    static VALUE get_root(VALUE self, VALUE schema);
 
     static VALUE Class;
   };

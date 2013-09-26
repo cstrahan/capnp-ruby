@@ -22,4 +22,9 @@ namespace ruby_capn_proto {
   VALUE Util::toRubyString(kj::StringPtr string) {
     return rb_str_new(string.begin(), string.size());
   }
+
+  bool Util::isNegative(VALUE rb_obj) {
+    if (FIXNUM_P(rb_obj)) return FIX2LONG(rb_obj) < 0;
+    return RTEST(rb_funcall(rb_obj, '<', 1, INT2FIX(0)));
+  }
 }

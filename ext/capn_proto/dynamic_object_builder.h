@@ -1,12 +1,12 @@
-#ifndef DYNAMIC_OBJECT_READER_H
-#define DYNAMIC_OBJECT_READER_H
+#ifndef DYNAMIC_OBJECT_BUILDER_H
+#define DYNAMIC_OBJECT_BUILDER_H
 
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
-  class DynamicObjectReader {
+  class DynamicObjectBuilder {
   public:
-    using WrappedType = capnp::ObjectPointer::Reader;
+    using WrappedType = capnp::ObjectPointer::Builder;
     static void Init();
     static VALUE alloc(VALUE klass);
     static VALUE create(WrappedType reader, VALUE parent);

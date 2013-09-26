@@ -22,9 +22,36 @@ module CapnProto
     end
   end
 
+  DynamicListBuilder.class_eval do
+    include Enumerable
+    def each
+      return to_enum(:each) unless block_given?
+      (0...size).each do |n|
+        yield self[n]
+      end
+    end
+  end
+
   DynamicStructReader.class_eval do
     def method_missing(name, *args, &block)
-      self[name.to_s, *args, &block]
+      self[name.to_s]
+    end
+  end
+
+  DynamicStructBuilder.class_eval do
+    def method_missing(name, *args, &block)
+      name = name.to_s
+
+      if name.start_with?("init") && name.size > 4
+        name = name[4..-1]
+        name[0] = name[0].downcase
+        init(name, *args)
+      elsif name.end_with?("=")
+        name = name[0..-2]
+        self[name.to_s] = args[0]
+      else
+        self[name.to_s]
+      end
     end
   end
 
@@ -73,11 +100,12 @@ module CapnProto
         reader.get_root(self)
       end
 
-      def read_packed_from(io)
-        raise 'not implemented'
+      def new_message
+        builder = MallocMessageBuilder.new
+        builder.init_root(self)
       end
 
-      def new_message(file)
+      def read_packed_from(io)
         raise 'not implemented'
       end
     end
