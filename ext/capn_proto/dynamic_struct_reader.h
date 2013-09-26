@@ -16,6 +16,8 @@ namespace ruby_capn_proto {
     static VALUE get(VALUE self, VALUE name);
 
     static VALUE Class;
+  private:
+    static VALUE _get(VALUE self, VALUE name);
   };
 }
 

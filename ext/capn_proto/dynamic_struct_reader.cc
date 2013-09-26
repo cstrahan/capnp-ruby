@@ -2,6 +2,7 @@
 #include "dynamic_struct_reader.h"
 #include "dynamic_value_reader.h"
 #include "class_builder.h"
+#include "exception.h"
 #include "util.h"
 
 namespace ruby_capn_proto {
@@ -42,9 +43,16 @@ namespace ruby_capn_proto {
   }
 
   VALUE DynamicStructReader::get(VALUE self, VALUE rb_name) {
+    try {
+      return _get(self, rb_name);
+    } catch (kj::Exception ex) {
+      return Exception::raise(ex);
+    }
+  }
+
+  VALUE DynamicStructReader::_get(VALUE self, VALUE rb_name) {
     auto reader = *unwrap(self);
     auto name = Util::toString(rb_name);
-
     return DynamicValueReader::to_ruby(reader.get(name), self);
   }
 

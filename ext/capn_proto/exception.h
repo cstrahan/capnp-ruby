@@ -8,7 +8,8 @@ namespace ruby_capn_proto {
   public:
     using WrappedType = kj::Exception;
     static void Init();
-    static VALUE create(WrappedType schema);
+    static VALUE create(WrappedType exception);
+    static VALUE raise(WrappedType exception);
 
     static VALUE Class;
   };

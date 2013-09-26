@@ -19,6 +19,12 @@ namespace ruby_capn_proto {
   VALUE Exception::create(WrappedType exception) {
     VALUE msg = Util::toRubyString(exception.getDescription());
     VALUE rb_exception = rb_funcall(Class, rb_intern("new"), 1, msg);
+
     return rb_exception;
+  }
+
+  VALUE Exception::raise(WrappedType exception) {
+    rb_exc_raise(create(exception));
+    return Qnil;
   }
 }

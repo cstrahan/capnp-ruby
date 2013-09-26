@@ -21,6 +21,7 @@ task :default => [:compile, :spec]
 Rake::Task["clean"].clear
 task :clean do
   rm_r "tmp" rescue nil
+  rm_r "pkg" rescue nil
   rm "lib/capn_proto/capn_proto.bundle" rescue nil
 end
 

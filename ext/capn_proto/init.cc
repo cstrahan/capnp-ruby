@@ -10,6 +10,7 @@
 #include "stream_fd_message_reader.h"
 #include "dynamic_object_reader.h"
 #include "message_reader.h"
+#include "exception.h"
 #include "field_list.h"
 
 extern "C" {
@@ -32,5 +33,6 @@ extern "C" {
     StreamFdMessageReader::Init();
     FieldList::Init();
     DynamicObjectReader::Init();
+    Exception::Init();
   }
 }
