@@ -19,12 +19,14 @@ end
 task :default => [:compile, :spec]
 
 Rake::Task["clean"].clear
+desc "Clean build artifacts"
 task :clean do
   rm_r "tmp" rescue nil
   rm_r "pkg" rescue nil
   rm "lib/capn_proto/capn_proto.bundle" rescue nil
 end
 
+desc "Tag commit, push to repo, then push to RubyGems"
 task :release => [:clean, :compile, :spec, :gem]  do
   tag = "v#{CapnProto::VERSION}"
   sh "git tag #{tag}"
@@ -32,6 +34,7 @@ task :release => [:clean, :compile, :spec, :gem]  do
   sh "gem push pkg/capn_proto-#{CapnProto::VERSION}.gem"
 end
 
+desc "Open an irb console"
 task :console do
   $: << File.expand_path("../lib", __FILE__)
   require 'irb'

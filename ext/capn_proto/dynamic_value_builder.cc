@@ -41,8 +41,8 @@ namespace ruby_capn_proto {
             return Qnil;
           }
         }
-      case capnp::DynamicValue::OBJECT:
-        return DynamicObjectBuilder::create(value.as<capnp::ObjectPointer>(), parent);
+      case capnp::DynamicValue::ANY_POINTER:
+        return DynamicObjectBuilder::create(value.as<capnp::AnyPointer>(), parent);
       case capnp::DynamicValue::VOID:
         return Qnil;
       case capnp::DynamicValue::UNKNOWN:

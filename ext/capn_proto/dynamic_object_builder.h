@@ -6,7 +6,7 @@
 namespace ruby_capn_proto {
   class DynamicObjectBuilder {
   public:
-    using WrappedType = capnp::ObjectPointer::Builder;
+    using WrappedType = capnp::AnyPointer::Builder;
     static void Init();
     static VALUE alloc(VALUE klass);
     static VALUE create(WrappedType reader, VALUE parent);

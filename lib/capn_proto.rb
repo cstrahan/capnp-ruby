@@ -33,10 +33,6 @@ module CapnProto
   end
 
   DynamicStructReader.class_eval do
-    # examples:
-    #
-    #    x.employed?(10)
-    #    x.age
     def method_missing(name, *args, &block)
       name = name.to_s
 
@@ -49,13 +45,6 @@ module CapnProto
   end
 
   DynamicStructBuilder.class_eval do
-    # examples:
-    #
-    #    x.initSandwich
-    #    x.initPeople(10)
-    #    x.employed?(10)
-    #    x.age = 10
-    #    x.age
     def method_missing(name, *args, &block)
       name = name.to_s
 

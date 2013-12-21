@@ -6,7 +6,7 @@
 namespace ruby_capn_proto {
   class DynamicObjectReader {
   public:
-    using WrappedType = capnp::ObjectPointer::Reader;
+    using WrappedType = capnp::AnyPointer::Reader;
     static void Init();
     static VALUE alloc(VALUE klass);
     static VALUE create(WrappedType reader, VALUE parent);

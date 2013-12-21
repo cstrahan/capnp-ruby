@@ -6,7 +6,7 @@
 #include "util.h"
 
 namespace ruby_capn_proto {
-  using WrappedType = capnp::ObjectPointer::Builder;
+  using WrappedType = capnp::AnyPointer::Builder;
   VALUE DynamicObjectBuilder::Class;
 
   void DynamicObjectBuilder::Init() {

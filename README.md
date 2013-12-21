@@ -96,7 +96,7 @@ What's implemented:
 - Message reading
   - From byte string
   - From file descriptor
-- Message writing (to file descriptor)
+- Message writing
   - To byte string
   - To file descriptor
 
