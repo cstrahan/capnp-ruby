@@ -7,6 +7,7 @@
 #include <kj/common.h>
 #include <kj/array.h>
 
+#include <capnp/any.h>
 #include <capnp/serialize.h>
 #include <capnp/serialize-packed.h>
 #include <capnp/message.h>
@@ -14,7 +15,6 @@
 #include <capnp/schema.h>
 #include <capnp/message.h>
 #include <capnp/dynamic.h>
-#include <capnp/object.h>
 
 #include <ruby.h>
 #ifdef __
