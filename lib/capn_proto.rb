@@ -84,7 +84,7 @@ module CapnProto
         end
 
         nested_nodes.each do |nested_node|
-          nested_mod = mod.const_set(nested_node.name, Module.new)
+          nested_mod = mod.const_set(nested_node.name.capitalize, Module.new)
           nested_schema = schema.get_nested(nested_node.name)
           load_schema_rec.call(nested_schema, nested_mod)
         end
