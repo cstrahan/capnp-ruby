@@ -1,3 +1,3 @@
 module CapnProto
-  VERSION = "0.0.1.alpha.5"
+  VERSION = "0.0.1.alpha.6"
 end
