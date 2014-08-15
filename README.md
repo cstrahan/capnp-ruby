@@ -70,11 +70,11 @@ def print_address_book(file)
 
     if person.employment.unemployed?
       puts "unemployed"
-    if person.employment.employer?
+    elsif person.employment.employer?
       puts "employer: #{person.employment.employer}"
-    if person.employment.school?
+    elsif person.employment.school?
       puts "student at: #{person.employment.school}"
-    if person.employment.selfEmployed?
+    elsif person.employment.selfEmployed?
       puts "self employed"
     end
   end
