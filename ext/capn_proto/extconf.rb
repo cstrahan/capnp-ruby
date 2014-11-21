@@ -14,6 +14,8 @@ CONFIG['CXXFLAGS'] = [(ENV['CXXFLAGS'] || CONFIG['CXXFLAGS']),
                       compiler.std_flag,
                       compiler.stdlib_flag].join(' ')
 
+$CXXFLAGS = CONFIG['CXXFLAGS']
+
 if enable_config('debug')
   CONFIG['CFLAGS'] += " -O0 -ggdb3"
 else
