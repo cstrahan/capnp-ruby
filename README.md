@@ -81,11 +81,13 @@ def print_address_book(file)
 end
 
 if __FILE__ == $0
-  file = File.open("addressbook.bin", "wb")
-  write_address_book(file)
+  File.open("addressbook.bin", "wb") do |file|
+    write_address_book(file)
+  end
 
-  file = File.open("addressbook.bin", "rb")
-  print_address_book(file)
+  File.open("addressbook.bin", "rb") do |file|
+    print_address_book(file)
+  end
 end
 ```
 
