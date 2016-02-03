@@ -23,5 +23,6 @@ end
 $LDFLAGS += " -lcapnpc"
 $LDFLAGS += " -lcapnp"
 $LDFLAGS += " -lkj"
+$LDFLAGS += " -L/usr/local/lib"
 
 create_makefile('capn_proto/capn_proto')
