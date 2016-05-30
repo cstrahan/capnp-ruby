@@ -5,7 +5,7 @@
 # ON DEVELOPMENT [RPC support]
 i changed some configs and parameters in order to develop this binding more easily.
 Don't try to use this for production. And if you want to contribute you will have to change some things.
-In this state this binding should't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my mess.
+In this state this binding should't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my 'mess'.
 
 # Ruby Edition
 
@@ -28,7 +28,7 @@ CXX=$HOME/clang-3.2/bin/clang++ gem install capn_proto --pre
 ```
 # Interfaces
 one of the critical parts of making the rpc support is the hability to load and pass to Capabilities InterfacesSchemas.
-At this state the binding can load InterfacesSchemas and consult Methods.
+At this state the binding can load InterfacesSchemas and use and consult their Methods.
 ``` ruby
 require 'capn_proto'
 
@@ -58,7 +58,7 @@ Calculator::Calculator.method? 'noExist'
 ```
 
 
-# Example
+# Structs Example
 
 ```ruby
 require 'capn_proto'
