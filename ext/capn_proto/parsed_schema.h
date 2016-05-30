@@ -14,7 +14,8 @@ namespace ruby_capn_proto {
     static WrappedType* unwrap(VALUE self);
     static VALUE get_proto(VALUE self);
     static VALUE get_nested(VALUE self, VALUE name);
-    static VALUE as_struct(VALUE name);
+    static VALUE as_struct(VALUE self);
+    static VALUE as_interface(VALUE self);
 
     static VALUE Class;
   };

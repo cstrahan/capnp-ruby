@@ -5,6 +5,8 @@
 #include "schema_parser.h"
 #include "parsed_schema.h"
 #include "struct_schema.h"
+#include "interface_schema.h"
+#include "interface_method.h"
 #include "schema_node_reader.h"
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
@@ -32,6 +34,8 @@ extern "C" {
     SchemaParser::Init();
     ParsedSchema::Init();
     StructSchema::Init();
+    InterfaceSchema::Init();
+    InterfaceMethod::Init();
     SchemaNodeReader::Init();
     NestedNodeReader::Init();
     ListNestedNodeReader::Init();

@@ -1,6 +1,6 @@
-require 'capn_proto/capn_proto'
-require 'capn_proto/version'
-
+require './capn_proto/capn_proto'
+require './capn_proto/version'
+# './' added for dev
 module CapnProto
   ListNestedNodeReader.class_eval do
     include Enumerable
@@ -83,6 +83,12 @@ module CapnProto
           mod.extend(Struct)
         end
 
+        if node.interface?
+          interface_schema = schema.as_interface
+          mod.instance_variable_set(:@schema, interface_schema)
+          mod.extend(Interface)
+        end
+
         nested_nodes.each do |nested_node|
           const_name = nested_node.name
           const_name[0] = const_name[0].upcase
@@ -123,6 +129,20 @@ module CapnProto
 
       def read_packed_from(io)
         raise 'not implemented'
+      end
+    end
+
+    module Interface
+      def schema
+        @schema
+      end
+
+      def find_method_by_name(name)
+        @schema.find_method_by_name name
+      end
+
+      def method? (name) #short and ruby friendlier alias for find_method_by_name
+        @schema.find_method_by_name name
       end
     end
   end

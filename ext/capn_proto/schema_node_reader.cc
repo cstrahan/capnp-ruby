@@ -12,6 +12,7 @@ namespace ruby_capn_proto {
       defineAlloc(&alloc).
       defineMethod("nested_nodes", &get_nested_nodes).
       defineMethod("struct?", &is_struct).
+      defineMethod("interface?", &is_interface).
       store(&Class);
   }
 
@@ -46,6 +47,10 @@ namespace ruby_capn_proto {
 
   VALUE SchemaNodeReader::is_struct(VALUE self) {
     return unwrap(self)->isStruct() ? Qtrue : Qfalse;
+  }
+
+  VALUE SchemaNodeReader::is_interface(VALUE self) {
+    return unwrap(self)->isInterface() ? Qtrue : Qfalse;
   }
 
   VALUE SchemaNodeReader::is_enum(VALUE self) {

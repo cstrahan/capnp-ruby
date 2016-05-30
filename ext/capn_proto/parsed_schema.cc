@@ -2,6 +2,7 @@
 #include "parsed_schema.h"
 #include "schema_node_reader.h"
 #include "struct_schema.h"
+#include "interface_schema.h"
 #include "class_builder.h"
 #include "util.h"
 
@@ -15,6 +16,7 @@ namespace ruby_capn_proto {
       defineMethod("get_proto", &get_proto).
       defineMethod("get_nested", &get_nested).
       defineMethod("as_struct", &as_struct).
+      defineMethod("as_interface", &as_interface).
       store(&Class);
   }
 
@@ -55,4 +57,9 @@ namespace ruby_capn_proto {
   VALUE ParsedSchema::as_struct(VALUE self) {
     return StructSchema::create(unwrap(self)->asStruct(), self);
   }
+
+  VALUE ParsedSchema::as_interface(VALUE self) {
+    return InterfaceSchema::create(unwrap(self)->asInterface(), self);
+  }
+
 }

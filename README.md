@@ -2,6 +2,11 @@
 
 ![Cap'n Proto][logo]
 
+# ON DEVELOPMENT [RPC support]
+i changed some configs and parameters in order to develop this binding more easily.
+Don't try to use this for production. And if you want to contribute you will have to change some things.
+In this state this binding should't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my mess.
+
 # Ruby Edition
 
 This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'n Proto][capnp].
@@ -21,6 +26,37 @@ The native extension for this gem requires a C++ compiler with C++11 features, s
 ```bash
 CXX=$HOME/clang-3.2/bin/clang++ gem install capn_proto --pre
 ```
+# Interfaces
+one of the critical parts of making the rpc support is the hability to load and pass to Capabilities InterfacesSchemas.
+At this state the binding can load InterfacesSchemas and consult Methods.
+``` ruby
+require 'capn_proto'
+
+module Calculator extend CapnProto::SchemaLoader
+  load_schema('calculator.capnp')
+end
+
+Calculator::Calculator.schema
+# => #<CapnProto::InterfaceSchema:0x0000000087f0a0>
+# in the future this will be passed to both DynamicCapability::client and DynamicCapability::server
+
+Calculator::Calculator.method? 'evaluate'
+# => #<CapnProto::InterfaceMethod:0x0000000083beb8>
+# in the furute this will be passed to DynamicCapabilities to make RPC requests
+
+#nested interfaces work too
+
+Calculator::Calculator::Function.schema
+# => #<CapnProto::InterfaceSchema:0x0000000087e3a8>
+
+Calculator::Calculator::Function.method? 'call'
+# => #<CapnProto::InterfaceMethod:0x000000008b97f0>
+
+#if a method dont exists it returns false
+Calculator::Calculator.method? 'noExist'
+# => false
+```
+
 
 # Example
 
@@ -105,7 +141,7 @@ What's to come:
   - Packing/unpacking
 - Extensive test coverage
 - Proper support for [JRuby][jruby]
-- Support for RPC
+- Support for RPC [ON PROGRESS]
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"

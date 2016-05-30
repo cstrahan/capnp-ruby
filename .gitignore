@@ -4,3 +4,5 @@ Gemfile.lock
 tmp
 .env
 pkg
+*.o
+*.so
