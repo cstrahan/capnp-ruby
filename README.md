@@ -5,7 +5,7 @@
 # ON DEVELOPMENT [RPC support]
 i changed some configs and parameters in order to develop this binding more easily.
 Don't try to use this for production. And if you want to contribute you will have to change some things.
-In this state this binding should't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my 'mess'.
+In this state this binding shouldn't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my 'mess'.
 
 # Ruby Edition
 
@@ -27,7 +27,7 @@ The native extension for this gem requires a C++ compiler with C++11 features, s
 CXX=$HOME/clang-3.2/bin/clang++ gem install capn_proto --pre
 ```
 # Interfaces
-one of the critical parts of making the rpc support is the hability to load and pass to Capabilities InterfacesSchemas.
+one of the critical parts of making the rpc support is the ability to load and pass to Capabilities InterfacesSchemas.
 At this state the binding can load InterfacesSchemas and use and consult their Methods.
 ``` ruby
 require 'capn_proto'
@@ -42,7 +42,7 @@ Calculator::Calculator.schema
 
 Calculator::Calculator.method? 'evaluate'
 # => #<CapnProto::InterfaceMethod:0x0000000083beb8>
-# in the furute this will be passed to DynamicCapabilities to make RPC requests
+# in the future this will be passed to DynamicCapabilities to make RPC requests
 
 #nested interfaces work too
 
@@ -52,7 +52,7 @@ Calculator::Calculator::Function.schema
 Calculator::Calculator::Function.method? 'call'
 # => #<CapnProto::InterfaceMethod:0x000000008b97f0>
 
-#if a method dont exists it returns false
+#if a method don't exists it returns false
 Calculator::Calculator.method? 'noExist'
 # => false
 ```
