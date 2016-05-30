@@ -18,4 +18,4 @@ namespace ruby_capn_proto {
 }
 
 
-#endif /* STRUCT_SCHEMA_H */
+#endif /* INTERFACE_METHOD_SCHEMA_H */

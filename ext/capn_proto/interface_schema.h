@@ -16,11 +16,11 @@ namespace ruby_capn_proto {
     //static VALUE getMethodByName(VALUE self, VALUE name);
     //static VALUE getMethods(VALUE self);
     static VALUE find_method_by_name(VALUE self, VALUE name);
-    
+
 
     static VALUE Class;
   };
 }
 
 
-#endif /* STRUCT_SCHEMA_H */
+#endif /* INTERFACE_SCHEMA_H */

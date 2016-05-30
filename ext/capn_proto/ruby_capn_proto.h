@@ -16,6 +16,8 @@
 #include <capnp/message.h>
 #include <capnp/dynamic.h>
 
+#include <capnp/ez-rpc.h>
+
 #include <ruby.h>
 #ifdef __
 #undef __
