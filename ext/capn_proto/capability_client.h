@@ -9,7 +9,7 @@ namespace ruby_capn_proto {
     using WrappedType = capnp::DynamicCapability::Client;
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(VALUE dir, VALUE schema);
+    static VALUE create(VALUE self, VALUE dir, VALUE schema);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE newRequest(VALUE self, VALUE method);

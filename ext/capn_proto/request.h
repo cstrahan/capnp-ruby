@@ -6,17 +6,17 @@
 namespace ruby_capn_proto {
   class Request {
   public:
-    using WrappedType = capnp::Request;
+    using WrappedType = capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>;
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(VALUE request);
+    static VALUE create(WrappedType* r, VALUE client);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
-    // to think
-    //static VALUE somenthing(VALUE self);
+    static VALUE send(VALUE self);
+    static VALUE builder(VALUE self);
     static VALUE Class;
   };
 }
 
 
-#endif /* STRUCT_SCHEMA_H */
+#endif /* REQUEST_H */

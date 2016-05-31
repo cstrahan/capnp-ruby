@@ -6,6 +6,7 @@
 
 #include <kj/common.h>
 #include <kj/array.h>
+#include <kj/debug.h>
 
 #include <capnp/any.h>
 #include <capnp/serialize.h>

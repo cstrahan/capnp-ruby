@@ -2,6 +2,8 @@
 #include "capability_client.h"
 #include "interface_schema.h"
 #include "interface_method.h"
+#include "ezrpc_client.h"
+#include "request.h"
 #include "class_builder.h"
 #include "util.h"
 
@@ -14,6 +16,7 @@ namespace ruby_capn_proto {
     ClassBuilder("CapabilityClient", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("newRequest" , &newRequest).
+      defineMethod("initialize" , &create).
       store(&Class);
   }
 
@@ -33,7 +36,9 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE CapabilityClient::create(VALUE dir, VALUE interschema) {
+  VALUE CapabilityClient::create(VALUE self, VALUE dir, VALUE interschema) {
+    // todo check if dir is a ruby string
+
     // we need that InterfaceSchema
     capnp::InterfaceSchema* capnInterfaceSchema = InterfaceSchema::unwrap(interschema);
 
@@ -47,13 +52,19 @@ namespace ruby_capn_proto {
     WrappedType* rubycapclient = unwrap(rb_obj);
     *rubycapclient = dynclient;
 
+    //store the client
+    VALUE rb_client = EzrpcClient::create(&client);
+    rb_iv_set(rb_obj,"client",rb_client);
+
     return rb_obj; // returns a object of CapabilityClient containing a DynamicCapability::client
   }
 
   VALUE CapabilityClient::newRequest(VALUE self, VALUE method){
     // todo
-    auto request = unwrap(self)->newRequest(*InterfaceMethod::unwrap(method));
-    return Request::create(request);
+    // get the stored client
+    VALUE rb_client = rb_iv_get(self,"client");
+    capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct> dorequest = unwrap(self)->newRequest(*InterfaceMethod::unwrap(method));
+    return Request::create(&dorequest, rb_client);
   }
 
 }
