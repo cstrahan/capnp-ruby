@@ -30,7 +30,6 @@ namespace ruby_capn_proto {
   }
 
   VALUE InterfaceMethod::create(WrappedType method) {
-    // re think
     VALUE rb_obj = alloc(Class);
     WrappedType* wrapped_method = unwrap(rb_obj);
     *wrapped_method = kj::mv(method);

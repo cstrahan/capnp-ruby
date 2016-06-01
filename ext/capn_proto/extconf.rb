@@ -25,5 +25,8 @@ end
 $LDFLAGS += " -lcapnpc"
 $LDFLAGS += " -lcapnp"
 $LDFLAGS += " -lkj"
+$LDFLAGS += " -lcapnp-rpc"
+$LDFLAGS += " -lkj-async"
+
 
 create_makefile('capn_proto/capn_proto')

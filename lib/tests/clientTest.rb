@@ -9,26 +9,10 @@ module Calculator extend CapnProto::SchemaLoader
 end
 
 class TestInterface < Minitest::Test
-  @interface_schema
-  @evalMethod
-  @client
-  @request
-  @response
 
   def setup
     #none
   end
-
-  def test_Interface_got_loaded
-    @interface_schema = Calculator::Calculator.schema
-    assert @interface_schema
-  end
-
-  def test_Interface_method_works
-    assert Calculator::Calculator.method?('evaluate')
-    @evalMethod = Calculator::Calculator.method? 'evaluate'
-  end
-
 
   def test_make_a_client
     @interface_schema = Calculator::Calculator.schema
@@ -37,15 +21,26 @@ class TestInterface < Minitest::Test
   end
 
   def test_make_a_request
-    @request = @client.newRequest(@evalMethod)
+    @interface_schema = Calculator::Calculator.schema
+    @evalMethod = Calculator::Calculator.method? 'evaluate'
+    @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)
+    @request = @client.newRequest(@client,@evalMethod)
     assert @request
   end
 
   def test_set_parameter_of_request
+    @interface_schema = Calculator::Calculator.schema
+    @evalMethod = Calculator::Calculator.method? 'evaluate'
+    @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)
+    @request = @client.newRequest(@evalMethod)
     assert @request['expresion']['literal']= '123'
   end
 
   def test_send_request
+    @interface_schema = Calculator::Calculator.schema
+    @evalMethod = Calculator::Calculator.method? 'evaluate'
+    @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)
+    @request = @client.newRequest(@evalMethod)
     @response = @request.send
     assert @response
   end

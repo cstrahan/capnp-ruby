@@ -7,6 +7,7 @@
 #include "struct_schema.h"
 #include "interface_schema.h"
 #include "interface_method.h"
+#include "static_capability_client.h"
 #include "capability_client.h"
 #include "request.h"
 #include "ezrpc_client.h"
@@ -41,6 +42,7 @@ extern "C" {
     InterfaceMethod::Init();
     EzrpcClient::Init();
     Request::Init();
+    StaticCapabilityClient::Init();
     CapabilityClient::Init();
     SchemaNodeReader::Init();
     NestedNodeReader::Init();
