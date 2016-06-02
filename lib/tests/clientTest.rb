@@ -24,11 +24,13 @@ class TestInterface < Minitest::Test
     @interface_schema = Calculator::Calculator.schema
     @evalMethod = Calculator::Calculator.method? 'evaluate'
     @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)
-    @request = @client.newRequest(@client,@evalMethod)
+    @request = @client.request_and_send(@evalMethod,['literal'=>3])
+    p @request
     assert @request
   end
 
   def test_set_parameter_of_request
+    skip
     @interface_schema = Calculator::Calculator.schema
     @evalMethod = Calculator::Calculator.method? 'evaluate'
     @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)
@@ -37,6 +39,7 @@ class TestInterface < Minitest::Test
   end
 
   def test_send_request
+    skip
     @interface_schema = Calculator::Calculator.schema
     @evalMethod = Calculator::Calculator.method? 'evaluate'
     @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)

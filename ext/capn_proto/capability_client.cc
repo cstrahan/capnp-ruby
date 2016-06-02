@@ -2,21 +2,19 @@
 #include "capability_client.h"
 #include "interface_schema.h"
 #include "interface_method.h"
-#include "static_capability_client.h"
-#include "ezrpc_client.h"
-#include "request.h"
+#include "dynamic_value_builder.h"
 #include "class_builder.h"
 #include "util.h"
 
 namespace ruby_capn_proto {
-  using WrappedType = capnp::DynamicCapability::Client;
+  using WrappedType = capnp::EzRpcClient;
   VALUE CapabilityClient::Class;
 
   void CapabilityClient::Init() {
     // this have to be an object
     ClassBuilder("CapabilityClient", rb_cObject).
       defineAlloc(&alloc).
-      defineMethod("newRequest" , &newRequest).
+      defineMethod("request_and_send" , &request_and_send).
       defineMethod("initialize" , &create).
       store(&Class);
   }
@@ -37,44 +35,30 @@ namespace ruby_capn_proto {
   }
 
   VALUE CapabilityClient::create(VALUE self, VALUE dir, VALUE interschema) {
-    //having serious problems here
-    // both Ezrpc client and StaticCapabilityClient may not be needed and deleted
-    // in the future.
-    // todo check if dir is a ruby string
 
-    // we need that InterfaceSchema
-    capnp::InterfaceSchema* capnInterfaceSchema = InterfaceSchema::unwrap(interschema);
-    // use it to create a DynamicCapability using ezrpc
-    capnp::EzRpcClient client(Util::toString(dir));
-    capnp::Capability::Client capclient = client.getMain();
-    capnp::DynamicCapability::Client dynclient = capclient.castAs<capnp::DynamicCapability>(*capnInterfaceSchema);
-    // store it in ruby
-    VALUE rb_obj = alloc(Class);
-    WrappedType* rubycapclient = unwrap(rb_obj);
-    *rubycapclient = kj::mv(dynclient); // segfault
-    //VALUE rb_obj = Data_Wrap_Struct(Class,NULL,free,&dynclient);
+    WrappedType* rb_self = unwrap(self);
+    new (rb_self) capnp::EzRpcClient(Util::toString(dir));
 
-    //store the client
-    //VALUE rb_client = EzrpcClient::create(&client);
-    //rb_iv_set(rb_obj,"client",rb_client);
-    //store the capabilit::client
-    VALUE rb_capability_client = StaticCapabilityClient::create(&capclient);
-    rb_iv_set(rb_obj,"capclient",rb_capability_client);
-    //unwrap(rb_obj)->getSchema().getProto(); things like this works here
-    //return rb_client; // returns a object of CapabilityClient containing a DynamicCapability::client
-    return rb_obj;
+    //store the InterfaceSchema
+    rb_iv_set(self,"schema",interschema);
+
+    return self;
   }
 
-  VALUE CapabilityClient::newRequest(VALUE self , VALUE method){
-    // todo
-    // get the stored client
-    capnp::InterfaceSchema::Method* unwraped_method = InterfaceMethod::unwrap(method);
-    capnp::DynamicCapability::Client* client = unwrap(self);
-    //client->getSchema().getProto();
-    //unwrap(self)->getSchema().getProto(); but not work here
-    //auto dorequest = unwrap(self)->newRequest("evaluate");
-    VALUE rb_client = rb_iv_get(self,"client");
-    //return Request::create(&dorequest, rb_client);
+  capnp::DynamicCapability::Client CapabilityClient::make_dynamic(VALUE self){
+    VALUE rb_schema = rb_iv_get(self,"schema");
+
+    capnp::Capability::Client capclient = unwrap(self)->getMain();
+    return capclient.castAs<capnp::DynamicCapability>(*InterfaceSchema::unwrap(rb_schema));
+  }
+
+  VALUE CapabilityClient::request_and_send(VALUE self , VALUE rb_method , VALUE Data){
+    //have, a method and a list of lists each list containing a value to set
+    //return, a remote promise.
+    //TODO
+    auto*  method = InterfaceMethod::unwrap(rb_method);
+    auto request = make_dynamic(self).newRequest(*method);
+    request.get("expression").get("literal"); // just a test
     return Qfalse;
   }
 

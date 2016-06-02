@@ -6,13 +6,14 @@
 namespace ruby_capn_proto {
   class CapabilityClient {
   public:
-    using WrappedType = capnp::DynamicCapability::Client;
+    using WrappedType = capnp::EzRpcClient;
     static void Init();
     static VALUE alloc(VALUE klass);
     static VALUE create(VALUE self, VALUE dir, VALUE schema);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
-    static VALUE newRequest(VALUE self, VALUE method);
+    static capnp::DynamicCapability::Client make_dynamic(VALUE self);
+    static VALUE request_and_send(VALUE self, VALUE method, VALUE data);
     static VALUE Class;
   };
 }
