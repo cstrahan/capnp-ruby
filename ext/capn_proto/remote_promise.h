@@ -14,6 +14,7 @@ namespace ruby_capn_proto {
     static WrappedType* unwrap(VALUE self);
     static VALUE get(VALUE self, VALUE data);
     static VALUE request_and_send(VALUE self, VALUE method, VALUE data);
+    static void setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arrays);
     static VALUE wait(VALUE self);
     static VALUE Class;
   };

@@ -49,8 +49,11 @@ namespace ruby_capn_proto {
   }
 
   VALUE RemotePromise::request_and_send(VALUE self, VALUE method, VALUE data){
-    //to do
-    return Qfalse;
+    // having some problems pipelining request because i can't get the 'client'
+    // of the RemotePromise.
+    //auto new_request = unwrap(self)->newRequest(*unwrap(method));
+    //setParam(&new_request,data);
+    //create(new_request.send());
   }
 
   VALUE RemotePromise::get(VALUE self, VALUE data){
@@ -63,6 +66,30 @@ namespace ruby_capn_proto {
     auto& waitscope = CapabilityClient::unwrap(client)->getWaitScope();
     capnp::DynamicStruct::Reader reader = unwrap(self)->wait(waitscope);
     return DynamicStructReader::create(reader,Qnil);
+  }
+
+  void RemotePromise::setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arys){
+    VALUE mainIter = rb_ary_pop(arys); // mainIter is now a array
+    while(mainIter != Qnil ){
+
+      VALUE val = rb_ary_pop(mainIter);    // value to assign
+      VALUE last = rb_ary_pop(mainIter);   // name of the field to assign to val
+      VALUE temp = rb_ary_shift(mainIter); // just a to iterate
+
+      capnp::DynamicStruct::Builder builder = NULL;
+
+      // follow the nodes indicated by the array
+      while( temp != Qnil && temp != last){
+        builder = *DynamicStructBuilder::unwrap(DynamicValueBuilder::to_ruby(request->get(Util::toString(temp)),Qnil));
+        temp = rb_ary_shift(mainIter);
+      }
+
+      // when arrived to last node make the assignation
+      VALUE rb_struct = DynamicStructBuilder::create(builder,Qnil,Qfalse);
+      DynamicStructBuilder::set(rb_struct,last,val);
+
+      mainIter = rb_ary_pop(arys);
+    }
   }
 
 }

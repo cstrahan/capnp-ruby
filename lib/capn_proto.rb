@@ -99,9 +99,9 @@ module CapnProto
       end
 
       schema = @schema_parser.parse_disk_file(
-        display_name,
-        file_name,
-        imports);
+      display_name,
+      file_name,
+      imports);
 
       load_schema_rec.call(schema, self)
     end
@@ -144,6 +144,37 @@ module CapnProto
       def method? (name) #short and ruby friendlier alias for find_method_by_name
         @schema.find_method_by_name name
       end
+    end
+  end
+
+  class RequestBuilder
+    attr_reader :data
+
+    def initialize( client )
+      @client = client
+      @data = []
+      @currentArray = []
+    end
+
+    def method_missing(*args)
+      if args.length == 1
+        @currentArray << args.pop
+        return self # to chain methods like .expression.literal(3)
+      else
+        @currentArray << args.shift
+        @currentArray << args.shift
+        @data << @currentArray
+        @currentArray = []
+      end
+    end
+
+    def send
+      @interface |= @client.schema
+      method = @interface.method? @data.shift
+      unless method
+        raise('method not found')
+      end
+      @client.request_and_send(method,@data)
     end
   end
 end

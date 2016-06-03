@@ -16,6 +16,7 @@ namespace ruby_capn_proto {
     // this have to be an object
     ClassBuilder("CapabilityClient", rb_cObject).
       defineAlloc(&alloc).
+      defineMethod("schema", &get_schema).
       defineMethod("request_and_send" , &request_and_send).
       defineMethod("initialize" , &create).
       store(&Class);
@@ -47,6 +48,10 @@ namespace ruby_capn_proto {
     return self;
   }
 
+  VALUE CapabilityClient::get_schema(VALUE self){
+    return rb_iv_get(self,"schema");
+  }
+
   capnp::DynamicCapability::Client CapabilityClient::make_dynamic(VALUE self){
     VALUE rb_schema = rb_iv_get(self,"schema");
 
@@ -63,27 +68,7 @@ namespace ruby_capn_proto {
     auto* method = InterfaceMethod::unwrap(rb_method);
     auto  request = make_dynamic(self).newRequest(*method);
 
-    VALUE mainIter = rb_ary_pop(arrays); // mainIter is now a array
-    while(mainIter != Qnil ){
-
-      VALUE val = rb_ary_pop(mainIter);    // value to assign
-      VALUE last = rb_ary_pop(mainIter);   // name of the field to assign to val
-      VALUE temp = rb_ary_shift(mainIter); // just a to iterate
-
-      capnp::DynamicStruct::Builder builder = NULL;
-
-      // follow the nodes indicated by the array
-      while( temp != Qnil && temp != last){
-        builder = *DynamicStructBuilder::unwrap(DynamicValueBuilder::to_ruby(request.get(Util::toString(temp)),Qnil));
-        temp = rb_ary_shift(mainIter);
-      }
-
-      // when arrived to last node make the assignation
-      VALUE rb_struct = DynamicStructBuilder::create(builder,Qnil,Qfalse);
-      DynamicStructBuilder::set(rb_struct,last,val);
-
-      mainIter = rb_ary_pop(arrays);
-    }
+    RemotePromise::setParam(&request,arrays);
 
     capnp::RemotePromise<capnp::DynamicStruct> r = request.send();
     return RemotePromise::create(r,self);
