@@ -158,10 +158,10 @@ module CapnProto
 
     def method_missing(*args)
       if args.length == 1
-        @currentArray << args.pop
+        @currentArray << args.pop.to_s
         return self # to chain methods like .expression.literal(3)
       else
-        @currentArray << args.shift
+        @currentArray << args.shift.to_s
         @currentArray << args.shift
         @data << @currentArray
         @currentArray = []
@@ -169,7 +169,7 @@ module CapnProto
     end
 
     def send
-      @interface |= @client.schema
+      @interface = @client.schema
       method = @interface.method? @data.shift
       unless method
         raise('method not found')
