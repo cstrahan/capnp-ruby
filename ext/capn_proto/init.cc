@@ -9,7 +9,7 @@
 #include "interface_method.h"
 
 #include "capability_client.h"
-
+#include "remote_promise.h"
 #include "schema_node_reader.h"
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
@@ -41,6 +41,7 @@ extern "C" {
     InterfaceMethod::Init();
 
     CapabilityClient::Init();
+    RemotePromise::Init();
     SchemaNodeReader::Init();
     NestedNodeReader::Init();
     ListNestedNodeReader::Init();

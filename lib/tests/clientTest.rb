@@ -24,8 +24,9 @@ class TestInterface < Minitest::Test
     @interface_schema = Calculator::Calculator.schema
     @evalMethod = Calculator::Calculator.method? 'evaluate'
     @client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , @interface_schema)
-    @request = @client.request_and_send(@evalMethod,['literal'=>3])
-    p @request
+    @request = @client.request_and_send(@evalMethod,[['expression','literal',3]])
+    p @request['literal']
+    p @request.wait
     assert @request
   end
 
