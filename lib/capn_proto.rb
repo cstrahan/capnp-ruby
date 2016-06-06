@@ -150,8 +150,7 @@ module CapnProto
   class RequestBuilder
     attr_reader :data
 
-    def initialize( client )
-      @client = client
+    def initialize
       @data = []
       @currentArray = []
     end
@@ -168,13 +167,43 @@ module CapnProto
       end
     end
 
-    def send(m)
-      @interface = @client.schema
-      method = @interface.find_method_by_name m
-      unless method
-        raise('method not found')
-      end
-      @client.request_and_send(method,@data)
+    def wait
+      @to_request.wait
     end
   end
+
+  class Request < RequestBuilder
+    def initialize( client )
+      @to_request = client
+      super()
+    end
+
+    def send(method)
+      PipelinedRequest.new(@to_request.request_and_send(method,@data))
+    end
+  end
+
+  class PipelinedRequest < RequestBuilder
+    def initialize( remotePromise )
+      @to_request = remotePromise
+      super()
+    end
+
+    def send(name_struct , method)
+      @to_request.request_and_send(name_struct,method,@data)
+    end
+  end
+
+  class Client
+    def initialize(ip, interface)
+      @capclient = CapabilityClient.new(ip, interface)
+    end
+
+    def request
+      Request.new(@capclient)
+    end
+  end
+
+
+
 end

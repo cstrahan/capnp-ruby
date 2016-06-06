@@ -57,6 +57,40 @@ Calculator::Calculator.method? 'noExist'
 # => false
 ```
 
+# RPC Client aka Capability::Client Example
+TODO: fix memory leaks [ON PROGRESS]
+TODO: check the values passed
+TODO: manage exceptions
+TODO: lock/unlock GIL
+
+``` ruby
+# we will need some interfaces and methods
+interface_schema = Calculator::Calculator.schema
+evalMethod = Calculator::Calculator.method? 'evaluate'
+readMethod = Calculator::Calculator::Value.method? 'read'
+
+#make a client
+client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
+
+#get a Request object
+evalRequest = client.request
+
+#set the parameters of the request
+evalRequest.expression.literal(3) #set expression literal to 3
+
+# send it to the server and get the result
+pipelineRequest = evalRequest.send(evalMethod)
+
+
+# do a read request of the result
+# value is what evaluate returns
+response = pipelineRequest.send('value',readMethod).wait
+#Until this point, we haven't waited at all!
+# note that response is a DynamicStructReader
+
+p "THE VALUE OF REQUEST IS #{response['value']}"
+assert response['value'] == 3
+```
 
 # Structs Example
 

@@ -23,7 +23,7 @@ class TestInterface < Minitest::Test
     assert client
   end
 
-  def test_make_a_request
+  def test_make_a_request_using_hard_interface
     interface_schema = Calculator::Calculator.schema
     evalMethod = Calculator::Calculator.method? 'evaluate'
     client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , interface_schema)
@@ -32,16 +32,22 @@ class TestInterface < Minitest::Test
     sol = request.request_and_send('value',readMethod,[]).wait
     p "THE VALUE OF REQUEST IS #{sol['value']}"
     assert request
-    assert sol
+    assert sol['value'] == 3
   end
 
-  def test_set_parameter_of_request
-    skip
+  def test_make_a_request_using_good_interface
     interface_schema = Calculator::Calculator.schema
     evalMethod = Calculator::Calculator.method? 'evaluate'
-    client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , interface_schema)
-    request = client.newRequest(evalMethod)
-    assert request['expresion']['literal']= '123'
+    readMethod = Calculator::Calculator::Value.method? 'read'
+
+    client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
+    evalRequest = client.request
+    evalRequest.expression.literal(3) #set expression literal to 3
+    pipelineRequest = evalRequest.send(evalMethod)
+    response = pipelineRequest.send('value',readMethod).wait
+    p "THE VALUE OF REQUEST IS #{response['value']}"
+    assert response['value'] == 3
+
   end
 
   def test_send_request
