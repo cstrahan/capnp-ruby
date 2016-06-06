@@ -168,9 +168,9 @@ module CapnProto
       end
     end
 
-    def send
+    def send(m)
       @interface = @client.schema
-      method = @interface.method? @data.shift
+      method = @interface.find_method_by_name m
       unless method
         raise('method not found')
       end

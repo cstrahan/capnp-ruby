@@ -4,6 +4,7 @@
 #include "dynamic_struct_builder.h"
 #include "dynamic_struct_reader.h"
 #include "capability_client.h"
+#include "interface_method.h"
 #include "class_builder.h"
 #include "util.h"
 
@@ -16,7 +17,6 @@ namespace ruby_capn_proto {
     ClassBuilder("RemotePromise", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("request_and_send" , &request_and_send).
-      defineMethod("[]" , &get).
       defineMethod("wait" , &wait).
       store(&Class);
   }
@@ -48,17 +48,14 @@ namespace ruby_capn_proto {
     return rb_obj;
   }
 
-  VALUE RemotePromise::request_and_send(VALUE self, VALUE method, VALUE data){
-    // having some problems pipelining request because i can't get the 'client'
-    // of the RemotePromise.
-    //auto new_request = unwrap(self)->newRequest(*unwrap(method));
-    //setParam(&new_request,data);
-    //create(new_request.send());
-  }
-
-  VALUE RemotePromise::get(VALUE self, VALUE data){
-    //to do
-    return Qfalse;
+  VALUE RemotePromise::request_and_send(VALUE self, VALUE name_struct, VALUE method, VALUE data){
+    VALUE rb_client = rb_iv_get(self,"client");
+    auto pipelinedClient = unwrap(self)->get(Util::toString(name_struct)).releaseAs<capnp::DynamicCapability>();
+    auto request = pipelinedClient.newRequest(*InterfaceMethod::unwrap(method));
+    setParam(&request,data);
+    auto promise = request.send();
+    VALUE new_remote_promise = create(promise,rb_client);
+    return new_remote_promise;
   }
 
   VALUE RemotePromise::wait(VALUE self){
@@ -68,6 +65,7 @@ namespace ruby_capn_proto {
     return DynamicStructReader::create(reader,Qnil);
   }
 
+  //TODO move to capability_client
   void RemotePromise::setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arys){
     VALUE mainIter = rb_ary_pop(arys); // mainIter is now a array
     while(mainIter != Qnil ){
