@@ -2,7 +2,7 @@
 
 ![Cap'n Proto][logo]
 
-# ON DEVELOPMENT [RPC support]
+# ON DEVELOPMENT [RPC SERVER]
 i changed some configs and parameters in order to develop this binding more easily.
 Don't try to use this for production. And if you want to contribute you will have to change some things.
 In this state this binding shouldn't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my 'mess'.
@@ -58,10 +58,10 @@ Calculator::Calculator.method? 'noExist'
 ```
 
 # RPC Client aka Capability::Client Example
-TODO: fix memory leaks [ON PROGRESS]
-TODO: check the values passed
-TODO: manage exceptions
-TODO: lock/unlock GIL
+TODO: fix memory leaks [ON PROGRESS]  
+TODO: check the values passed  
+TODO: manage exceptions  
+TODO: lock/unlock GIL  
 
 ``` ruby
 # we will need some interfaces and methods
