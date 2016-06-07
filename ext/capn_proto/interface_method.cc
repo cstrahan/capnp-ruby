@@ -15,7 +15,7 @@ namespace ruby_capn_proto {
   }
 
   void InterfaceMethod::free(WrappedType* p) {
-    //p->~Method();
+    p->~Method();
     ruby_xfree(p);
   }
 

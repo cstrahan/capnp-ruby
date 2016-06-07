@@ -57,11 +57,9 @@ Calculator::Calculator.method? 'noExist'
 # => false
 ```
 
-# RPC Client aka Capability::Client Example
-TODO: fix memory leaks [ON PROGRESS]  
+# RPC Client aka Capability::Client Example  
 TODO: check the values passed  
 TODO: manage exceptions  
-TODO: lock/unlock GIL  
 
 ``` ruby
 # we will need some interfaces and methods
@@ -85,7 +83,9 @@ pipelineRequest = evalRequest.send(evalMethod)
 # do a read request of the result
 # value is what evaluate returns
 response = pipelineRequest.send('value',readMethod).wait
-#Until this point, we haven't waited at all!
+# Until this point, we haven't waited at all!
+# also during the wait the global interpreter lock gets released
+# so others threads can run ruby code
 # note that response is a DynamicStructReader
 
 p "THE VALUE OF REQUEST IS #{response['value']}"

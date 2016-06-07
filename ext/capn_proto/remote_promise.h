@@ -4,6 +4,12 @@
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
+  typedef struct _waitpacket {
+    capnp::EzRpcClient* client;
+    capnp::RemotePromise<capnp::DynamicStruct>* prom;
+    capnp::Response<capnp::DynamicStruct>* response;
+  } waitpacket;
+
   class RemotePromise {
   public:
     using WrappedType = capnp::RemotePromise<capnp::DynamicStruct>;
@@ -15,6 +21,7 @@ namespace ruby_capn_proto {
     static VALUE request_and_send(VALUE self, VALUE struct_name, VALUE method, VALUE data);
     static void setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arrays);
     static VALUE wait(VALUE self);
+    static void * waitIntern(void * p);
     static VALUE Class;
   };
 }

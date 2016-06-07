@@ -6,6 +6,7 @@
 #include "capability_client.h"
 #include "interface_method.h"
 #include "class_builder.h"
+#include <ruby/thread.h>
 #include "util.h"
 
 namespace ruby_capn_proto {
@@ -22,8 +23,8 @@ namespace ruby_capn_proto {
   }
 
   void RemotePromise::free(WrappedType* p) {
-    // todo fix
-    printf("Free has been called\n" );
+    p->~RemotePromise();
+    ruby_xfree(p);
   }
 
   VALUE RemotePromise::alloc(VALUE klass) {
@@ -60,9 +61,20 @@ namespace ruby_capn_proto {
 
   VALUE RemotePromise::wait(VALUE self){
     VALUE client = rb_iv_get(self,"client");
-    auto& waitscope = CapabilityClient::unwrap(client)->getWaitScope();
-    capnp::DynamicStruct::Reader reader = unwrap(self)->wait(waitscope);
-    return DynamicStructReader::create(reader,Qnil);
+
+    waitpacket p;
+    p.prom = unwrap(self);
+    p.client = CapabilityClient::unwrap(client);
+    p.response = NULL;
+
+    rb_thread_call_without_gvl(waitIntern, &p, RUBY_UBF_IO , 0);
+    return DynamicStructReader::create(*p.response,Qnil);
+  }
+
+  void * RemotePromise::waitIntern(void * p){
+    waitpacket* pkt = (waitpacket*) p;
+    auto& waitscope = pkt->client->getWaitScope();
+    pkt->response = new capnp::Response<capnp::DynamicStruct>(pkt->prom->wait(waitscope));
   }
 
   //TODO move to capability_client

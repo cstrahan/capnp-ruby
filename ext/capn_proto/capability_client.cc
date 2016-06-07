@@ -23,8 +23,8 @@ namespace ruby_capn_proto {
   }
 
   void CapabilityClient::free(WrappedType* p) {
-    // todo fix
-    printf("Free has been called\n" );
+    //p->~EzRpcClient(); to be fixed soon
+    ruby_xfree(p);
   }
 
   VALUE CapabilityClient::alloc(VALUE klass) {
