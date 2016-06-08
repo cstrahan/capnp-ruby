@@ -5,6 +5,7 @@
 #include "dynamic_value_builder.h"
 #include "dynamic_struct_builder.h"
 #include "remote_promise.h"
+#include "exception.h"
 #include "class_builder.h"
 #include "util.h"
 
@@ -65,14 +66,18 @@ namespace ruby_capn_proto {
     // Data must be a array of arrays
     // arrays must be like ['expression','literal','3']
     // this will set in the expression param literal = 3
-    auto* method = InterfaceMethod::unwrap(rb_method);
-    auto  request = make_dynamic(self).newRequest(*method);
+    try{
+      auto* method = InterfaceMethod::unwrap(rb_method);
+      auto  request = make_dynamic(self).newRequest(*method);
 
-    RemotePromise::setParam(&request,arrays);
+      RemotePromise::setParam(&request,arrays);
 
-    capnp::RemotePromise<capnp::DynamicStruct> r = request.send();
-    return RemotePromise::create(r,self);
-    //return Qfalse;
+      capnp::RemotePromise<capnp::DynamicStruct> r = request.send();
+      return RemotePromise::create(r,self);
+      //return Qfalse;
+    }catch(kj::Exception e){
+      Exception::raise(e);
+    }
   }
 
 }

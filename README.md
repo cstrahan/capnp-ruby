@@ -57,9 +57,8 @@ Calculator::Calculator.method? 'noExist'
 # => false
 ```
 
-# RPC Client aka Capability::Client Example  
-TODO: check the values passed  
-TODO: manage exceptions  
+# RPC Client aka Capability::Client Example   
+TODO: simplify the usage  
 
 ``` ruby
 # we will need some interfaces and methods

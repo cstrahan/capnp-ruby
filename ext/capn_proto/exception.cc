@@ -27,4 +27,8 @@ namespace ruby_capn_proto {
     rb_exc_raise(create(exception));
     return Qnil;
   }
+
+  void * Exception::raise(void * exception) {
+    rb_exc_raise(create(*((kj::Exception*)exception)));
+  }
 }

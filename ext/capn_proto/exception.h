@@ -10,6 +10,7 @@ namespace ruby_capn_proto {
     static void Init();
     static VALUE create(WrappedType exception);
     static VALUE raise(WrappedType exception);
+    static void * raise(void * exception);
 
     static VALUE Class;
   };

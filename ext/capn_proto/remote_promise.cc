@@ -5,6 +5,7 @@
 #include "dynamic_struct_reader.h"
 #include "capability_client.h"
 #include "interface_method.h"
+#include "exception.h"
 #include "class_builder.h"
 #include <ruby/thread.h>
 #include "util.h"
@@ -51,12 +52,16 @@ namespace ruby_capn_proto {
 
   VALUE RemotePromise::request_and_send(VALUE self, VALUE name_struct, VALUE method, VALUE data){
     VALUE rb_client = rb_iv_get(self,"client");
-    auto pipelinedClient = unwrap(self)->get(Util::toString(name_struct)).releaseAs<capnp::DynamicCapability>();
-    auto request = pipelinedClient.newRequest(*InterfaceMethod::unwrap(method));
-    setParam(&request,data);
-    auto promise = request.send();
-    VALUE new_remote_promise = create(promise,rb_client);
-    return new_remote_promise;
+    try{
+      auto pipelinedClient = unwrap(self)->get(Util::toString(name_struct)).releaseAs<capnp::DynamicCapability>();
+      auto request = pipelinedClient.newRequest(*InterfaceMethod::unwrap(method));
+      setParam(&request,data);
+      auto promise = request.send();
+      VALUE new_remote_promise = create(promise,rb_client);
+      return new_remote_promise;
+    }catch( kj::Exception t){
+      Exception::raise(t);
+    }
   }
 
   VALUE RemotePromise::wait(VALUE self){
@@ -72,9 +77,13 @@ namespace ruby_capn_proto {
   }
 
   void * RemotePromise::waitIntern(void * p){
-    waitpacket* pkt = (waitpacket*) p;
-    auto& waitscope = pkt->client->getWaitScope();
-    pkt->response = new capnp::Response<capnp::DynamicStruct>(pkt->prom->wait(waitscope));
+    try {
+      waitpacket* pkt = (waitpacket*) p;
+      auto& waitscope = pkt->client->getWaitScope();
+      pkt->response = new capnp::Response<capnp::DynamicStruct>(pkt->prom->wait(waitscope));
+    }catch(kj::Exception t){
+      rb_thread_call_with_gvl(&Exception::raise,&t);
+    }
   }
 
   //TODO move to capability_client
@@ -90,8 +99,12 @@ namespace ruby_capn_proto {
 
       // follow the nodes indicated by the array
       while( temp != Qnil && temp != last){
-        builder = *DynamicStructBuilder::unwrap(DynamicValueBuilder::to_ruby(request->get(Util::toString(temp)),Qnil));
-        temp = rb_ary_shift(mainIter);
+        try{
+          builder = *DynamicStructBuilder::unwrap(DynamicValueBuilder::to_ruby(request->get(Util::toString(temp)),Qnil));
+          temp = rb_ary_shift(mainIter);
+        }catch(kj::Exception t){
+          Exception::raise(t);
+        }
       }
 
       // when arrived to last node make the assignation

@@ -44,23 +44,9 @@ class TestInterface < Minitest::Test
     evalRequest = client.request
     evalRequest.expression.literal(3) #set expression literal to 3
     pipelineRequest = evalRequest.send(evalMethod)
-    response = pipelineRequest.send('value',readMethod).wait
+    response = pipelineRequest.send('val12ue',readMethod).wait
     p "THE VALUE OF REQUEST IS #{response['value']}"
     assert response['value'] == 3
 
-  end
-
-  def test_send_request
-    skip
-    interface_schema = Calculator::Calculator.schema
-    evalMethod = Calculator::Calculator.method? 'evaluate'
-    client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , interface_schema)
-    request = client.newRequest(evalMethod)
-    response = request.send
-    assert response
-  end
-
-  def test_response_is_correct
-    skip
   end
 end
