@@ -57,35 +57,36 @@ Calculator::Calculator.method? 'noExist'
 # => false
 ```
 
-# RPC Client aka Capability::Client Example   
-TODO: simplify the usage  
-
+# RPC Client aka Capability::Client Example    
+TODO: write client_interface.md   
 ``` ruby
 # we will need some interfaces and methods
 interface_schema = Calculator::Calculator.schema
-evalMethod = Calculator::Calculator.method? 'evaluate'
 readMethod = Calculator::Calculator::Value.method? 'read'
 
 #make a client
 client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
 
-#get a Request object
-evalRequest = client.request
+#get a Request object wich calls method evaluate
+evalRequest = client.evaluateRequest
 
 #set the parameters of the request
 evalRequest.expression.literal(3) #set expression literal to 3
 
 # send it to the server and get the result
-pipelineRequest = evalRequest.send(evalMethod)
+pipelineRequest = evalRequest.send
 
 
 # do a read request of the result
 # value is what evaluate returns
-response = pipelineRequest.send('value',readMethod).wait
+pipelineRequest.get('value').method = readMethod
+response = pipelineRequest.send.wait
 # Until this point, we haven't waited at all!
 # also during the wait the global interpreter lock gets released
 # so others threads can run ruby code
 # note that response is a DynamicStructReader
+
+#for advanced usage check out client_interface.md
 
 p "THE VALUE OF REQUEST IS #{response['value']}"
 assert response['value'] == 3

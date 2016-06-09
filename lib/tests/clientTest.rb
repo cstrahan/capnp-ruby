@@ -7,9 +7,6 @@ require "./capn_proto.rb"
 module Calculator extend CapnProto::SchemaLoader
   Calculator::load_schema('./tests/calculator.capnp')
 end
-interface_schema = Calculator::Calculator.schema
-evalMethod = Calculator::Calculator.method? 'evaluate'
-client = CapnProto::CapabilityClient.new('127.0.0.1:1337' , interface_schema)
 
 class TestInterface < Minitest::Test
 
@@ -37,16 +34,29 @@ class TestInterface < Minitest::Test
 
   def test_make_a_request_using_good_interface
     interface_schema = Calculator::Calculator.schema
-    evalMethod = Calculator::Calculator.method? 'evaluate'
     readMethod = Calculator::Calculator::Value.method? 'read'
 
     client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
-    evalRequest = client.request
+    evalRequest = client.evaluateRequest
     evalRequest.expression.literal(3) #set expression literal to 3
-    pipelineRequest = evalRequest.send(evalMethod)
-    response = pipelineRequest.send('val12ue',readMethod).wait
+    pipelineRequest = evalRequest.send
+    pipelineRequest.get('value').method = readMethod
+    response = pipelineRequest.send().wait
     p "THE VALUE OF REQUEST IS #{response['value']}"
     assert response['value'] == 3
+  end
 
+  def test_make_a_request_using_short_interface
+    interface_schema = Calculator::Calculator.schema
+    readMethod = Calculator::Calculator::Value.method? 'read'
+
+    client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
+    evalRequest = client.evaluateRequest
+    evalRequest.expression.literal(3) #set expression literal to 3
+    pipelineRequest = evalRequest.send
+
+    response = pipelineRequest.send('value',readMethod).wait
+    p "THE VALUE OF REQUEST IS #{response['value']}"
+    assert response['value'] == 3
   end
 end
