@@ -58,7 +58,7 @@ Calculator::Calculator.method? 'noExist'
 ```
 
 # RPC Client aka Capability::Client Example    
-TODO: write client_interface.md   
+
 ``` ruby
 # we will need some interfaces and methods
 interface_schema = Calculator::Calculator.schema
