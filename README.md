@@ -38,11 +38,11 @@ end
 
 Calculator::Calculator.schema
 # => #<CapnProto::InterfaceSchema:0x0000000087f0a0>
-# in the future this will be passed to both DynamicCapability::client and DynamicCapability::server
+# this is passed to DynamicCapability::client
 
 Calculator::Calculator.method? 'evaluate'
 # => #<CapnProto::InterfaceMethod:0x0000000083beb8>
-# in the future this will be passed to DynamicCapabilities to make RPC requests
+# this is passed to DynamicCapabilities to request a method
 
 #nested interfaces work too
 
@@ -67,7 +67,7 @@ readMethod = Calculator::Calculator::Value.method? 'read'
 #make a client
 client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
 
-#get a Request object wich calls method evaluate
+#get a Request object which calls method evaluate
 evalRequest = client.evaluateRequest
 
 #set the parameters of the request
@@ -169,6 +169,9 @@ What's implemented:
 - Message writing
   - To byte string
   - To file descriptor
+- RPC
+  - loading InterfaceSchema and InterfaceSchema::Method
+  - RPC client (DynamicCapability::Client)
 
 What's to come:
 - More reading/writing mechanisms:
