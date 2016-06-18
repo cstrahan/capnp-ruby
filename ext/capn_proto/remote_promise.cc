@@ -15,7 +15,7 @@ namespace ruby_capn_proto {
   VALUE RemotePromise::Class;
 
   void RemotePromise::Init() {
-    // this have to be an object
+
     ClassBuilder("RemotePromise", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("request_and_send" , &request_and_send).
@@ -72,6 +72,7 @@ namespace ruby_capn_proto {
     p.client = CapabilityClient::unwrap(client);
     p.response = NULL;
 
+    // call waitIntern releasing the GIL
     rb_thread_call_without_gvl(waitIntern, &p, RUBY_UBF_IO , 0);
     return DynamicStructReader::create(*p.response,Qnil);
   }
@@ -82,18 +83,19 @@ namespace ruby_capn_proto {
       auto& waitscope = pkt->client->getWaitScope();
       pkt->response = new capnp::Response<capnp::DynamicStruct>(pkt->prom->wait(waitscope));
     }catch(kj::Exception t){
+      // adquire the lock to raise an exception on ruby
       rb_thread_call_with_gvl(&Exception::raise,&t);
     }
   }
 
-  //TODO move to capability_client
+  //should be moved to capability_client?
   void RemotePromise::setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arys){
     VALUE mainIter = rb_ary_pop(arys); // mainIter is now a array
     while(mainIter != Qnil ){
 
       VALUE val = rb_ary_pop(mainIter);    // value to assign
       VALUE last = rb_ary_pop(mainIter);   // name of the field to assign to val
-      VALUE temp = rb_ary_shift(mainIter); // just a to iterate
+      VALUE temp = rb_ary_shift(mainIter); // just to iterate
 
       capnp::DynamicStruct::Builder builder = NULL;
 

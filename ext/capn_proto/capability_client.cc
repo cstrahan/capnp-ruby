@@ -14,7 +14,6 @@ namespace ruby_capn_proto {
   VALUE CapabilityClient::Class;
 
   void CapabilityClient::Init() {
-    // this have to be an object
     ClassBuilder("CapabilityClient", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("schema", &get_schema).
@@ -61,8 +60,8 @@ namespace ruby_capn_proto {
   }
 
   VALUE CapabilityClient::request_and_send(VALUE self , VALUE rb_method , VALUE arrays){
-    //have, a method and a list of lists each list containing a value to set
-    //return, a remote promise.
+    // have, a method and a list of lists each list containing a value to set
+    // return, a remote promise.
     // Data must be a array of arrays
     // arrays must be like ['expression','literal','3']
     // this will set in the expression param literal = 3
@@ -74,7 +73,7 @@ namespace ruby_capn_proto {
 
       capnp::RemotePromise<capnp::DynamicStruct> r = request.send();
       return RemotePromise::create(r,self);
-      //return Qfalse;
+
     }catch(kj::Exception e){
       Exception::raise(e);
     }
