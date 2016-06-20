@@ -10,6 +10,7 @@
 
 #include "capability_client.h"
 #include "remote_promise.h"
+#include "call_context.h"
 #include "schema_node_reader.h"
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
@@ -42,6 +43,7 @@ extern "C" {
 
     CapabilityClient::Init();
     RemotePromise::Init();
+    CallContext::Init();
     SchemaNodeReader::Init();
     NestedNodeReader::Init();
     ListNestedNodeReader::Init();
