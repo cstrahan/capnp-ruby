@@ -10,13 +10,13 @@ namespace ruby_capn_proto {
   VALUE CallContext::Class;
 
   void CallContext::Init() {
-    ClassBuilder("CallContext", rb_cObject).
+    ClassBuilder("CallContext" , rb_cObject).
       defineAlloc(&alloc).
       defineMethod("getParams" , &getParams).
       defineMethod("releaseParams" , &releaseParams).
       defineMethod("getResults" , &getResults).
       defineMethod("initResults" , &initResults).
-      defineMethod("setResults") , &setResults).
+      defineMethod("setResults" , &setResults).
       store(&Class);
   }
 
@@ -37,8 +37,8 @@ namespace ruby_capn_proto {
 
   VALUE CallContext::create(WrappedType context) {
     VALUE rb_obj = alloc(Class);
-    WrappedType* wrapped_method = unwrap(rb_obj);
-    *wrapped_method = kj::mv(method);
+    WrappedType* wrapped_context = unwrap(rb_obj);
+    *wrapped_context = kj::mv(context);
     return rb_obj;
   }
 
@@ -52,11 +52,11 @@ namespace ruby_capn_proto {
   }
 
   VALUE CallContext::getResults(VALUE self) {
-    return DynamicStructBuilder::create(unwrap(self)->getResults(),Qnil);
+    return DynamicStructBuilder::create(unwrap(self)->getResults(), Qnil, Qtrue);
   }
 
   VALUE CallContext::initResults(VALUE self) {
-    return DynamicStructBuilder::create(unwrap(self)->initResults(),Qnil);
+    return DynamicStructBuilder::create(unwrap(self)->initResults(), Qnil, Qtrue );
   }
 
   VALUE CallContext::setResults(VALUE self, VALUE structReader) {

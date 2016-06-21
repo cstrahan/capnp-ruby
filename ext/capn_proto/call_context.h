@@ -7,7 +7,10 @@ namespace ruby_capn_proto {
   class CallContext {
   public:
     using WrappedType = capnp::CallContext<capnp::DynamicStruct, capnp::DynamicStruct>;
-    static void create(WrappedType context);
+    static void Init();
+    static VALUE alloc(VALUE klass);
+    static void free(WrappedType* p);
+    static VALUE create(WrappedType context);
     static WrappedType* unwrap(VALUE self);
     static VALUE getParams(VALUE self);
     static VALUE releaseParams(VALUE self);
