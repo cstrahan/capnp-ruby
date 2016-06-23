@@ -8,7 +8,7 @@ module Calculator extend CapnProto::SchemaLoader
   Calculator::load_schema('./tests/calculator.capnp')
 end
 
-class TestInterface < Minitest::Test
+class ClientTest < Minitest::Test
 
   def setup
     #none

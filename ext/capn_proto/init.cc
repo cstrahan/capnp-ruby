@@ -9,6 +9,7 @@
 #include "interface_method.h"
 
 #include "capability_client.h"
+#include "capability_server.h"
 #include "remote_promise.h"
 #include "call_context.h"
 #include "schema_node_reader.h"
@@ -42,6 +43,7 @@ extern "C" {
     InterfaceMethod::Init();
 
     CapabilityClient::Init();
+    CapabilityServer::Init();
     RemotePromise::Init();
     CallContext::Init();
     SchemaNodeReader::Init();
