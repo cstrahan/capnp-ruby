@@ -4,6 +4,7 @@
 #include "interface_schema.h"
 #include "exception.h"
 #include "class_builder.h"
+#include <ruby/thread.h>
 #include "util.h"
 
 namespace ruby_capn_proto {
@@ -45,8 +46,13 @@ namespace ruby_capn_proto {
 
   VALUE CapabilityServer::process(VALUE self){
     auto server = unwrap(self);
-    kj::NEVER_DONE.wait(server->getWaitScope());
+    rb_thread_call_without_gvl(loopServer, &(server->getWaitScope()), RUBY_UBF_IO , 0);
     return Qtrue;
+  }
+
+  void * CapabilityServer::loopServer(void * p){
+    auto* waitScope = (kj::WaitScope*) p;
+    kj::NEVER_DONE.wait(*waitScope);
   }
 
 }

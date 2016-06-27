@@ -13,6 +13,7 @@ namespace ruby_capn_proto {
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE process(VALUE self);
+    static void * loopServer(void* p);
     static VALUE Class;
   };
 }

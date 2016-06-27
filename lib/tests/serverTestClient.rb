@@ -12,8 +12,10 @@ class ServerTestClient < Minitest::Test
   def test_doRead
     schema = Calculator::Calculator::Value.schema
     client = CapnProto::Client.new("127.0.0.1:4645", schema)
-    request = client.readRequest
-    results = request.send.wait
-    p results['value']
+    100.times do
+      request = client.readRequest
+      results = request.send.wait
+      p results['value']
+    end
   end
 end

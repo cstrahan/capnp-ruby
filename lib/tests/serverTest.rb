@@ -22,7 +22,7 @@ class ServerTest < Minitest::Test
   def test_processRead
     interface = Calculator::Calculator::Value.schema
     server = CapnProto::CapabilityServer.new(RubyServerReader.new, interface, "*:4645")
-    puts "listening on :4545"
+    puts "listening on :4645"
     server.process
     puts "hello"
   end

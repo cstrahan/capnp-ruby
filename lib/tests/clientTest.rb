@@ -37,13 +37,15 @@ class ClientTest < Minitest::Test
     readMethod = Calculator::Calculator::Value.method? 'read'
 
     client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
-    evalRequest = client.evaluateRequest
-    evalRequest.expression.literal(3) #set expression literal to 3
-    pipelineRequest = evalRequest.send
-    pipelineRequest.get('value').method = readMethod
-    response = pipelineRequest.send().wait
-    p "THE VALUE OF REQUEST IS #{response['value']}"
-    assert response['value'] == 3
+    10.times do #to test if the binding can handle multiple requests
+      evalRequest = client.evaluateRequest
+      evalRequest.expression.literal(3) #set expression literal to 3
+      pipelineRequest = evalRequest.send
+      pipelineRequest.get('value').method = readMethod
+      response = pipelineRequest.send().wait
+      p "THE VALUE OF REQUEST IS #{response['value']}"
+      assert response['value'] == 3
+    end
   end
 
   def test_make_a_request_using_short_interface
