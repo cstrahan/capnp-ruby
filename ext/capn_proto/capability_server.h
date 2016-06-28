@@ -4,6 +4,12 @@
 #include "ruby_capn_proto.h"
 
 namespace ruby_capn_proto {
+
+  typedef struct _loopCall{
+    kj::WaitScope* waitscope;
+    kj::PromiseFulfillerPair<void>* promisepair;
+  } loopCall;
+
   class CapabilityServer {
   public:
     using WrappedType = capnp::EzRpcServer;
@@ -14,6 +20,7 @@ namespace ruby_capn_proto {
     static WrappedType* unwrap(VALUE self);
     static VALUE process(VALUE self);
     static void * loopServer(void* p);
+    static void stopLoopServer(void* p);
     static VALUE Class;
   };
 }

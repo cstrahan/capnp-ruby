@@ -24,6 +24,5 @@ class ServerTest < Minitest::Test
     server = CapnProto::CapabilityServer.new(RubyServerReader.new, interface, "*:4645")
     puts "listening on :4645"
     server.process
-    puts "hello"
   end
 end

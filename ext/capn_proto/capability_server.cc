@@ -45,14 +45,23 @@ namespace ruby_capn_proto {
   }
 
   VALUE CapabilityServer::process(VALUE self){
+    loopCall l;
     auto server = unwrap(self);
-    rb_thread_call_without_gvl(loopServer, &(server->getWaitScope()), RUBY_UBF_IO , 0);
+    auto to_fulfill = kj::heap<kj::PromiseFulfillerPair<void>>(kj::newPromiseAndFulfiller<void>());
+    l.waitscope = &server->getWaitScope();
+    l.promisepair = to_fulfill.get();
+    rb_thread_call_without_gvl(loopServer, &l, stopLoopServer , l.promisepair);
     return Qtrue;
   }
 
   void * CapabilityServer::loopServer(void * p){
-    auto* waitScope = (kj::WaitScope*) p;
-    kj::NEVER_DONE.wait(*waitScope);
+    auto* loopcall = (loopCall*) p;
+    loopcall->promisepair->promise.wait(*(loopcall->waitscope));
+  }
+
+  void CapabilityServer::stopLoopServer(void *p){
+    auto* promisefulfiller = (kj::PromiseFulfillerPair<void>*) p;
+    promisefulfiller->fulfiller->fulfill();
   }
 
 }
