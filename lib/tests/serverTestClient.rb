@@ -16,6 +16,7 @@ class ServerTestClient < Minitest::Test
       request = client.readRequest
       results = request.send.wait
       p results['value']
+      assert results['value'] == 19
     end
   end
 end
