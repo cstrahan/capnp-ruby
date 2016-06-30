@@ -97,7 +97,7 @@ namespace ruby_capn_proto {
       VALUE last = rb_ary_pop(mainIter);   // name of the field to assign to val
       VALUE temp = rb_ary_shift(mainIter); // just to iterate
 
-      capnp::DynamicStruct::Builder builder = NULL;
+      capnp::DynamicStruct::Builder builder = *request;
 
       // follow the nodes indicated by the array
       while( temp != Qnil && temp != last){
