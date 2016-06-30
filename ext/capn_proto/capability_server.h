@@ -21,6 +21,9 @@ namespace ruby_capn_proto {
     static VALUE process(VALUE self);
     static void * loopServer(void* p);
     static void stopLoopServer(void* p);
+    // schema and rb_server to make new RubyCapabilityServer on the fly
+    static capnp::InterfaceSchema* schema(VALUE self);
+    static VALUE rb_server(VALUE self);
     static VALUE Class;
   };
 }

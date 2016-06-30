@@ -9,13 +9,13 @@ struct Task {
 }
 
 interface Employer {
-  put23 @0 ( taskSent :Task ) -> ( taskRecv :Task );
+  getWorker @0 () -> ( worker :Worker );
 }
 
 interface Master {
-  wantToWork @0 ( ipOfWorker :Text ) -> ( hired :Bool);
+  wantToWork @0 ( workerInterface :Worker ) -> ( hired :Bool);
 }
 
 interface Worker {
-  work @0 (taskToProcess :Task) -> (taskProcessed :Task);
+  put23 @0 (taskToProcess :Task) -> (taskProcessed :Task);
 }

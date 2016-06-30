@@ -41,6 +41,9 @@ namespace ruby_capn_proto {
     WrappedType* rb_self = unwrap(self);
     new (rb_self) capnp::EzRpcServer( kj::heap<capnp::RubyCapabilityServer>(*schema, rb_server) , Util::toString(dir) );
 
+    rb_iv_set(self,"rb_server",rb_server);
+    rb_iv_set(self,"schema",interschema);
+
     return self;
   }
 
@@ -62,6 +65,14 @@ namespace ruby_capn_proto {
   void CapabilityServer::stopLoopServer(void *p){
     auto* promisefulfiller = (kj::PromiseFulfillerPair<void>*) p;
     promisefulfiller->fulfiller->fulfill();
+  }
+
+  VALUE CapabilityServer::rb_server(VALUE self){
+    return rb_iv_get(self,"rb_server");
+  }
+
+  capnp::InterfaceSchema* CapabilityServer::schema(VALUE self){
+    return InterfaceSchema::unwrap(rb_iv_get(self,"schema"));
   }
 
 }

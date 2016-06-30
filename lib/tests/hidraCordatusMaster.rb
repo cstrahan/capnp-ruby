@@ -12,15 +12,17 @@ class MasterServer
   end
 
   def wantToWork(context)
-    ip_of_worker = context.getParams['ipOfWorker']
-    @workers << CapnProto::CapabilityClient.new(ip_of_worker,@schema)
+    @workers << context.getParams['workerInterface']
+    p @workers
     context.getResults['hired'] = true;
     puts "new worker hired"
   end
 
   def getWorker
     @currentWorker += 1
-    @workers[ @currentWorker % @workers.size ]
+    w = @workers[ @currentWorker % @workers.size ]
+    p w
+    return w
   end
 end
 
@@ -29,13 +31,10 @@ class EmployerServer
     @worker_pool = masterServer
   end
 
-  def put23(context)
-    to_process = context.getParams['task_sent']
-    worker = @worker_pool.getWorker
-    request = worker.workRequest
-    request.task_to_process(to_process)
-    result_task = request.send.wait['task_processed']
-    context.getResults['task_recv'] = result_task
+  def getWorker(context)
+    puts "getWorker called"
+    context.getResults['worker'] = @worker_pool.getWorker
+    puts "getWorker dispatched"
   end
 
 end

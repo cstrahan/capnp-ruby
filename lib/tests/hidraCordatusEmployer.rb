@@ -10,14 +10,18 @@ class Employer < Minitest::Test
     employer_schema = Hydra::Employer.schema
     client = CapnProto::Client.new("127.0.0.1:1337",employer_schema)
 
+    put23method = Hydra::Worker.method? 'put23'
     100.times do
 
       #set up the request
-      request = client.put23Request
-      request.taskSent.dataint(0)
+      request = client.getWorkerRequest
+      pipelinedRequest = request.send
+      pipelinedRequest.get('worker').method = put23method
+      pipelinedRequest.taskToProcess.dataint(0)
+
 
       #get the results
-      results = request.send.wait
+      results = pipelinedRequest.send.wait
       p results['taskRecv']['dataint']
       p results['taskRecv']['madeBy']
 
