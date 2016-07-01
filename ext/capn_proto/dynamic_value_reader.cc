@@ -10,7 +10,7 @@ namespace ruby_capn_proto {
     switch (value.getType())
     {
       case capnp::DynamicValue::CAPABILITY:
-        return CapabilityClient::fromRaw(value.as<capnp::DynamicCapability>());
+        return CapabilityClient::create(value.as<capnp::DynamicCapability>());
       case capnp::DynamicValue::BOOL:
         return value.as<bool>() ? Qtrue : Qfalse;
       case capnp::DynamicValue::INT:

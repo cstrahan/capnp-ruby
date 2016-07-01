@@ -1,5 +1,6 @@
 #include "ruby_capn_proto.h"
 #include "capability_client.h"
+#include "dynamic_capability_client.h"
 #include "interface_schema.h"
 #include "interface_method.h"
 #include "dynamic_value_builder.h"
@@ -10,20 +11,18 @@
 #include "util.h"
 
 namespace ruby_capn_proto {
-  using WrappedType = capnp::EzRpcClient;
+  using WrappedType = capnp::Capability::Client;
   VALUE CapabilityClient::Class;
 
   void CapabilityClient::Init() {
     ClassBuilder("CapabilityClient", rb_cObject).
       defineAlloc(&alloc).
-      defineMethod("schema", &get_schema).
-      defineMethod("request_and_send" , &request_and_send).
-      defineMethod("initialize" , &create).
+      defineMethod("to_dynamic" , &to_dynamic).
       store(&Class);
   }
 
   void CapabilityClient::free(WrappedType* p) {
-    //p->~EzRpcClient(); to be fixed soon
+    p->~Client();
     ruby_xfree(p);
   }
 
@@ -37,46 +36,17 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE CapabilityClient::create(VALUE self, VALUE dir, VALUE interschema) {
+  VALUE CapabilityClient::create(WrappedType native_client ) {
 
+    VALUE self = alloc(Class);
     WrappedType* rb_self = unwrap(self);
-    new (rb_self) capnp::EzRpcClient(Util::toString(dir));
-
-    //store the InterfaceSchema
-    rb_iv_set(self,"schema",interschema);
+    new (rb_self) capnp::Capability::Client(native_client);
 
     return self;
   }
 
-  VALUE CapabilityClient::get_schema(VALUE self){
-    return rb_iv_get(self,"schema");
-  }
-
-  capnp::DynamicCapability::Client CapabilityClient::make_dynamic(VALUE self){
-    VALUE rb_schema = rb_iv_get(self,"schema");
-
-    capnp::Capability::Client capclient = unwrap(self)->getMain();
-    return capclient.castAs<capnp::DynamicCapability>(*InterfaceSchema::unwrap(rb_schema));
-  }
-
-  VALUE CapabilityClient::request_and_send(VALUE self , VALUE rb_method , VALUE arrays){
-    // have, a method and a list of lists each list containing a value to set
-    // return, a remote promise.
-    // Data must be a array of arrays
-    // arrays must be like ['expression','literal','3']
-    // this will set in the expression param literal = 3
-    try{
-      auto* method = InterfaceMethod::unwrap(rb_method);
-      auto  request = make_dynamic(self).newRequest(*method);
-
-      RemotePromise::setParam(&request,arrays);
-
-      capnp::RemotePromise<capnp::DynamicStruct> r = request.send();
-      return RemotePromise::create(r,self);
-
-    }catch(kj::Exception e){
-      Exception::raise(e);
-    }
+  VALUE CapabilityClient::to_dynamic(VALUE self, VALUE schema){
+    return DynamicCapabilityClient::create(self,schema);
   }
 
 }

@@ -10,11 +10,12 @@ end
 
 class ServerTestClient < Minitest::Test
   def test_doRead
+    readMethod = Calculator::Calculator::Value.method? 'read'
     schema = Calculator::Calculator::Value.schema
-    client = CapnProto::Client.new("127.0.0.1:4645", schema)
+    ezclient = CapnProto::EzRpcClient.new("127.0.0.1:4645", schema)
     100.times do
-      request = client.readRequest
-      results = request.send.wait
+      client = ezclient.client
+      results = client.request_and_send(readMethod,[]).wait(ezclient)
       p results['value']
       assert results['value'] == 19
     end

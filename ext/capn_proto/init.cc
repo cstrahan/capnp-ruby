@@ -12,6 +12,8 @@
 #include "capability_server.h"
 #include "remote_promise.h"
 #include "call_context.h"
+#include "EzRpc_client.h"
+#include "dynamic_capability_client.h"
 #include "schema_node_reader.h"
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
@@ -46,6 +48,8 @@ extern "C" {
     CapabilityServer::Init();
     RemotePromise::Init();
     CallContext::Init();
+    EzRpcCapabilityClient::Init();
+    DynamicCapabilityClient::Init();
     SchemaNodeReader::Init();
     NestedNodeReader::Init();
     ListNestedNodeReader::Init();

@@ -3,7 +3,7 @@
 #include "dynamic_value_builder.h"
 #include "dynamic_struct_builder.h"
 #include "dynamic_struct_reader.h"
-#include "capability_client.h"
+#include "EzRpc_client.h"
 #include "interface_method.h"
 #include "exception.h"
 #include "class_builder.h"
@@ -38,15 +38,12 @@ namespace ruby_capn_proto {
     return p;
   }
 
-  VALUE RemotePromise::create(WrappedType& remote_promise, VALUE client) {
+  VALUE RemotePromise::create(WrappedType& remote_promise) {
 
     VALUE rb_obj = alloc(Class);
     WrappedType* rb_promise = unwrap(rb_obj);
     new (rb_promise) WrappedType(kj::mv(remote_promise));
 
-
-    //store the client
-    rb_iv_set(rb_obj,"client",client);
     return rb_obj;
   }
 
@@ -57,19 +54,19 @@ namespace ruby_capn_proto {
       auto request = pipelinedClient.newRequest(*InterfaceMethod::unwrap(method));
       setParam(&request,data);
       auto promise = request.send();
-      VALUE new_remote_promise = create(promise,rb_client);
+      VALUE new_remote_promise = create(promise);
       return new_remote_promise;
     }catch( kj::Exception t){
       Exception::raise(t);
     }
   }
 
-  VALUE RemotePromise::wait(VALUE self){
-    VALUE client = rb_iv_get(self,"client");
+  VALUE RemotePromise::wait(VALUE self, VALUE ezrpclient){
+    VALUE client = ezrpclient;
 
     waitpacket p;
     p.prom = unwrap(self);
-    p.client = CapabilityClient::unwrap(client);
+    p.client = EzRpcCapabilityClient::unwrap(client);
     p.response = NULL;
 
     // call waitIntern releasing the GIL

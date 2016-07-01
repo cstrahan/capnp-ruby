@@ -15,12 +15,12 @@ namespace ruby_capn_proto {
     using WrappedType = capnp::RemotePromise<capnp::DynamicStruct>;
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(WrappedType& promise, VALUE client);
+    static VALUE create(WrappedType& promise);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE request_and_send(VALUE self, VALUE struct_name, VALUE method, VALUE data);
     static void setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arrays);
-    static VALUE wait(VALUE self);
+    static VALUE wait(VALUE self, VALUE ezrpclient);
     static void * waitIntern(void * p);
     static VALUE Class;
   };
