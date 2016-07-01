@@ -10,9 +10,9 @@ namespace ruby_capn_proto {
     static void Init();
     static VALUE alloc(VALUE klass);
     static VALUE create(VALUE capclient, VALUE schema);
+    static VALUE create(WrappedType native_dynclient);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
-    static VALUE get_schema(VALUE self);
     static VALUE request_and_send(VALUE self, VALUE method, VALUE data);
     static VALUE Class;
   };

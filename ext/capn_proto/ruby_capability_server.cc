@@ -10,6 +10,7 @@ namespace capnp {
     // or that is my intention anyway
     callPacket packet;
     packet.methodName = method.getProto().getName().cStr();
+    printf("%s called\n",packet.methodName );
     packet.rb_context = ruby_capn_proto::CallContext::create(context);
     packet.rb_server = this->server;
     rb_thread_call_with_gvl(this->rbCall, &packet);

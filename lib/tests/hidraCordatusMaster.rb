@@ -19,6 +19,7 @@ class MasterServer
   end
 
   def getWorker
+    
     @currentWorker += 1
     w = @workers[ @currentWorker % @workers.size ]
     p w

@@ -7,6 +7,7 @@
 #include "malloc_message_builder.h"
 #include "capability_server.h"
 #include "ruby_capability_server.h"
+#include "dynamic_capability_client.h"
 #include "class_builder.h"
 #include "exception.h"
 #include "util.h"
@@ -129,7 +130,8 @@ namespace ruby_capn_proto {
       unwrap(self)->set(field, (*DynamicStructBuilder::unwrap(rb_obj)).asReader());
     }else if (rb_equal(klass, CapabilityServer::Class)){
       unwrap(self)->set(field, kj::heap<capnp::RubyCapabilityServer>(*CapabilityServer::schema(rb_obj),CapabilityServer::rb_server(rb_obj)));
-      printf("get trolled\n");
+    }else if (rb_equal(klass, DynamicCapabilityClient::Class)){
+      unwrap(self)->set(field, *DynamicCapabilityClient::unwrap(rb_obj));
     } else {
       // TODO: raise "Non primitive type"
     }

@@ -18,12 +18,11 @@ namespace ruby_capn_proto {
     ClassBuilder("DynamicCapabilityClient", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("request_and_send" , &request_and_send).
-      defineMethod("schema", &get_schema).
       store(&Class);
   }
 
   void DynamicCapabilityClient::free(WrappedType* p) {
-    p->~Client(); 
+    p->~Client();
     ruby_xfree(p);
   }
 
@@ -44,7 +43,13 @@ namespace ruby_capn_proto {
     auto dyncap = CapabilityClient::unwrap(client)->castAs<capnp::DynamicCapability>(*InterfaceSchema::unwrap(interschema));
     new (rb_self) capnp::DynamicCapability::Client(dyncap);
 
-    rb_iv_set(self, "schema", interschema);
+    return self;
+  }
+
+  VALUE DynamicCapabilityClient::create(WrappedType native_client){
+    VALUE self = alloc(Class);
+    WrappedType* rb_self = unwrap(self);
+    new (rb_self) capnp::DynamicCapability::Client(native_client);
 
     return self;
   }
@@ -67,9 +72,4 @@ namespace ruby_capn_proto {
       Exception::raise(e);
     }
   }
-
-  VALUE DynamicCapabilityClient::get_schema(VALUE self){
-    return rb_iv_get(self,"schema");
-  }
-
 }

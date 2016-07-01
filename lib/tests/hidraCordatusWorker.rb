@@ -17,16 +17,23 @@ end
 #make a request to master to be a worker
 master_interface = Hydra::Master.schema
 worker_interface = Hydra::Worker.schema
-client = CapnProto::Client.new("127.0.0.1:3456",master_interface)
-
+wantToWork_method = Hydra::Master.method? 'wantToWork'
+ezclient = CapnProto::EzRpcClient.new("127.0.0.1:3456",master_interface)
+client = ezclient.client
 
 workerServer = CapnProto::CapabilityServer.new(WorkerServer.new,worker_interface,"*:3434")
-puts "listening for work on 3434"
+
 hired = false
 while !hired
-  request = client.wantToWorkRequest
+  p workerServer
+  request = client.request(wantToWork_method)
   request.workerInterface(workerServer)
-  hired = request.send.wait['hired']
+  p request
+  result = request.send.wait(ezclient)
+  hired = result['hired']
   puts "hired = #{hired}"
 end
+
+
+puts "listening for work on 3434"
 workerServer.process

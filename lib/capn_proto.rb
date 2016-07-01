@@ -167,48 +167,29 @@ module CapnProto
       end
     end
 
-    def wait
-      @to_request.wait
+    def wait(waitscope)
+      @to_request.wait(waitscope)
     end
   end
 
   class Request < RequestBuilder
-    attr_accessor :method
-    def initialize( *args )
-      if args.size == 2
-        @to_request = client
-        @interface = args[1]
-        @method = nil
-      elsif args.size == 3
-        @to_request = args[0]
-        @method = args[1]
-        @interface = args[2]
-      elsif args.size > 3
-        raise "too much arguments"
-      end
 
+    def initialize( client, method )
+      @to_request = client
+      @method = method
       super()
     end
 
-    def send(*args)
-      if args.size == 1
-        @method = args[0]
-      end
-      if args.size > 1
-        raise "too much arguments"
-      end
-      if !@method
-        raise "No method error. set a method before calling send"
-      end
-      PipelinedRequest.new(@to_request.request_and_send(@method,@data),@interface)
+    def send
+      PipelinedRequest.new(@to_request.request_and_send(@method,@data))
     end
+
   end
 
   class PipelinedRequest < RequestBuilder
     attr_accessor :method
-    def initialize( remotePromise , interface )
+    def initialize( remotePromise )
       @to_request = remotePromise
-      @interface = interface
       super()
     end
 
@@ -217,46 +198,20 @@ module CapnProto
       return self # to chain calls like get('value').readRequest
     end
 
-    def send(*args)
-      if args.size == 2
-        @value = args[0]
-        @method = args[1]
-      end
-      if args.size > 2
-        raise "too much arguments"
-      end
+    def send
       if !@value || !@method
         raise "call both get and request before calling send"
       end
-      @to_request.request_and_send(@value,method,@data)
+      @to_request.request_and_send(@value,@method,@data)
     end
   end
 
-  class Client
-    def initialize(ip, interface)
-      @interface = interface
-      @capclient = CapabilityClient.new(ip, interface)
+  DynamicCapabilityClient.class_eval do
+
+    def request(method)
+      Request.new(self,method)
     end
 
-    def request
-      Request.new(@capclient,@interface)
-    end
-
-    def method_missing(*args)
-      if args.size == 1
-        t = /(\w+)Request/.match args[0]
-        if t
-          try_method = @interface.find_method_by_name(t[1])
-          unless try_method
-            raise ("no method found: #{t[1]}")
-          end
-          return Request.new(@capclient,try_method,@interface)
-        end
-      end
-      super
-    end
   end
-
-
 
 end
