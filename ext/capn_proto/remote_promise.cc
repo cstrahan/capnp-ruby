@@ -66,6 +66,7 @@ namespace ruby_capn_proto {
 
     waitpacket p;
     p.prom = unwrap(self);
+    //TODO handle EzRpcServer waitscope too
     p.client = EzRpcCapabilityClient::unwrap(client);
     p.response = NULL;
 

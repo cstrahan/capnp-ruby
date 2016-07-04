@@ -2,12 +2,6 @@
 #include "EzRpc_client.h"
 #include "capability_client.h"
 #include "dynamic_capability_client.h"
-#include "interface_schema.h"
-#include "interface_method.h"
-#include "dynamic_value_builder.h"
-#include "dynamic_struct_builder.h"
-#include "remote_promise.h"
-#include "exception.h"
 #include "class_builder.h"
 #include "util.h"
 
@@ -24,7 +18,6 @@ namespace ruby_capn_proto {
   }
 
   void EzRpcCapabilityClient::free(WrappedType* p) {
-    //p->~EzRpcClient(); to be fixed soon
     ruby_xfree(p);
   }
 

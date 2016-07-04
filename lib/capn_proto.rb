@@ -133,16 +133,19 @@ module CapnProto
     end
 
     module Interface
-      def schema
-        @schema
-      end
+      attr_reader :schema
 
       def find_method_by_name(name)
         @schema.find_method_by_name name
       end
 
-      def method? (name) #short and ruby friendlier alias for find_method_by_name
-        @schema.find_method_by_name name
+      def method!(name) #short and ruby friendlier alias for find_method_by_name
+        temp = @schema.find_method_by_name name
+        if temp
+          return temp
+        else
+          raise "Method #{name} not found in this interface"
+        end
       end
     end
   end
@@ -200,7 +203,7 @@ module CapnProto
 
     def send
       if !@value || !@method
-        raise "call both get and request before calling send"
+        raise "call both get and set method before calling send"
       end
       @to_request.request_and_send(@value,@method,@data)
     end
@@ -214,4 +217,15 @@ module CapnProto
 
   end
 
+  class Server
+    attr_reader :raw
+
+    def initialize(interface, listen)
+      @raw = CapabilityServer.new(self, interface, listen)
+    end
+
+    def run
+      @raw.run
+    end
+  end
 end

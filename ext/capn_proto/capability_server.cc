@@ -14,13 +14,12 @@ namespace ruby_capn_proto {
   void CapabilityServer::Init() {
     ClassBuilder("CapabilityServer", rb_cObject).
       defineAlloc(&alloc).
-      defineMethod("process" , &process).
+      defineMethod("run" , &process).
       defineMethod("initialize" , &create).
       store(&Class);
   }
 
   void CapabilityServer::free(WrappedType* p) {
-    //p->~EzRpcServer(); to be fixed soon
     ruby_xfree(p);
   }
 

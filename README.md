@@ -2,7 +2,7 @@
 
 ![Cap'n Proto][logo]
 
-# ON DEVELOPMENT [RPC SERVER]
+# ON DEVELOPMENT
 i changed some configs and parameters in order to develop this binding more easily.
 Don't try to use this for production. And if you want to contribute you will have to change some things.
 In this state this binding shouldn't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my 'mess'.
@@ -26,71 +26,8 @@ The native extension for this gem requires a C++ compiler with C++11 features, s
 ```bash
 CXX=$HOME/clang-3.2/bin/clang++ gem install capn_proto --pre
 ```
-# Interfaces
-one of the critical parts of making the rpc support is the ability to load and pass to Capabilities InterfacesSchemas.
-At this state the binding can load InterfacesSchemas and use and consult their Methods.
-``` ruby
-require 'capn_proto'
-
-module Calculator extend CapnProto::SchemaLoader
-  load_schema('calculator.capnp')
-end
-
-Calculator::Calculator.schema
-# => #<CapnProto::InterfaceSchema:0x0000000087f0a0>
-# this is passed to DynamicCapability::client
-
-Calculator::Calculator.method? 'evaluate'
-# => #<CapnProto::InterfaceMethod:0x0000000083beb8>
-# this is passed to DynamicCapabilities to request a method
-
-#nested interfaces work too
-
-Calculator::Calculator::Function.schema
-# => #<CapnProto::InterfaceSchema:0x0000000087e3a8>
-
-Calculator::Calculator::Function.method? 'call'
-# => #<CapnProto::InterfaceMethod:0x000000008b97f0>
-
-#if a method don't exists it returns false
-Calculator::Calculator.method? 'noExist'
-# => false
-```
-
-# RPC Client aka Capability::Client Example    
-
-``` ruby
-# we will need some interfaces and methods
-interface_schema = Calculator::Calculator.schema
-readMethod = Calculator::Calculator::Value.method? 'read'
-
-#make a client
-client = CapnProto::Client.new('127.0.0.1:1337', interface_schema)
-
-#get a Request object which calls method evaluate
-evalRequest = client.evaluateRequest
-
-#set the parameters of the request
-evalRequest.expression.literal(3) #set expression literal to 3
-
-# send it to the server and get the result
-pipelineRequest = evalRequest.send
 
 
-# do a read request of the result
-# value is what evaluate returns
-pipelineRequest.get('value').method = readMethod
-response = pipelineRequest.send.wait
-# Until this point, we haven't waited at all!
-# also during the wait the global interpreter lock gets released
-# so others threads can run ruby code
-# note that response is a DynamicStructReader
-
-#for advanced usage check out client_interface.md
-
-p "THE VALUE OF REQUEST IS #{response['value']}"
-assert response['value'] == 3
-```
 
 # Structs Example
 
@@ -158,6 +95,104 @@ if __FILE__ == $0
   print_address_book(file)
 end
 ```
+# RPC Client Example    
+note, both the client example and the server example can be found in lib/tests as a minitest.
+```ruby
+
+module Hydra extend CapnProto::SchemaLoader
+  load_schema('./tests/hidraCordatus.capnp')
+end
+
+employer_schema =   Hydra::Employer.schema
+get_worker_method = Hydra::Employer.method! 'getWorker'
+put23method =       Hydra::Worker.method!   'put23'
+
+ezclient = CapnProto::EzRpcClient.new("127.0.0.1:1337",employer_schema)
+client = ezclient.client
+
+# set up the request
+# note that there is truly 2 requests, one to get the worker interface, other to call put23
+request = client.request(get_worker_method)
+pipelinedRequest = request.send
+# end of request to get the worker interface, begin of request put23
+pipelinedRequest.get('worker').method = put23method
+pipelinedRequest.taskToProcess.dataint(0)
+# end of request put23
+
+results = pipelinedRequest.send.wait(ezclient)
+# note that ezclient is used as a waitscope
+puts results.taskProcessed.dataint
+puts results.taskProcessed.madeBy
+```
+
+# RPC server Example
+CapnProto::Server is a hybrid between EzRpcServer and DynamicCapability::Server
+```ruby
+
+module Hydra extend CapnProto::SchemaLoader
+  load_schema('./tests/hidraCordatus.capnp')
+end
+
+class WorkerServer < CapnProto::Server
+  def initialize(i)
+    @madeBy = "made by worker ##{i}"
+    super(Hydra::Worker.schema, "")
+    # super takes the InterfaceSchema served and a bind direction
+    # as WorkerServer is used only to be passed around
+    # by the Employer server the bind direction
+    # should be ""
+  end
+
+  def put23(context)
+    puts "put23 called"
+    n = context.getParams.taskToProcess.dataint
+    context.getResults.taskProcessed.dataint = n + 23
+    context.getResults.taskProcessed.madeBy = @madeBy
+    puts "put23 dispatched"
+  end
+end
+
+class EmployerServer < CapnProto::Server
+  def initialize(wp)
+    @worker_pool = wp
+    @currentWorker = 0
+    super(Hydra::Employer.schema, "*:1337")
+  end
+
+  def get_a_Worker
+    @currentWorker += 1
+    @worker_pool[@currentWorker % @worker_pool.size]
+  end
+
+  def getWorker(context)
+    puts "getWorker called"
+    context.getResults.worker = get_a_Worker.raw
+    puts "getWorker dispatched"
+  end
+end
+
+workers = []
+10.times do |i|
+  workers << WorkerServer.new(i)
+end
+
+Thread.new do
+  es = EmployerServer.new(workers)
+  puts "serving EmployerServer on 1337..."
+  es.run
+end.join
+```
+the results of running the server/client pair is :
+```
+23
+"made by worker #1"
+23
+"made by worker #2"
+23
+"made by worker #3"
+23
+...
+```
 
 # Status
 
@@ -171,14 +206,16 @@ What's implemented:
   - To file descriptor
 - RPC
   - loading InterfaceSchema and InterfaceSchema::Method
-  - RPC client (DynamicCapability::Client)
+  - RPC client
+  - RPC server
 
 What's to come:
 - More reading/writing mechanisms:
   - Packing/unpacking
 - Extensive test coverage
 - Proper support for [JRuby][jruby]
-- Support for RPC [ON PROGRESS]
+- A best RPC
+  - no more exceptions at control-c [WIP]
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"

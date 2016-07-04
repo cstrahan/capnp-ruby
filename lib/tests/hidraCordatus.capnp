@@ -1,4 +1,3 @@
-# little but powerful distributed computation system.
 # made by Felipe Vieira, gsoc 2016 student
 
 @0x9dfdcaa625365235;
@@ -10,10 +9,6 @@ struct Task {
 
 interface Employer {
   getWorker @0 () -> ( worker :Worker );
-}
-
-interface Master {
-  wantToWork @0 ( workerInterface :Worker ) -> ( hired :Bool);
 }
 
 interface Worker {
