@@ -136,11 +136,11 @@ end
 class WorkerServer < CapnProto::Server
   def initialize(i)
     @madeBy = "made by worker ##{i}"
-    super(Hydra::Worker.schema, "")
+    super(Hydra::Worker.schema, "*")
     # super takes the InterfaceSchema served and a bind direction
     # as WorkerServer is used only to be passed around
     # by the Employer server the bind direction
-    # should be ""
+    # should be "*"
   end
 
   def put23(context)

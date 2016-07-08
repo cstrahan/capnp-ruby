@@ -3,6 +3,7 @@
 #include "capability_client.h"
 #include "dynamic_capability_client.h"
 #include "class_builder.h"
+#include "exception.h"
 #include "util.h"
 
 namespace ruby_capn_proto {

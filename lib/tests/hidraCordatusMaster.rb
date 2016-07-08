@@ -7,16 +7,16 @@ end
 class WorkerServer < CapnProto::Server
   def initialize(i)
     @madeBy = "made by worker ##{i}"
-    super(Hydra::Worker.schema, "")
+    super(Hydra::Worker.schema, "*")
     #as WorkerServer is used only to be passed around
     #by the Employer server the bind direction
-    #should be ""
+    #should be "*"
   end
 
   def put23(context)
     puts "put23 called"
     n = context.getParams.taskToProcess.dataint
-    context.getResults.taskProcessed.dataint = n + 23
+    context.getResults.taskProcessed.dataint = n + 23/0
     context.getResults.taskProcessed.madeBy = @madeBy
     puts "put23 dispatched"
   end
@@ -47,11 +47,9 @@ workers = []
   workers << WorkerServer.new(i)
 end
 
-
-
+puts "serving EmployerServer on 1337..."
 
 Thread.new do
-  es = EmployerServer.new(workers)
-  puts "serving EmployerServer on 1337..."
-  es.run
+e = EmployerServer.new(workers)
+e.run
 end.join

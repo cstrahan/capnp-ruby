@@ -39,7 +39,8 @@ namespace ruby_capn_proto {
 
     WrappedType* rb_self = unwrap(self);
     new (rb_self) capnp::EzRpcServer( kj::heap<capnp::RubyCapabilityServer>(*schema, rb_server) , Util::toString(dir) );
-
+    //TODO if the capserver is just meant to be passed away by the main capserver
+    // dont construct a EzrpcServer
     rb_iv_set(self,"rb_server",rb_server);
     rb_iv_set(self,"schema",interschema);
 
@@ -47,23 +48,36 @@ namespace ruby_capn_proto {
   }
 
   VALUE CapabilityServer::process(VALUE self){
-    loopCall l;
-    auto server = unwrap(self);
-    auto to_fulfill = kj::heap<kj::PromiseFulfillerPair<void>>(kj::newPromiseAndFulfiller<void>());
-    l.waitscope = &server->getWaitScope();
-    l.promisepair = to_fulfill.get();
-    rb_thread_call_without_gvl(loopServer, &l, stopLoopServer , l.promisepair);
+    try{
+      loopCall l;
+      auto server = unwrap(self);
+      auto to_fulfill = kj::heap<kj::PromiseFulfillerPair<void>>(kj::newPromiseAndFulfiller<void>());
+      l.waitscope = &server->getWaitScope();
+      l.promisepair = to_fulfill.get();
+      rb_thread_call_without_gvl(loopServer, &l, stopLoopServer , l.promisepair);
+    }catch ( kj::Exception t ){
+      Exception::raise(t);
+    }
     return Qtrue;
   }
 
   void * CapabilityServer::loopServer(void * p){
-    auto* loopcall = (loopCall*) p;
-    loopcall->promisepair->promise.wait(*(loopcall->waitscope));
+    try {
+      auto* loopcall = (loopCall*) p;
+      loopcall->promisepair->promise.wait(*(loopcall->waitscope));
+    }catch( kj::Exception t ){
+      //adquire the lock to raise a ruby exception
+      rb_thread_call_with_gvl(&Exception::raise,&t);
+    }
   }
 
   void CapabilityServer::stopLoopServer(void *p){
-    auto* promisefulfiller = (kj::PromiseFulfillerPair<void>*) p;
-    promisefulfiller->fulfiller->fulfill();
+    try {
+      auto* promisefulfiller = (kj::PromiseFulfillerPair<void>*) p;
+      promisefulfiller->fulfiller->fulfill();
+    }catch( kj::Exception t ){
+      Exception::raise(t);
+    }
   }
 
   VALUE CapabilityServer::rb_server(VALUE self){
