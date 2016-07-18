@@ -4,29 +4,26 @@ module Hydra extend CapnProto::SchemaLoader
   load_schema('./tests/hidraCordatus.capnp')
 end
 
-class WorkerServer < CapnProto::Server
+class WorkerServer < CapnProto::CapabilityServer
   def initialize(i)
     @madeBy = "made by worker ##{i}"
-    super(Hydra::Worker.schema, "*")
-    #as WorkerServer is used only to be passed around
-    #by the Employer server the bind direction
-    #should be "*"
+    super(Hydra::Worker.schema)
   end
 
   def put23(context)
     puts "put23 called"
     n = context.getParams.taskToProcess.dataint
-    context.getResults.taskProcessed.dataint = n + 23/0
+    context.getResults.taskProcessed.dataint = n + 23
     context.getResults.taskProcessed.madeBy = @madeBy
     puts "put23 dispatched"
   end
 end
 
-class EmployerServer < CapnProto::Server
+class EmployerServer < CapnProto::CapabilityServer
   def initialize(wp)
     @worker_pool = wp
     @currentWorker = 0
-    super(Hydra::Employer.schema, "*:1337")
+    super(Hydra::Employer.schema)
   end
 
   def get_a_Worker
@@ -36,7 +33,7 @@ class EmployerServer < CapnProto::Server
 
   def getWorker(context)
     puts "getWorker called"
-    context.getResults.worker = get_a_Worker.raw
+    context.getResults.worker = get_a_Worker
     puts "getWorker dispatched"
   end
 
@@ -50,6 +47,6 @@ end
 puts "serving EmployerServer on 1337..."
 
 Thread.new do
-e = EmployerServer.new(workers)
+e = CapnProto::EzRpcServer.new(EmployerServer.new(workers), "*:1337")
 e.run
 end.join

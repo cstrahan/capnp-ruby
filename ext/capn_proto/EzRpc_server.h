@@ -1,5 +1,5 @@
-#ifndef CAPABILITY_SERVER_H
-#define CAPABILITY_SERVER_H
+#ifndef EZRPC_CAPABILITY_SERVER_H
+#define EZRPC_CAPABILITY_SERVER_H
 
 #include "ruby_capn_proto.h"
 
@@ -10,12 +10,12 @@ namespace ruby_capn_proto {
     kj::PromiseFulfillerPair<void>* promisepair;
   } loopCall;
 
-  class CapabilityServer {
+  class EzRpcCapabilityServer {
   public:
     using WrappedType = capnp::EzRpcServer;
     static void Init();
     static VALUE alloc(VALUE klass);
-    static VALUE create(VALUE self, VALUE rb_server, VALUE schema , VALUE dir);
+    static VALUE create(VALUE self, VALUE rb_server, VALUE dir);
     static void free(WrappedType* p);
     static WrappedType* unwrap(VALUE self);
     static VALUE process(VALUE self);
@@ -29,4 +29,4 @@ namespace ruby_capn_proto {
 }
 
 
-#endif /* CAPABILITY_SERVER_H */
+#endif /* EZRPC_CAPABILITY_SERVER_H */

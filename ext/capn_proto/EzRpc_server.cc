@@ -1,5 +1,5 @@
 #include "ruby_capn_proto.h"
-#include "capability_server.h"
+#include "EzRpc_server.h"
 #include "ruby_capability_server.h"
 #include "interface_schema.h"
 #include "exception.h"
@@ -9,45 +9,42 @@
 
 namespace ruby_capn_proto {
   using WrappedType = capnp::EzRpcServer;
-  VALUE CapabilityServer::Class;
+  VALUE EzRpcCapabilityServer::Class;
 
-  void CapabilityServer::Init() {
-    ClassBuilder("CapabilityServer", rb_cObject).
+  void EzRpcCapabilityServer::Init() {
+    ClassBuilder("EzRpcServer", rb_cObject).
       defineAlloc(&alloc).
       defineMethod("run" , &process).
       defineMethod("initialize" , &create).
       store(&Class);
   }
 
-  void CapabilityServer::free(WrappedType* p) {
+  void EzRpcCapabilityServer::free(WrappedType* p) {
     ruby_xfree(p);
   }
 
-  VALUE CapabilityServer::alloc(VALUE klass) {
+  VALUE EzRpcCapabilityServer::alloc(VALUE klass) {
     return Data_Wrap_Struct(klass, NULL, free, ruby_xmalloc(sizeof(WrappedType)));
   }
 
-  WrappedType* CapabilityServer::unwrap(VALUE self) {
+  WrappedType* EzRpcCapabilityServer::unwrap(VALUE self) {
     WrappedType* p;
     Data_Get_Struct(self, WrappedType, p);
     return p;
   }
 
-  VALUE CapabilityServer::create(VALUE self, VALUE rb_server, VALUE interschema, VALUE dir) {
+  VALUE EzRpcCapabilityServer::create(VALUE self, VALUE rb_capServer, VALUE dir) {
 
+    VALUE interschema = rb_iv_get(rb_capServer,"@schema");
     auto schema = InterfaceSchema::unwrap(interschema);
 
     WrappedType* rb_self = unwrap(self);
-    new (rb_self) capnp::EzRpcServer( kj::heap<capnp::RubyCapabilityServer>(*schema, rb_server) , Util::toString(dir) );
-    //TODO if the capserver is just meant to be passed away by the main capserver
-    // dont construct a EzrpcServer
-    rb_iv_set(self,"rb_server",rb_server);
-    rb_iv_set(self,"schema",interschema);
+    new (rb_self) capnp::EzRpcServer( kj::heap<capnp::RubyCapabilityServer>(*schema, rb_capServer) , Util::toString(dir) );
 
     return self;
   }
 
-  VALUE CapabilityServer::process(VALUE self){
+  VALUE EzRpcCapabilityServer::process(VALUE self){
     try{
       loopCall l;
       auto server = unwrap(self);
@@ -61,7 +58,7 @@ namespace ruby_capn_proto {
     return Qtrue;
   }
 
-  void * CapabilityServer::loopServer(void * p){
+  void * EzRpcCapabilityServer::loopServer(void * p){
     try {
       auto* loopcall = (loopCall*) p;
       loopcall->promisepair->promise.wait(*(loopcall->waitscope));
@@ -71,7 +68,7 @@ namespace ruby_capn_proto {
     }
   }
 
-  void CapabilityServer::stopLoopServer(void *p){
+  void EzRpcCapabilityServer::stopLoopServer(void *p){
     try {
       auto* promisefulfiller = (kj::PromiseFulfillerPair<void>*) p;
       promisefulfiller->fulfiller->fulfill();
@@ -79,13 +76,4 @@ namespace ruby_capn_proto {
       Exception::raise(t);
     }
   }
-
-  VALUE CapabilityServer::rb_server(VALUE self){
-    return rb_iv_get(self,"rb_server");
-  }
-
-  capnp::InterfaceSchema* CapabilityServer::schema(VALUE self){
-    return InterfaceSchema::unwrap(rb_iv_get(self,"schema"));
-  }
-
 }

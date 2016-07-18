@@ -217,15 +217,12 @@ module CapnProto
 
   end
 
-  class Server
-    attr_reader :raw
+  class CapabilityServer
 
-    def initialize(interface, listen)
-      @raw = CapabilityServer.new(self, interface, listen)
+    def initialize(interface)
+      @schema = interface
     end
 
-    def run
-      @raw.run
-    end
   end
+
 end

@@ -5,7 +5,7 @@
 #include "dynamic_value_builder.h"
 #include "message_builder.h"
 #include "malloc_message_builder.h"
-#include "capability_server.h"
+#include "interface_schema.h"
 #include "ruby_capability_server.h"
 #include "dynamic_capability_client.h"
 #include "class_builder.h"
@@ -128,8 +128,10 @@ namespace ruby_capn_proto {
       unwrap(self)->set(field, *DynamicStructReader::unwrap(rb_obj));
     } else if (rb_equal(klass, DynamicStructBuilder::Class)) {
       unwrap(self)->set(field, (*DynamicStructBuilder::unwrap(rb_obj)).asReader());
-    }else if (rb_equal(klass, CapabilityServer::Class)){
-      unwrap(self)->set(field, kj::heap<capnp::RubyCapabilityServer>(*CapabilityServer::schema(rb_obj),CapabilityServer::rb_server(rb_obj)));
+    }else if (Qnil != rb_iv_get(rb_obj,"@schema")){
+      VALUE interschema = rb_iv_get(rb_obj,"@schema");
+      auto c_schema = InterfaceSchema::unwrap(interschema);
+      unwrap(self)->set(field, kj::heap<capnp::RubyCapabilityServer>(*c_schema, rb_obj));
     }else if (rb_equal(klass, DynamicCapabilityClient::Class)){
       unwrap(self)->set(field, *DynamicCapabilityClient::unwrap(rb_obj));
     } else {
