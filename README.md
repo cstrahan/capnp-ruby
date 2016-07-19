@@ -96,7 +96,7 @@ if __FILE__ == $0
 end
 ```
 # RPC Client Example    
-note, both the client example and the server example can be found in lib/tests as a minitest.
+note, both the schema file, client example and the server example can be found in lib/tests as a minitest.
 ```ruby
 
 module Hydra extend CapnProto::SchemaLoader
@@ -110,23 +110,31 @@ put23method =       Hydra::Worker.method!   'put23'
 ezclient = CapnProto::EzRpcClient.new("127.0.0.1:1337",employer_schema)
 client = ezclient.client
 
-# set up the request
-# note that there is truly 2 requests, one to get the worker interface, other to call put23
+```
+Here we create an EzRpcClient and from it we get our DynamicCapabilityClient.
+```ruby
 request = client.request(get_worker_method)
 pipelinedRequest = request.send
-# end of request to get the worker interface, begin of request put23
+```
+Create a request of the method "getWorker" who is in the variable get_worker_method above.
+Then, send it storing the pipelined request.
+
+```ruby
 pipelinedRequest.get('worker').method = put23method
 pipelinedRequest.taskToProcess.dataint(0)
-# end of request put23
-
+```
+get the returned "worker" set the method that we want to request on it and then set
+the parameters to requested, in this case we set dataint to 0.
+```ruby
 results = pipelinedRequest.send.wait(ezclient)
-# note that ezclient is used as a waitscope
 puts results.taskProcessed.dataint
 puts results.taskProcessed.madeBy
 ```
+now we wait for the results (note that this is the only line that blocks). while we are waiting
+the Global interpreter lock is released so we can run ruby code on other threads.
+Also note that we use ezclient as a waitscope.
 
 # RPC server Example
-CapnProto::Server is a hybrid between EzRpcServer and DynamicCapability::Server
 ```ruby
 
 module Hydra extend CapnProto::SchemaLoader
@@ -136,19 +144,13 @@ end
 class WorkerServer < CapnProto::Server
   def initialize(i)
     @madeBy = "made by worker ##{i}"
-    super(Hydra::Worker.schema, "*")
-    # super takes the InterfaceSchema served and a bind direction
-    # as WorkerServer is used only to be passed around
-    # by the Employer server the bind direction
-    # should be "*"
+    super(Hydra::Worker.schema)
   end
 
   def put23(context)
-    puts "put23 called"
     n = context.getParams.taskToProcess.dataint
     context.getResults.taskProcessed.dataint = n + 23
     context.getResults.taskProcessed.madeBy = @madeBy
-    puts "put23 dispatched"
   end
 end
 
@@ -156,7 +158,7 @@ class EmployerServer < CapnProto::Server
   def initialize(wp)
     @worker_pool = wp
     @currentWorker = 0
-    super(Hydra::Employer.schema, "*:1337")
+    super(Hydra::Employer.schema)
   end
 
   def get_a_Worker
@@ -165,25 +167,30 @@ class EmployerServer < CapnProto::Server
   end
 
   def getWorker(context)
-    puts "getWorker called"
-    context.getResults.worker = get_a_Worker.raw
-    puts "getWorker dispatched"
+    context.getResults.worker = get_a_Worker
   end
 end
 
+```
+note that the name of the methods is exactly the same as the name of the function that is defined on the schema and recieves only one argument.
+regarding the example, EmployerServer will serve WorkerServers to the clients.
+
+```ruby
 workers = []
 10.times do |i|
   workers << WorkerServer.new(i)
 end
 
-Thread.new do
-  es = EmployerServer.new(workers)
-  puts "serving EmployerServer on 1337..."
-  es.run
-end.join
+
+e = CapnProto::EzRpcServer.new(EmployerServer.new(workers), "*:1337")
+puts "serving EmployerServer on 1337..."
+e.run
+
+```
+create ten workers, then a EzRpcServer wich binds to port 1337. Then run it.
 ```
 the results of running the server/client pair is :
-```
+
 23
 "made by worker #1"
 23
@@ -205,7 +212,7 @@ What's implemented:
   - To byte string
   - To file descriptor
 - RPC
-  - loading InterfaceSchema and InterfaceSchema::Method
+  - loading InterfaceSchema and their methods
   - RPC client
   - RPC server
 
@@ -214,8 +221,6 @@ What's to come:
   - Packing/unpacking
 - Extensive test coverage
 - Proper support for [JRuby][jruby]
-- A best RPC
-  - no more exceptions at control-c [WIP]
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"

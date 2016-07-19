@@ -46,7 +46,5 @@ end
 
 puts "serving EmployerServer on 1337..."
 
-Thread.new do
 e = CapnProto::EzRpcServer.new(EmployerServer.new(workers), "*:1337")
 e.run
-end.join
