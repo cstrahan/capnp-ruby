@@ -44,7 +44,7 @@ workers = []
   workers << WorkerServer.new(i)
 end
 
-puts "serving EmployerServer on 1337..."
 
 e = CapnProto::EzRpcServer.new(EmployerServer.new(workers), "*:1337")
+puts "serving EmployerServer on 1337..."
 e.run

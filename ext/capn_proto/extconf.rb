@@ -9,7 +9,7 @@ unless compiler.has_cxx11_library_support?
   abort "*** A C++ library with support for C++11 features is required."
 end
 
-$CXXFLAGS = ' -std=c++11 ' #added by fvieira in order to compile in his computer
+$CXXFLAGS = ' -std=c++11 ' 
 
 CONFIG['CXX']      = ENV['CXX'] || CONFIG['CXX']
 CONFIG['CXXFLAGS'] = [(ENV['CXXFLAGS'] || CONFIG['CXXFLAGS']),

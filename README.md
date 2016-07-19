@@ -96,7 +96,7 @@ if __FILE__ == $0
 end
 ```
 # RPC Client Example    
-note, both the schema file, client example and the server example can be found in lib/tests as a minitest.
+note: the schema file, client example and the server example can be found in lib/tests as a minitest.
 ```ruby
 
 module Hydra extend CapnProto::SchemaLoader
@@ -111,7 +111,7 @@ ezclient = CapnProto::EzRpcClient.new("127.0.0.1:1337",employer_schema)
 client = ezclient.client
 
 ```
-Here we create an EzRpcClient and from it we get our DynamicCapabilityClient.
+Create an EzRpcClient and from it get our DynamicCapabilityClient.
 ```ruby
 request = client.request(get_worker_method)
 pipelinedRequest = request.send
@@ -173,7 +173,7 @@ end
 
 ```
 note that the name of the methods is exactly the same as the name of the function that is defined on the schema and recieves only one argument.
-regarding the example, EmployerServer will serve WorkerServers to the clients.
+regarding to the example, EmployerServer will serve WorkerServers to the clients.
 
 ```ruby
 workers = []
