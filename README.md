@@ -2,10 +2,13 @@
 
 ![Cap'n Proto][logo]
 
-# ON DEVELOPMENT
-i changed some configs and parameters in order to develop this binding more easily.
-Don't try to use this for production. And if you want to contribute you will have to change some things.
-In this state this binding shouldn't be gemified. Wait till i finish working on the RPC and i will gemify this and clean my 'mess'.
+# Disclaimer
+This is not the official capnproto gem. Just a fork.   
+If you want to install **this fork** please use
+```
+gem "capn_proto", :git => "https://github.com/nemoNoboru/capnp-ruby.git"
+```
+On your Gemfile
 
 # Ruby Edition
 

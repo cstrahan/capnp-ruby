@@ -1,11 +1,10 @@
 require "minitest/autorun"
-require "./capn_proto.rb"
+require "capn_proto"
 
-# to be runned from lib, ex: fvieiraashpool:~/capnp-ruby/lib$ ruby -Ilib:test tests/interfaceTest.rb
-# only for dev purposes.
+# install the gem before running the tests
 
 module Calculator extend CapnProto::SchemaLoader
-  Calculator::load_schema('./tests/calculator.capnp')
+  Calculator::load_schema('calculator.capnp')
 end
 
 class RubyServerReader

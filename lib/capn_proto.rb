@@ -1,5 +1,5 @@
-require './capn_proto/capn_proto'
-require './capn_proto/version'
+require 'capn_proto/capn_proto'
+require 'capn_proto/version'
 
 module CapnProto
   ListNestedNodeReader.class_eval do

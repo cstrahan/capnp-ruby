@@ -1,7 +1,7 @@
-require './capn_proto.rb'
+require 'capn_proto'
 
 module Hydra extend CapnProto::SchemaLoader
-  load_schema('./tests/hidraCordatus.capnp')
+  load_schema('hidraCordatus.capnp')
 end
 
 class WorkerServer < CapnProto::CapabilityServer
@@ -38,6 +38,7 @@ class EmployerServer < CapnProto::CapabilityServer
   end
 
 end
+
 
 workers = []
 10.times do |i|

@@ -1,8 +1,8 @@
-require './capn_proto.rb'
+require 'capn_proto'
 require 'minitest/autorun'
 
 module Hydra extend CapnProto::SchemaLoader
-  load_schema('./tests/hidraCordatus.capnp')
+  load_schema('hidraCordatus.capnp')
 end
 
 class Employer < Minitest::Test

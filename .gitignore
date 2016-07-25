@@ -6,3 +6,5 @@ tmp
 pkg
 *.o
 *.so
+*.gem
+Makefile
