@@ -144,7 +144,7 @@ module Hydra extend CapnProto::SchemaLoader
   load_schema('./tests/hidraCordatus.capnp')
 end
 
-class WorkerServer < CapnProto::Server
+class WorkerServer < CapnProto::CapabilityServer
   def initialize(i)
     @madeBy = "made by worker ##{i}"
     super(Hydra::Worker.schema)
@@ -157,7 +157,7 @@ class WorkerServer < CapnProto::Server
   end
 end
 
-class EmployerServer < CapnProto::Server
+class EmployerServer < CapnProto::CapabilityServer
   def initialize(wp)
     @worker_pool = wp
     @currentWorker = 0

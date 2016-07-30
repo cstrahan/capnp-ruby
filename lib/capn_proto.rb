@@ -162,11 +162,13 @@ module CapnProto
       if args.length == 1
         @currentArray << args.pop.to_s
         return self # to chain methods like .expression.literal(3)
-      else
+      elsif args.length == 2
         @currentArray << args.shift.to_s
         @currentArray << args.shift
         @data << @currentArray
         @currentArray = []
+      else
+        super
       end
     end
 
@@ -191,6 +193,7 @@ module CapnProto
 
   class PipelinedRequest < RequestBuilder
     attr_accessor :method
+
     def initialize( remotePromise )
       @to_request = remotePromise
       super()
