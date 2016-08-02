@@ -99,7 +99,26 @@ if __FILE__ == $0
 end
 ```
 # RPC Client Example    
-note: the schema file, client example and the server example can be found in lib/tests as a minitest.
+note: the schema file, client example and the server example can be found in lib/tests as a minitest.   
+
+The following examples uses this schema:
+```CapnProto
+
+struct Task {
+  dataint @0 :Int32;
+  madeBy @1 :Text;
+}
+
+interface Employer {
+  getWorker @0 () -> ( worker :Worker );
+}
+
+interface Worker {
+  put23 @0 (taskToProcess :Task) -> (taskProcessed :Task);
+}
+
+```
+Load all the schemas and methods that will be used then create an EzRpcClient and from it get our client.
 ```ruby
 
 module Hydra extend CapnProto::SchemaLoader
@@ -114,28 +133,27 @@ ezclient = CapnProto::EzRpcClient.new("127.0.0.1:1337",employer_schema)
 client = ezclient.client
 
 ```
-Create an EzRpcClient and from it get our DynamicCapabilityClient.
+Create a request of the method "getWorker" who is in the variable get_worker_method above.
+Then, send it storing the pipelined request.
 ```ruby
 request = client.request(get_worker_method)
 pipelinedRequest = request.send
 ```
-Create a request of the method "getWorker" who is in the variable get_worker_method above.
-Then, send it storing the pipelined request.
+get the returned "worker" set the method that we want to request on it and then set
+the parameters to requested, in this case we set dataint to 0.
 
 ```ruby
 pipelinedRequest.get('worker').method = put23method
 pipelinedRequest.taskToProcess.dataint(0)
 ```
-get the returned "worker" set the method that we want to request on it and then set
-the parameters to requested, in this case we set dataint to 0.
+now we wait for the results (note that this is the only line that blocks). while we are waiting
+the Global interpreter lock is released so we can run ruby code on other threads.
+Also note that we use ezclient as a waitscope.
 ```ruby
 results = pipelinedRequest.send.wait(ezclient)
 puts results.taskProcessed.dataint
 puts results.taskProcessed.madeBy
 ```
-now we wait for the results (note that this is the only line that blocks). while we are waiting
-the Global interpreter lock is released so we can run ruby code on other threads.
-Also note that we use ezclient as a waitscope.
 
 # RPC server Example
 ```ruby
@@ -175,7 +193,8 @@ class EmployerServer < CapnProto::CapabilityServer
 end
 
 ```
-note that the name of the methods is exactly the same as the name of the function that is defined on the schema and recieves only one argument.
+note that the name of the methods is exactly the same as the name of the function that is defined on the schema and recieves only one argument. This argument is a callContext, you can use the method **getParams** to get the parameters passed  to the called method or
+use **getResults** to set the results of the request.   
 regarding to the example, EmployerServer will serve WorkerServers to the clients.
 
 ```ruby
