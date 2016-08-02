@@ -140,7 +140,7 @@ request = client.request(get_worker_method)
 pipelinedRequest = request.send
 ```
 get the returned "worker" set the method that we want to request on it and then set
-the parameters to requested, in this case we set dataint to 0.
+the parameters to be requested, in this case we set dataint to 0.
 
 ```ruby
 pipelinedRequest.get('worker').method = put23method
@@ -243,6 +243,8 @@ What's to come:
   - Packing/unpacking
 - Extensive test coverage
 - Proper support for [JRuby][jruby]
+- There is a known bug where the servers don't exits when pressing control-c. It only exits after
+pressing control-c and then a request is made from a client.
 
 [logo]: https://raw.github.com/cstrahan/capnp-ruby/master/media/captain_proto_small.png "Cap'n Proto"
 [ruby]: http://www.ruby-lang.org/ "Ruby"
