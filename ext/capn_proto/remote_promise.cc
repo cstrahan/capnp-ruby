@@ -66,7 +66,6 @@ namespace ruby_capn_proto {
 
     waitpacket p;
     p.prom = unwrap(self);
-    //TODO handle EzRpcServer waitscope too
     p.client = EzRpcCapabilityClient::unwrap(client);
     p.response = NULL;
 
@@ -86,7 +85,6 @@ namespace ruby_capn_proto {
     }
   }
 
-  //should be moved to capability_client?
   void RemotePromise::setParam(capnp::Request<capnp::DynamicStruct, capnp::DynamicStruct>* request, VALUE arys){
     VALUE mainIter = rb_ary_pop(arys); // mainIter is now a array
     while(mainIter != Qnil ){

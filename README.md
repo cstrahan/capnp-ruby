@@ -2,14 +2,6 @@
 
 ![Cap'n Proto][logo]
 
-# Disclaimer
-This is not the official capnproto gem. Just a fork.   
-If you want to install **this fork** please use
-```
-gem "capn_proto", :git => "https://github.com/nemoNoboru/capnp-ruby.git"
-```
-On your Gemfile
-
 # Ruby Edition
 
 This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'n Proto][capnp].

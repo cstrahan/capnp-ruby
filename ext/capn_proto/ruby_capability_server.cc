@@ -7,7 +7,7 @@
 namespace capnp {
   kj::Promise<void> RubyCapabilityServer::call(InterfaceSchema::Method method, CallContext<DynamicStruct, DynamicStruct> context) {
     // just a dummy c++ server that calls methods on a passed ruby server.
-    // or that is my intention anyway
+    
     callPacket packet;
     packet.methodName = method.getProto().getName().cStr();
     packet.rb_context = ruby_capn_proto::CallContext::create(context);

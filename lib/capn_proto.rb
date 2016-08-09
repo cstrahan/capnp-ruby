@@ -135,7 +135,7 @@ module CapnProto
     module Interface
       attr_reader :schema
 
-      def find_method_by_name(name)
+      def method?(name)
         @schema.find_method_by_name name
       end
 
