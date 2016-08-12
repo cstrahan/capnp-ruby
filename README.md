@@ -50,6 +50,7 @@ interface Worker {
 ```
 Load all the schemas and methods that will be used then create an EzRpcClient and from it get our client.
 ```ruby
+require 'capn_proto'
 
 module Hydra extend CapnProto::SchemaLoader
   load_schema('./tests/hidraCordatus.capnp')
@@ -87,6 +88,7 @@ puts results.taskProcessed.madeBy
 
 # RPC server Example
 ```ruby
+require 'capn_proto'
 
 module Hydra extend CapnProto::SchemaLoader
   load_schema('./tests/hidraCordatus.capnp')
