@@ -13,7 +13,7 @@ This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'
 First [install libcapnp][libcapnp-install], then install the gem:
 
 ```bash
-gem install capn_proto-rpc
+gem install capn_proto-rpc --pre
 ```
 
 or add this to your Gemfile
