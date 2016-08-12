@@ -13,88 +13,26 @@ This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'
 First [install libcapnp][libcapnp-install], then install the gem:
 
 ```bash
-gem install capn_proto --pre
+gem install capn_proto-rpc
 ```
 
-The native extension for this gem requires a C++ compiler with C++11 features, so use the same C++ compiler and flags that you used to compile libcapnp (e.g. `CXX` and `CXXFLAGS`). As an OSX user, having followed the [instructions for installing libcapnp on OSX][libcapnp-install], the correct incantation is as follows:
+or add this to your Gemfile
+
 
 ```bash
-CXX=$HOME/clang-3.2/bin/clang++ gem install capn_proto --pre
+gem capn_proto-rpc
 ```
 
+The native extension for this gem requires a C++ compiler with C++11 features.
+I've hardcoded compiler flags directly on the makefile in order to make the install easier.
 
-
-# Structs Example
-
-```ruby
-require 'capn_proto'
-
-module AddressBook extend CapnProto::SchemaLoader
-  load_schema("addressbook.capnp")
-end
-
-def write_address_book(file)
-  addresses = AddressBook::AddressBook.new_message
-  people = addresses.initPeople(2)
-
-  alice = people[0]
-  alice.id = 123
-  alice.name = 'Alice'
-  alice.email = 'alice@example.com'
-  alice_phones = alice.initPhones(1)
-  alice_phones[0].number = "555-1212"
-  alice_phones[0].type = 'mobile'
-  alice.employment.school = "MIT"
-
-  bob = people[1]
-  bob.id = 456
-  bob.name = 'Bob'
-  bob.email = 'bob@example.com'
-  bob_phones = bob.initPhones(2)
-  bob_phones[0].number = "555-4567"
-  bob_phones[0].type = 'home'
-  bob_phones[1].number = "555-7654"
-  bob_phones[1].type = 'work'
-  bob.employment.unemployed = nil
-
-  addresses.write(file)
-end
-
-def print_address_book(file)
-  addresses = AddressBook::AddressBook.read_from(file)
-
-  addresses.people.each do |person|
-    puts "#{person.name} : #{person.email}"
-
-    person.phones.each do |phone|
-      puts "#{phone.type} : #{phone.number}"
-    end
-
-    if person.employment.unemployed?
-      puts "unemployed"
-    if person.employment.employer?
-      puts "employer: #{person.employment.employer}"
-    if person.employment.school?
-      puts "student at: #{person.employment.school}"
-    if person.employment.selfEmployed?
-      puts "self employed"
-    end
-  end
-end
-
-if __FILE__ == $0
-  file = File.open("addressbook.bin", "wb")
-  write_address_book(file)
-
-  file = File.open("addressbook.bin", "rb")
-  print_address_book(file)
-end
-```
 # RPC Client Example    
 note: the schema file, client example and the server example can be found in lib/tests as a minitest.   
 
 The following examples uses this schema:
+
 ```CapnProto
+# file hidraCordatus.capnp
 
 struct Task {
   dataint @0 :Int32;
@@ -213,6 +151,72 @@ the results of running the server/client pair is :
 "made by worker #3"
 23
 ...
+```
+# Structs Example
+
+```ruby
+require 'capn_proto'
+
+module AddressBook extend CapnProto::SchemaLoader
+  load_schema("addressbook.capnp")
+end
+
+def write_address_book(file)
+  addresses = AddressBook::AddressBook.new_message
+  people = addresses.initPeople(2)
+
+  alice = people[0]
+  alice.id = 123
+  alice.name = 'Alice'
+  alice.email = 'alice@example.com'
+  alice_phones = alice.initPhones(1)
+  alice_phones[0].number = "555-1212"
+  alice_phones[0].type = 'mobile'
+  alice.employment.school = "MIT"
+
+  bob = people[1]
+  bob.id = 456
+  bob.name = 'Bob'
+  bob.email = 'bob@example.com'
+  bob_phones = bob.initPhones(2)
+  bob_phones[0].number = "555-4567"
+  bob_phones[0].type = 'home'
+  bob_phones[1].number = "555-7654"
+  bob_phones[1].type = 'work'
+  bob.employment.unemployed = nil
+
+  addresses.write(file)
+end
+
+def print_address_book(file)
+  addresses = AddressBook::AddressBook.read_from(file)
+
+  addresses.people.each do |person|
+    puts "#{person.name} : #{person.email}"
+
+    person.phones.each do |phone|
+      puts "#{phone.type} : #{phone.number}"
+    end
+
+    if person.employment.unemployed?
+      puts "unemployed"
+    if person.employment.employer?
+      puts "employer: #{person.employment.employer}"
+    if person.employment.school?
+      puts "student at: #{person.employment.school}"
+    if person.employment.selfEmployed?
+      puts "self employed"
+    end
+  end
+end
+
+if __FILE__ == $0
+  file = File.open("addressbook.bin", "wb")
+  write_address_book(file)
+
+  file = File.open("addressbook.bin", "rb")
+  print_address_book(file)
+end
 ```
 
 # Status
