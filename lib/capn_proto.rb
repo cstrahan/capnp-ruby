@@ -83,6 +83,12 @@ module CapnProto
           mod.extend(Struct)
         end
 
+        if node.interface?
+          interface_schema = schema.as_interface
+          mod.instance_variable_set(:@schema, interface_schema)
+          mod.extend(Interface)
+        end
+
         nested_nodes.each do |nested_node|
           const_name = nested_node.name
           const_name[0] = const_name[0].upcase
@@ -93,9 +99,9 @@ module CapnProto
       end
 
       schema = @schema_parser.parse_disk_file(
-        display_name,
-        file_name,
-        imports);
+      display_name,
+      file_name,
+      imports);
 
       load_schema_rec.call(schema, self)
     end
@@ -125,5 +131,101 @@ module CapnProto
         raise 'not implemented'
       end
     end
+
+    module Interface
+      attr_reader :schema
+
+      def method?(name)
+        @schema.find_method_by_name name
+      end
+
+      def method!(name) #short and ruby friendlier alias for find_method_by_name
+        temp = @schema.find_method_by_name name
+        if temp
+          return temp
+        else
+          raise "Method #{name} not found in this interface"
+        end
+      end
+    end
   end
+
+  class RequestBuilder
+    attr_reader :data
+
+    def initialize
+      @data = []
+      @currentArray = []
+    end
+
+    def method_missing(*args)
+      if args.length == 1
+        @currentArray << args.pop.to_s
+        return self # to chain methods like .expression.literal(3)
+      elsif args.length == 2
+        @currentArray << args.shift.to_s
+        @currentArray << args.shift
+        @data << @currentArray
+        @currentArray = []
+      else
+        super
+      end
+    end
+
+    def wait(waitscope)
+      @to_request.wait(waitscope)
+    end
+  end
+
+  class Request < RequestBuilder
+
+    def initialize( client, method )
+      @to_request = client
+      @method = method
+      super()
+    end
+
+    def send
+      PipelinedRequest.new(@to_request.request_and_send(@method,@data))
+    end
+
+  end
+
+  class PipelinedRequest < RequestBuilder
+    attr_accessor :method
+
+    def initialize( remotePromise )
+      @to_request = remotePromise
+      super()
+    end
+
+    def get(value)
+      @value = value
+      return self # to chain calls like get('value').readRequest
+    end
+
+    def send
+      if !@value || !@method
+        raise "call both get and set method before calling send"
+      end
+      @to_request.request_and_send(@value,@method,@data)
+    end
+  end
+
+  DynamicCapabilityClient.class_eval do
+
+    def request(method)
+      Request.new(self,method)
+    end
+
+  end
+
+  class CapabilityServer
+
+    def initialize(interface)
+      @schema = interface
+    end
+
+  end
+
 end

@@ -3,11 +3,14 @@
 #include "dynamic_list_reader.h"
 #include "dynamic_struct_reader.h"
 #include "dynamic_object_reader.h"
+#include "dynamic_capability_client.h"
 
 namespace ruby_capn_proto {
   VALUE DynamicValueReader::to_ruby(capnp::DynamicValue::Reader value, VALUE parent) {
     switch (value.getType())
     {
+      case capnp::DynamicValue::CAPABILITY:
+        return DynamicCapabilityClient::create(value.as<capnp::DynamicCapability>());
       case capnp::DynamicValue::BOOL:
         return value.as<bool>() ? Qtrue : Qfalse;
       case capnp::DynamicValue::INT:

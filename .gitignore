@@ -4,3 +4,7 @@ Gemfile.lock
 tmp
 .env
 pkg
+*.o
+*.so
+*.gem
+Makefile

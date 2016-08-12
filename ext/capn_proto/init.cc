@@ -5,6 +5,15 @@
 #include "schema_parser.h"
 #include "parsed_schema.h"
 #include "struct_schema.h"
+#include "interface_schema.h"
+#include "interface_method.h"
+
+#include "capability_client.h"
+#include "remote_promise.h"
+#include "call_context.h"
+#include "EzRpc_server.h"
+#include "EzRpc_client.h"
+#include "dynamic_capability_client.h"
 #include "schema_node_reader.h"
 #include "nested_node_reader.h"
 #include "list_nested_node_reader.h"
@@ -32,6 +41,15 @@ extern "C" {
     SchemaParser::Init();
     ParsedSchema::Init();
     StructSchema::Init();
+    InterfaceSchema::Init();
+    InterfaceMethod::Init();
+
+    CapabilityClient::Init();
+    RemotePromise::Init();
+    CallContext::Init();
+    EzRpcCapabilityServer::Init();
+    EzRpcCapabilityClient::Init();
+    DynamicCapabilityClient::Init();
     SchemaNodeReader::Init();
     NestedNodeReader::Init();
     ListNestedNodeReader::Init();

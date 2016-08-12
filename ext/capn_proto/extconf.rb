@@ -9,6 +9,8 @@ unless compiler.has_cxx11_library_support?
   abort "*** A C++ library with support for C++11 features is required."
 end
 
+$CXXFLAGS = ' -std=c++11 ' 
+
 CONFIG['CXX']      = ENV['CXX'] || CONFIG['CXX']
 CONFIG['CXXFLAGS'] = [(ENV['CXXFLAGS'] || CONFIG['CXXFLAGS']),
                       compiler.std_flag,
@@ -23,5 +25,8 @@ end
 $LDFLAGS += " -lcapnpc"
 $LDFLAGS += " -lcapnp"
 $LDFLAGS += " -lkj"
+$LDFLAGS += " -lcapnp-rpc"
+$LDFLAGS += " -lkj-async"
+
 
 create_makefile('capn_proto/capn_proto')

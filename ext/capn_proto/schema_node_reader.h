@@ -14,6 +14,7 @@ namespace ruby_capn_proto {
     static VALUE get_nested_nodes(VALUE self);
     static VALUE is_struct(VALUE self);
     static VALUE is_enum(VALUE self);
+    static VALUE is_interface(VALUE self);
 
     static VALUE Class;
   };
