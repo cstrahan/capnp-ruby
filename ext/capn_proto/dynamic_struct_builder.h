@@ -20,6 +20,9 @@ namespace ruby_capn_proto {
     static VALUE init(int argc, VALUE* argv, VALUE self);
 
     static VALUE write(VALUE self, VALUE file);
+    static VALUE write_packed(VALUE self, VALUE file);
+    static VALUE to_packed_string(VALUE self, VALUE str);
+    static VALUE to_string(VALUE self, VALUE str);
     static VALUE to_bytes(VALUE self);
 
     static VALUE Class;

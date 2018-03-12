@@ -64,6 +64,27 @@ describe "writing" do
     end
   end
 
+  describe "#to_string" do
+    it "writes the message to a string" do
+      addresses = AddressBook::AddressBook.new_message
+      people = addresses.initPeople(1)
+      bob = people[0]
+      bob.name = "Bob"
+      bob.id = 123
+      str = ""
+      addresses.to_string(str)
+
+      tmp = Tempfile.new('test.bin')
+      tmp << str
+      tmp.rewind
+
+      addresses = AddressBook::AddressBook.read_from(tmp)
+      expect(addresses.people.size).to eq 1
+      expect(addresses.people.first.name).to eq "Bob"
+      expect(addresses.people.first.id).to eq 123
+    end
+  end
+
   describe "Dynamic Structs" do
     let(:addresses) { AddressBook::AddressBook.new_message }
 
