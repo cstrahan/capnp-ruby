@@ -1,18 +1,29 @@
-sudo: required
-language: generic
+language: ruby
 
-services:
-  - docker
+rvm:
+  - 2.4.1
 
 env:
   global:
-    - CAPNPROTO_RELEASE_URL="https://github.com/OneSignal/capnproto-debian/releases/download/onesignal-0.6.1-1"
-    - CAPNPROTO_DEB="capnproto_0.6.1-1_amd64.deb"
-    - LIBCAPNP_DEB="libcapnp-0.6.1_0.6.1-1_amd64.deb"
-    - LIBCAPNP_DEV_DEB="libcapnp-dev_0.6.1-1_amd64.deb"
+    - CAPNP_RELEASE_URL="https://github.com/OneSignal/capnproto-debian/releases/download/onesignal-0.6.1-1"
+    - CAPNP_DEB="capnproto_0.6.1-1_amd64.deb"
+    - CAPNP_LIB_DEB="libcapnp-0.6.1_0.6.1-1_amd64.deb"
+    - CAPNP_LIB_DEV_DEB="libcapnp-dev_0.6.1-1_amd64.deb"
+    - CXX=g++-7
+
+before_install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -q
+  - sudo apt-get install gcc-7 g++-7 -y
+  - curl -sSLO "${CAPNP_RELEASE_URL}/$(CAPNP_DEB)"
+  - curl -sSLO "${CAPNP_RELEASE_URL}/${CAPNP_LIB_DEB}"
+  - curl -sSLO "${CAPNP_RELEASE_URL}/${CAPNP_LIB_DEV_DEB}"
+  - sudo dpkg -i ${CAPNP_DEB} ${CAPNP_LIB_DEB} ${CAPNP_LIB_DEV_DEB}
 
 script:
-  - ./build.sh
+  - gem install gem-compiler
+  - gem build capn_proto.gemspec
+  - gem compile $(ls capn_proto-*.gem) --prune
 
 deploy:
   provider: releases
