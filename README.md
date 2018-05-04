@@ -8,6 +8,9 @@ This here is a [Ruby][ruby] wrapper for the official C++ implementation of [Cap'
 
 [![Build Status][travis-badge]][travis-link]
 
+**THIS IS A FORK.** The original project is at
+https://github.com/cstrahan/capnp-ruby and has not been updated in over 4 years.
+
 # Installing
 
 First [install libcapnp][libcapnp-install], then install the gem:

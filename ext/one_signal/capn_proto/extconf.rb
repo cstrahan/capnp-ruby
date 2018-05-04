@@ -24,4 +24,4 @@ $LDFLAGS += " -lcapnpc"
 $LDFLAGS += " -lcapnp"
 $LDFLAGS += " -lkj"
 
-create_makefile('capn_proto/capn_proto')
+create_makefile('one_signal/capn_proto/capn_proto')

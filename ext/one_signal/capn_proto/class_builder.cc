@@ -4,7 +4,8 @@
 namespace ruby_capn_proto {
 
   VALUE defineClass(const char *name, VALUE superclass = rb_cObject) {
-    VALUE CapnProto = rb_define_module("CapnProto");
+    VALUE OneSignal = rb_define_module("OneSignal");
+    VALUE CapnProto = rb_define_module_under(OneSignal, "CapnProto");
     VALUE klass = rb_define_class_under(CapnProto, name, superclass);
     // rb_funcall(klass, rb_intern("private_class_method"), 1, rb_str_new2("new"));
     return klass;

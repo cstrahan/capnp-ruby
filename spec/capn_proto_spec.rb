@@ -1,10 +1,10 @@
 require 'tempfile'
 require 'spec_helper'
-require 'capn_proto'
+require 'one_signal/capn_proto'
 
 ADDRESSBOOK_SCHEMA = File.expand_path("../addressbook.capnp", __FILE__)
 
-module AddressBook extend CapnProto::SchemaLoader
+module AddressBook extend OneSignal::CapnProto::SchemaLoader
   load_schema(ADDRESSBOOK_SCHEMA)
 end
 
@@ -14,7 +14,7 @@ describe "reading" do
     let(:addresses) { AddressBook::AddressBook.read_from(file) }
 
     it "unkown fields raise exception" do
-      expect { addresses.foo }.to raise_error(CapnProto::Exception)
+      expect { addresses.foo }.to raise_error(OneSignal::CapnProto::Exception)
     end
   end
 
@@ -24,7 +24,7 @@ describe "reading" do
     let(:people) { addresses.people }
 
     it "#[] given out-of-bounds index raises" do
-      expect { addresses.people[999999] }.to raise_error(CapnProto::Exception)
+      expect { addresses.people[999999] }.to raise_error(OneSignal::CapnProto::Exception)
     end
   end
 end
