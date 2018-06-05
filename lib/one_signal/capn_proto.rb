@@ -123,7 +123,8 @@ module OneSignal
         end
 
         def read_packed_from(io)
-          raise 'not implemented'
+          reader = PackedArrayMessageReader.new(io)
+          reader.get_root(self)
         end
       end
     end
