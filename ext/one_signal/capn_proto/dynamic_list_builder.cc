@@ -91,7 +91,7 @@ namespace ruby_capn_proto {
     }
 
     // TODO: handle assigning lists (see _setDynamicField)
-    if FIXNUM_P(rb_obj) {
+    if (FIXNUM_P(rb_obj)) {
       if (Util::isNegative(rb_obj)) {
         unwrap(self)->set(field, NUM2LONG(rb_obj));
       } else {
